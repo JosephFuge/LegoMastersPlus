@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+LegoMasters.db
+LegoMasters.db-shm
+LegoMasters.db-wal
