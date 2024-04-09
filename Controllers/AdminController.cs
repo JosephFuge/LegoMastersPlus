@@ -44,6 +44,46 @@ namespace LegoMastersPlus.Controllers
             return View(productPagingModel);
         }
 
+        [HttpGet]
+        public IActionResult AddProduct()
+        {
+            return View("AddEditProduct", new Product());
+        }
+        
+        [HttpPost]
+        public IActionResult AddProduct(Product newProduct)
+        {
+            if (ModelState.IsValid)
+            {
+                _legoRepo.AddProduct(newProduct);
+                return RedirectToAction("Products");
+            } else
+            {
+                return View(newProduct);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult EditProduct(int productId)
+        {
+            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == productId);
+            return View("AddEditProduct", editProduct);
+        }
+
+        [HttpPost]
+        public IActionResult EditProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _legoRepo.UpdateProduct(product);
+                return RedirectToAction("Products");
+            }
+            else
+            {
+                return View("AddEditProduct", product);
+            }
+        }
+
         public async Task<IActionResult> Users(int pageNum)
         {
             const int pageSize = 10;

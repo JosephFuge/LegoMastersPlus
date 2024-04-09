@@ -7,6 +7,8 @@ namespace LegoMastersPlus.Data
         public IQueryable<Customer> Customers { get; }
         public void AddCustomer(Customer customer);
         public IQueryable<Product> Products { get; }
+        public void AddProduct(Product product);
+        public void UpdateProduct(Product product);
         public IQueryable<Order> Orders { get; }
     }
 }

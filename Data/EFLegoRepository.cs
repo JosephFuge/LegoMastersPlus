@@ -22,6 +22,16 @@ namespace LegoMastersPlus.Data
 
         public IQueryable<Product> Products => _context.Products;
 
+        public void AddProduct(Product product) {
+            _context.Products.Add(product);
+            _context.SaveChanges();
+        }
+
+        public void UpdateProduct(Product product) {
+            _context.Products.Update(product);
+            _context.SaveChanges();
+        }
+
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
     }
 }
