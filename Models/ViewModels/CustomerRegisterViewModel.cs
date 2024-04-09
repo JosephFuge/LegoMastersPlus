@@ -23,9 +23,11 @@ namespace LegoMastersPlus.Models.ViewModels
         [EmailAddress]
         public string Email { get; set; }
 
+        [DataType(DataType.Password)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password is required.")]
         public string Password { get; set; }
 
+        [DataType(DataType.Password)]
         [Required]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }

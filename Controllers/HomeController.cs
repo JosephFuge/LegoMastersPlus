@@ -174,11 +174,6 @@ namespace LegoMastersPlus.Controllers
             return new ChallengeResult(provider, properties);
         }
 
-        //public IActionResult CreateAccountInfo(string returnUrl = null, string remoteError = null)
-        //{
-
-
-        //}
         [HttpGet]
         public async Task<IActionResult> CreateAccountInfo(string returnUrl = null, string remoteError = null)
         {

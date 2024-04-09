@@ -12,6 +12,7 @@ namespace LegoMastersPlus.Models.ViewModels
 
         public bool RememberMe { get; set; } = false;
 
+        [DataType(DataType.Password)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password is required.")]
         public string Password { get; set; } = string.Empty;
 

@@ -1,10 +1,12 @@
 ﻿using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LegoMastersPlus.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class AdminController : Controller
     {
         private readonly ILegoRepository _legoRepo;

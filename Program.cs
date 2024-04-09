@@ -1,6 +1,8 @@
 using LegoMastersPlus.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +17,20 @@ builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 12;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredUniqueChars = 2;
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+})
     .AddEntityFrameworkStores<LegoMastersDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -82,6 +97,14 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while initializing the database.");
     }
 }
+
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com;");
+    // Add more directives as needed
+    await next();
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
