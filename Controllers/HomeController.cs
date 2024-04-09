@@ -2,10 +2,17 @@ using Humanizer;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.WebUtilities;
 using System.Diagnostics;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+using System.Text;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -128,7 +135,12 @@ namespace LegoMastersPlus.Controllers
                 if (curUser != null)
                 {
                     return RedirectToAction("Index", "Home");
-                } else { return View(); }
+                } else {
+                    return View(new LoginViewModel
+                    {
+                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                    });
+                }
             } else
             {
                 return View();
@@ -146,6 +158,128 @@ namespace LegoMastersPlus.Controllers
             {
                 return View(loginRequest);
             }
+        }
+
+        [HttpGet]
+        public IActionResult ExternalLogin()
+        {
+            return View("Login");
+        }
+
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider)
+        {
+            string redirectUrl = "/Home/CreateAccountInfo";
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        //public IActionResult CreateAccountInfo(string returnUrl = null, string remoteError = null)
+        //{
+
+
+        //}
+        [HttpGet]
+        public async Task<IActionResult> CreateAccountInfo(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl ??= "/Home/Index";
+
+            if (remoteError != null)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info!.Principal?.Identity?.Name ?? "User", info.LoginProvider);
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.IsLockedOut)
+                {
+                    return LocalRedirect("/Home/Index");
+                }
+                else
+                {
+                    // If the user does not have an account, then ask the user to create an account.
+                    CreateAccountInfoViewModel createAccountInfo = new CreateAccountInfoViewModel
+                    {
+                        ReturnUrl = returnUrl
+                    };
+
+
+                    if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                    {
+                        createAccountInfo.Email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    }
+                    return View(createAccountInfo);
+                }
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAccountInfo(CreateAccountInfoViewModel newCustomerInfo)
+        {
+            // Get the information about the user from the external login provider
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                // TODO: add error if it went wrong
+                return LocalRedirect("Index");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser {
+                    Email = newCustomerInfo.Email,
+                    UserName = newCustomerInfo.Email
+                };
+
+                //await SetUserNameAsync(user, newCustomerInfo.Email, CancellationToken.None);
+                //await SetEmailAsync(user, newCustomerInfo.Email, CancellationToken.None);
+
+                var result = await _signInManager.UserManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    result = await _signInManager.UserManager.AddLoginAsync(user, info);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                        await _signInManager.UserManager.AddToRoleAsync(user, "Customer");
+
+                        var newCustomer = new Customer
+                        {
+                            first_name = newCustomerInfo.first_name,
+                            gender = newCustomerInfo.gender,
+                            last_name = newCustomerInfo.last_name,
+                            birth_date = DateOnly.FromDateTime(newCustomerInfo.birth_date),
+                            country_of_residence = newCustomerInfo.country_of_residence,
+                            age = CalculateAge(newCustomerInfo.birth_date, DateTime.Now)
+                        };
+
+                        _legoRepo.AddCustomer(newCustomer);
+
+                        _logger.LogInformation("Customer created with name " + newCustomerInfo.first_name + " " + newCustomerInfo.last_name);
+
+                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        return LocalRedirect(newCustomerInfo.ReturnUrl);
+                    }
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return LocalRedirect(newCustomerInfo.ReturnUrl);
         }
 
         [HttpPost]

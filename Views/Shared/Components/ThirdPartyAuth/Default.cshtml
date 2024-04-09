@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model LoginViewModel
+
+<div class="col-md-6 col-md-offset-2">
+    <section>
+        <h3>Use another service to log in.</h3>
+        <hr />
+        @{
+            if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                // asp-route-returnUrl="@Model.ReturnUrl"
+                <form id="external-account" asp-controller="Home" asp-action="ExternalLogin" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            }
+        }
+    </section>
+</div>

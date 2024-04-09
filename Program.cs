@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("LegoMasterConnection") ?? throw new InvalidOperationException("Connection string 'LegoMasterConnection' not found.");
+var connectionString = config.GetConnectionString("LegoMasterConnection") ?? throw new InvalidOperationException("Connection string 'LegoMasterConnection' not found.");
 builder.Services.AddDbContext<LegoMastersDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -13,19 +14,25 @@ builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<LegoMastersDbContext>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.IsEssential = true;
-    options.LoginPath = "/Identity/Login";
-    options.AccessDeniedPath = "/Identity/AccessDenied";
-    options.LogoutPath = "/Identity/Logout";
+    options.LoginPath = "/Home/Login";
+    options.AccessDeniedPath = "/Home/AccessDenied";
+    options.LogoutPath = "/Home/Logout";
     options.SlidingExpiration = true;
 });
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = config["Authentication:Google:ClientId"];
+    googleOptions.ClientSecret = config["Authentication:Google:ClientSecret"];
+});
 
 var app = builder.Build();
 
@@ -73,6 +80,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

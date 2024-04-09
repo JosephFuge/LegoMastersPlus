@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Authentication;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LegoMastersPlus.Models.ViewModels
 {
@@ -6,11 +8,15 @@ namespace LegoMastersPlus.Models.ViewModels
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Email is required.")]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         public bool RememberMe { get; set; } = false;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password is required.")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
+
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+        //public string ReturnUrl { get; set; } = Url.Content("~/");
     }
 }
