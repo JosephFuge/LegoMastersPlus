@@ -36,25 +36,27 @@ namespace LegoMastersPlus.Infrastructure
 
                 TagBuilder result = new TagBuilder("div");
 
-                // Build out a link for each page
-                for (int i = 1; i <= PageModel.TotalPages; i++)
+                if (PageModel.TotalPages > 1)
                 {
-                    TagBuilder aTag = new TagBuilder("a");
-
-                    aTag.Attributes["href"] = urlHelper.ActionLink(PageAction, PageController, new { pageNum = i });
-
-                    // Add class styling if applicable
-                    if (PageClassesEnabled)
+                    // Build out a link for each page
+                    for (int i = 1; i <= PageModel.TotalPages; i++)
                     {
-                        aTag.AddCssClass(PageClass);
-                        aTag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+                        TagBuilder aTag = new TagBuilder("a");
+
+                        aTag.Attributes["href"] = urlHelper.ActionLink(PageAction, PageController, new { pageNum = i });
+
+                        // Add class styling if applicable
+                        if (PageClassesEnabled)
+                        {
+                            aTag.AddCssClass(PageClass);
+                            aTag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+                        }
+
+                        aTag.InnerHtml.Append(i.ToString());
+
+                        result.InnerHtml.AppendHtml(aTag);
                     }
-
-                    aTag.InnerHtml.Append(i.ToString());
-
-                    result.InnerHtml.AppendHtml(aTag);
                 }
-
                 // Put the resulting built HTML tag into the containing div that has HTML attributes
                 output.Content.AppendHtml(result.InnerHtml);
             }
