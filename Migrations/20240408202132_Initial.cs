@@ -15,10 +15,10 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,21 +29,21 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,17 +54,17 @@ namespace LegoMastersPlus.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    product_ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    name = table.Column<string>(type: "TEXT", nullable: false),
-                    year = table.Column<int>(type: "INTEGER", nullable: false),
-                    num_parts = table.Column<int>(type: "INTEGER", nullable: false),
-                    price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    img_link = table.Column<string>(type: "TEXT", nullable: false),
-                    primary_color = table.Column<string>(type: "TEXT", nullable: false),
-                    secondary_color = table.Column<string>(type: "TEXT", nullable: false),
-                    description = table.Column<string>(type: "TEXT", nullable: false),
-                    category = table.Column<string>(type: "TEXT", nullable: false)
+                    product_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    year = table.Column<int>(type: "int", nullable: false),
+                    num_parts = table.Column<int>(type: "int", nullable: false),
+                    price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    img_link = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    primary_color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    secondary_color = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    category = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,11 +75,11 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -96,11 +96,11 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -117,10 +117,10 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,8 +137,8 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,10 +161,10 @@ namespace LegoMastersPlus.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,15 +181,15 @@ namespace LegoMastersPlus.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    customer_ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    IdentityID = table.Column<string>(type: "TEXT", nullable: true),
-                    first_name = table.Column<string>(type: "TEXT", nullable: false),
-                    last_name = table.Column<string>(type: "TEXT", nullable: false),
-                    birth_date = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    country_of_residence = table.Column<string>(type: "TEXT", nullable: false),
-                    gender = table.Column<string>(type: "TEXT", nullable: false),
-                    age = table.Column<double>(type: "REAL", nullable: false)
+                    customer_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdentityID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    first_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    last_name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    birth_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    country_of_residence = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    age = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,20 +205,20 @@ namespace LegoMastersPlus.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    transaction_ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    customer_ID = table.Column<int>(type: "INTEGER", nullable: false),
-                    date = table.Column<string>(type: "TEXT", nullable: false),
-                    day_of_week = table.Column<string>(type: "TEXT", nullable: false),
-                    time = table.Column<int>(type: "INTEGER", nullable: false),
-                    entry_mode = table.Column<string>(type: "TEXT", nullable: false),
-                    amount = table.Column<int>(type: "INTEGER", nullable: false),
-                    type_of_transaction = table.Column<string>(type: "TEXT", nullable: false),
-                    country_of_transaction = table.Column<string>(type: "TEXT", nullable: false),
-                    shipping_address = table.Column<string>(type: "TEXT", nullable: false),
-                    bank = table.Column<string>(type: "TEXT", nullable: false),
-                    type_of_card = table.Column<string>(type: "TEXT", nullable: false),
-                    fraud = table.Column<bool>(type: "INTEGER", nullable: false)
+                    transaction_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    customer_ID = table.Column<int>(type: "int", nullable: false),
+                    date = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    day_of_week = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    time = table.Column<int>(type: "int", nullable: false),
+                    entry_mode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    amount = table.Column<int>(type: "int", nullable: false),
+                    type_of_transaction = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    country_of_transaction = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    shipping_address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    bank = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    type_of_card = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    fraud = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -235,10 +235,10 @@ namespace LegoMastersPlus.Migrations
                 name: "LineItems",
                 columns: table => new
                 {
-                    transaction_ID = table.Column<int>(type: "INTEGER", nullable: false),
-                    product_ID = table.Column<int>(type: "INTEGER", nullable: false),
-                    qty = table.Column<int>(type: "INTEGER", nullable: false),
-                    rating = table.Column<int>(type: "INTEGER", nullable: true)
+                    transaction_ID = table.Column<int>(type: "int", nullable: false),
+                    product_ID = table.Column<int>(type: "int", nullable: false),
+                    qty = table.Column<int>(type: "int", nullable: false),
+                    rating = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -266,7 +266,8 @@ namespace LegoMastersPlus.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -292,7 +293,8 @@ namespace LegoMastersPlus.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_IdentityID",
