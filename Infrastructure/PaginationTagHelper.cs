@@ -21,7 +21,7 @@ namespace LegoMastersPlus.Infrastructure
         public string? PageController {  get; set; }
         public string? PageAction { get; set; }
 
-        public ProductPaginationInfo PageModel { get; set; }
+        public PaginationInfo PageModel { get; set; }
 
         public bool PageClassesEnabled { get; set; } = false;
         public string PageClass { get; set; } = String.Empty;
