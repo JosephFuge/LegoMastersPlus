@@ -1,0 +1,51 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model ProductsListViewModel
+
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Name</td>
+                <td>Price</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
+        @foreach (Product tempProd in Model.Products)
+        {
+            <tr>
+                <td>
+                    <img src="@tempProd.img_link" width="182"/>
+                </td>
+                <td>
+                    <p>@tempProd.name</p>
+                </td>
+                <td>
+                    <p>$@tempProd.price</p>
+                </td>
+                <td>
+                    <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditProduct" asp-route-prod-id="@tempProd.product_ID">Edit Product</a>
+                </td>
+                <td>
+                    <a class="rounded-pill btn-danger btn-pill" asp-controller="Admin" asp-action="DeleteProduct" asp-route-prod-id="@tempProd.product_ID">Delete Product</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div class="row">
+    <div class="col"></div>
+    <div class="col d-flex justify-content-center">
+        <a class="rounded-pill btn-success btn-pill" asp-controller="Admin" asp-action="AddProduct">Add Product</a>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <div page-model="@Model.PaginationInfo" page-action="Products" page-controller="Admin"
+             page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+     </div>
+</div>

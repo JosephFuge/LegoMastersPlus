@@ -20,3 +20,54 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*.nav-square {
+    width: 196px;
+    height: 196px;
+    background-color: lightslategrey;
+    border-radius: 16px 16px;
+    text-align: center;
+    align-content: center;
+    color: black;
+    link
+}*/
+
+.nav-square {
+    min-width: 164px; /* Ensures the width doesn't shrink below 196px */
+    min-height: 164px;
+    background-color: lightslategrey;
+    border-radius: 16px 16px;
+    text-align: center;
+    align-content: center; /* Changed from align-content for better centering */
+    align-items: center;
+    display: flex;  /*Added for better centering */
+    flex-direction: column;  /*Added for better centering*/ 
+    justify-content: center; /* Added for better centering */
+    color: black;
+    margin: 0 auto;
+}
+
+a.nav-square:link, a.nav-square:hover, a.nav-square:visited, a.nav-square:active {
+    text-decoration: none;
+}
+
+.nav-square-group {
+    display: flex; /* Changed to flex to handle responsiveness */
+    flex-wrap: wrap; /* Allows items to wrap onto the next line */
+    justify-content: center; /* Centers the buttons in the row */
+    gap: 16px; /* Adds space between buttons */
+}
+
+.bg-soft-purple {
+    background-color: #5654BF;
+}
+
+.btn-pill {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-right: 16px;
+    padding-left: 16px;
+    text-decoration: none;
+    text-align: center;
+    color: white;
+}

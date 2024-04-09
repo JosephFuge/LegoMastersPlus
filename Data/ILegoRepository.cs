@@ -4,9 +4,9 @@ namespace LegoMastersPlus.Data
 {
     public interface ILegoRepository
     {
-        public IQueryable Customers { get; }
+        public IQueryable<Customer> Customers { get; }
         public void AddCustomer(Customer customer);
-        public IQueryable Products { get; }
-        public IQueryable Orders { get; }
+        public IQueryable<Product> Products { get; }
+        public IQueryable<Order> Orders { get; }
     }
 }

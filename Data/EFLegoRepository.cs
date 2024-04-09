@@ -12,7 +12,7 @@ namespace LegoMastersPlus.Data
             _context = temp;
         }
 
-        public IQueryable Customers => _context.Customers.Include("IdentityUser");
+        public IQueryable<Customer> Customers => _context.Customers.Include("IdentityUser");
 
         public void AddCustomer(Customer customer)
         {
@@ -20,8 +20,8 @@ namespace LegoMastersPlus.Data
             _context.SaveChanges();
         }
 
-        public IQueryable Products => _context.Products;
+        public IQueryable<Product> Products => _context.Products;
 
-        public IQueryable Orders => _context.Orders.Include(order => order.LineItems);
+        public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
     }
 }
