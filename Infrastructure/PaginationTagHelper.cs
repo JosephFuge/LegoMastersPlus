@@ -36,6 +36,7 @@ namespace LegoMastersPlus.Infrastructure
 
                 TagBuilder result = new TagBuilder("div");
 
+                // Don't add pagination if there's only one page
                 if (PageModel.TotalPages > 1)
                 {
                     // Build out a link for each page

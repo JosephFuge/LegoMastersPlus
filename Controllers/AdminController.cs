@@ -48,12 +48,10 @@ namespace LegoMastersPlus.Controllers
         {
             const int pageSize = 10;
 
-            // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
+            // Set pageNum to 1 if it is 0 (as can happen for the default Users page request)
             pageNum = pageNum == 0 ? 1 : pageNum;
 
             Dictionary<IdentityUser, IList<string>> allUserRoles = new Dictionary<IdentityUser, IList<string>>();
-
-            //var customers = _legoRepo.Customers.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
             // Get the correct list of users based on page size and page number
             var allUsers = await _userManager.Users.ToListAsync();
