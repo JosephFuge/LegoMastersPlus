@@ -20,7 +20,7 @@ namespace LegoMastersPlus.Data
             _context.SaveChanges();
         }
 
-        public IQueryable<Product> Products => _context.Products;
+        public IQueryable<Product> Products => _context.Products.Include(p => p.ProductCategories).ThenInclude(pc => pc.Category);
 
         public void AddProduct(Product product) {
             _context.Products.Add(product);
