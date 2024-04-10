@@ -25,16 +25,23 @@
 @* </div> *@
 
 
-<div class="col-md-4" style="height: 75px;">
-    <div class="card d-flex">
-        <h4 class="card-header">@Model.name</h4> <!-- Displaying the book title -->
+<div class="col-md-3">
+    <div class="card d-flex justify-content-center mb-4">
         <div class="card-body">
-            <img src="@Model.img_link" class="img-fluid"/> <!-- Displaying the img of the product -->
-            <ul>
-                <li>Category: @Model.category</li> <!-- Displaying the category of the product -->
-                <li>Price: $@Model.price</li> <!-- Displaying the price of the product -->
-            </ul>
+            <!-- Displaying the img of the product -->
+            <div class="card justify-content-center">
+                <a asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID">
+                    <img src="@Model.img_link" class="product-image"/>
+                </a>
+            </div>
+            <!-- Display the Product name and link to product details -->
+            <div class="row">
+                <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID"><h6>@Model.name</h6></a>
+            </div>
+            <div class="fw-bold row">@Model.category</div>
+            <div class="fw-bold row">Price: $@Model.price</div>
         </div>
     </div>
 </div>
+
 <!-- Dynamically rendering pagination using the PaginationTagHelper -->

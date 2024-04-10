@@ -51,6 +51,12 @@ namespace LegoMastersPlus.Data
                                                                                     .Include(x => x.Product_8)
                                                                                     .Include(x => x.Product_9)
                                                                                     .Include(x => x.Product_10);
+        
+        public void DeleteOrder(Order order)
+        {
+            _context.Orders.Remove(order);
+        }
+        
 
         public void SaveChanges()
         {
