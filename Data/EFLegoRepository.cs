@@ -40,7 +40,6 @@ namespace LegoMastersPlus.Data
         // Get item recommendations for a specific product and all the products of the associated recommendations
         public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int productId) => _context.ProductItemRecommendations
                                                                                     .Where(pir => pir.product_ID == productId)
-                                                                                    .Include(pir => pir.RecProduct)
                                                                                     .Include(x => x.Product_1)
                                                                                     .Include(x => x.Product_2)
                                                                                     .Include(x => x.Product_3)
@@ -50,7 +49,10 @@ namespace LegoMastersPlus.Data
                                                                                     .Include(x => x.Product_7)
                                                                                     .Include(x => x.Product_8)
                                                                                     .Include(x => x.Product_9)
-                                                                                    .Include(x => x.Product_10);
+                                                                                    .Include(x => x.Product_10)
+                                                                                    .Include(pir => pir.RecProduct)
+                                                                                        .ThenInclude(pr => pr.ProductCategories)
+                                                                                            .ThenInclude(c => c.Category);
         
         public void DeleteOrder(Order order)
         {
