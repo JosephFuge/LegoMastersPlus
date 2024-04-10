@@ -57,6 +57,20 @@ namespace LegoMastersPlus.Controllers
 
             return RedirectToAction("Products");
         }
+        
+        [HttpPost]
+        public  IActionResult DeleteOrder(int transactionId)
+        {
+            // Logic to delete the product from the repository
+            var order = _legoRepo.Orders.FirstOrDefault(o => o.transaction_ID == transactionId);
+            if (order != null)
+            {
+                _legoRepo.DeleteOrder(order); 
+                _legoRepo.SaveChanges(); 
+            }
+
+            return RedirectToAction("ReviewOrders");
+        }
 
         [HttpGet]
         public IActionResult AddProduct()

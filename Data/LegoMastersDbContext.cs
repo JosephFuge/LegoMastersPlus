@@ -17,6 +17,7 @@ namespace LegoMastersPlus.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<LineItem> LineItems { get; set; }
+        public DbSet<ProductItemRecommendation> ProductItemRecommendations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
