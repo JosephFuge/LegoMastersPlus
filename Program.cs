@@ -1,5 +1,8 @@
 using LegoMastersPlus.Data;
+using LegoMastersPlus.Models;
+using LegoMastersPlus.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,12 @@ builder.Services.AddDbContext<LegoMastersDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
+builder.Services.AddRazorPages();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -109,14 +118,16 @@ app.Use(async (context, next) =>
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseSession();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-//app.MapRazorPages();
+app.MapControllerRoute("pagination", "{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
+app.MapDefaultControllerRoute();
+
+app.MapRazorPages();
 
 app.Run();
