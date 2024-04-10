@@ -2,6 +2,7 @@
 @* eventually will get to this page with something like this: *@
 @* <a class="rounded-pill btn btn-danger btn-pill" data-url="@Url.Action("DeleteProduct", "Admin", new { productId = tempProd.product_ID })" data-productid="@tempProd.product_ID">Delete Product</a> *@
 
+@using LegoMastersPlus.Infrastructure
 @model ProductItemRecommendation
 
 <div class="container container-fluid d-flex">
@@ -37,7 +38,12 @@
                 <div class="card fw-bold text-md-end">
                     <div class="card-body">
                         Price: $@Model.RecProduct.price
-                        <button class="btn btn-outline-primary">Add to Cart</button>
+                        <form id="@Model.RecProduct.product_ID" method="post" asp-page="/Cart">
+                            <input type="hidden" asp-for="product_ID">
+                            <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/>
+                            <button type="submit" class="btn btn-outline-primary btn-sm float-end">Add to Cart</button>
+                        </form>
+                        
                     </div>
                 </div>
             </div>

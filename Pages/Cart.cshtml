@@ -19,13 +19,13 @@
     @foreach (var line in Model.Cart?.Lines ?? Enumerable.Empty<Cart.CartLine>())
     {
         <tr>
-            <td>@line.Project.ProjectName</td>
+            <td>@line.Product.name</td>
             <td>@line.Quantity</td>
-            <td>$25</td>
+            <td>@line.Product.price</td>
             <td>@((line.Quantity * 25).ToString("C"))</td>
             <td class="text-center">
                 <form asp-page-handler="Remove" method="post">
-                    <input type="hidden" name="ProductId" value="@line.Project.ProjectName"/>
+                    <input type="hidden" name="productId" value="@line.Product.name"/>
                     <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/>
                     <button type="submit" class="btn btn-sm btn-danger">Remove</button>
                 </form>

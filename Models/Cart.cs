@@ -2,12 +2,12 @@ namespace LegoMastersPlus.Models;
 
 public class Cart
 {
-    public List<CartLine> Lines { get; set; } new List<CartLine>();
+    public List<CartLine> Lines { get; set; } = new List<CartLine>();
 
-    public virtual void AddItem(Project proj, int quantity)
+    public virtual void AddItem(Product prod, int quantity)
     {
         CartLine? line = Lines
-            .Where(x => x.Project.ProjectId == proj.ProjectId)
+            .Where(x => x.Product.product_ID == prod.product_ID)
             .FirstOrDefault();
         
         // has this item already been added to our cart?
@@ -15,7 +15,7 @@ public class Cart
         {
             Lines.Add(new CartLine
             {
-                Project = proj,
+                Product = prod,
                 Quantity = quantity
             });
         }
@@ -25,14 +25,14 @@ public class Cart
         }
     }
 
-    public virtual void RemoveLine(Project proj) => Lines.RemoveAll(x => x.Project.ProjectId == proj.ProjectId);
+    public virtual void RemoveLine(Product prod) => Lines.RemoveAll(x => x.Product.product_ID == prod.product_ID);
     public virtual void Clear() => Lines.Clear();
     public decimal CalculateTotal() => Lines.Sum(x => 25 * x.Quantity);
 
     public class CartLine
     {
         public int CartLineId { get; set; }
-        public Project Project { get; set; }
+        public Product Product { get; set; }
         public int Quantity { get; set; }
     }
 

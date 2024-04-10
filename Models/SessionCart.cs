@@ -21,15 +21,15 @@ public class SessionCart : Cart
     [JsonIgnore]
     public ISession? Session { get; set; }
     
-    public override void AddItem(Project proj, int quantity)
+    public override void AddItem(Product prod, int quantity)
     {
-        base.AddItem(proj, quantity);
+        base.AddItem(prod, quantity);
         Session?.SetJson("Cart", this);
     }
 
-    public override void RemoveLine(Project proj)
+    public override void RemoveLine(Product prod)
     {
-        base.RemoveLine(proj);
+        base.RemoveLine(prod);
         Session?.SetJson("Cart", this);
     }
 

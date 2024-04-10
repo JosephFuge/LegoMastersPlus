@@ -17,7 +17,7 @@ public class CartModel : PageModel
     public CartModel(ILegoRepository temp, Cart cartservice)
     {
         _repo = temp;
-        Cart - cartservice;
+        Cart = cartservice;
     }
     
     public string ReturnUrl { get; set; }
@@ -28,22 +28,23 @@ public class CartModel : PageModel
         
     }
 
-    public IActionResult OnPost(int projectId, string returnUrl)
+    public IActionResult OnPost(int productId, string returnUrl)
     {
-        Project proj = _repo.Products
-            .FirstOrDefault(x => x.product_ID == projectId);
+        Product prod = _repo.Products
+            .FirstOrDefault(x => x.product_ID == productId);
 
-        if (proj != null)
+        if (prod != null)
         {
-            Cart.AddItem(proj, 1);
+            Cart.AddItem(prod, 1);
         }
 
         return RedirectToPage(new { returnUrl = returnUrl });
     }
 
-    public IActionResult OnPostRemove(int projectId, string returnUrl)
+    public IActionResult OnPostRemove(int productId, string returnUrl)
     {
-        Cart.RemoveLine(Cart.Lines.First(x => x.Project.ProjectId).Project);
+        
+        Cart.RemoveLine(Cart.Lines.First(x => x.Product.product_ID == productId).Product);
         return RedirectToPage(new { returnUrl = returnUrl });
     }
     
