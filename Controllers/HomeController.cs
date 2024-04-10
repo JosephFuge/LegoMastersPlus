@@ -36,8 +36,7 @@ namespace LegoMastersPlus.Controllers
 
         public IActionResult ProductDetails(int productId=3)
         {
-
-            var details = _legoRepo.Products.Single(p => p.product_ID == productId);
+            var details = _legoRepo.ProductItemRecommendations(productId).FirstOrDefault();
             return View(details);
         }
 
