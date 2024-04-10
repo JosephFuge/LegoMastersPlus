@@ -38,7 +38,7 @@
             <div class="row">
                 <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID"><h6>@Model.name</h6></a>
             </div>
-            <div class="fw-bold row">@Model.category</div>
+            <div class="fw-bold row">@(Model.ProductCategories.Any() ? string.Join(" - ", Model.ProductCategories.Select(pc => pc.Category.Name)) : "N/A")</div>
             <div class="fw-bold row">Price: $@Model.price</div>
         </div>
     </div>

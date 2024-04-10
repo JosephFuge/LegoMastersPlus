@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LegoMastersPlus.Models
 {
@@ -22,7 +23,6 @@ namespace LegoMastersPlus.Models
         public string secondary_color { get; set; }
         [Required]
         public string description { get; set; }
-        [Required]
-        public string category { get; set; }    
+        public List<ProductCategory> ProductCategories { get; set; }
     }
 }
