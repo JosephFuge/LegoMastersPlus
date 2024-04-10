@@ -37,6 +37,11 @@ namespace LegoMastersPlus.Data
             _context.Products.Remove(product);
         }
         
+        public void DeleteOrder(Order order)
+        {
+            _context.Orders.Remove(order);
+        }
+        
 
         public void SaveChanges()
         {
