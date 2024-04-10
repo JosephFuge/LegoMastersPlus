@@ -1,25 +1,40 @@
 ﻿@using LegoMastersPlus.Infrastructure
 @model Product
 
-<div class="card m-1 p-1">
-    <h4>
-        @Model.name
-    </h4>
-    <ul>
-        <li>Year: @Model.year</li>
-        <li>Number of Parts: @Model.num_parts</li>
-        <li>Price: @Model.price</li>
-        <li>Image Link: @Model.img_link</li>
-        <li>Primary Color: @Model.primary_color</li>
-        <li>Secondary Color: @Model.secondary_color</li>
-        <li>Description: @Model.description</li>
-        <li>Category: @Model.category</li>
+@* <div class="card m-1 p-1"> *@
+@*     <h4> *@
+@*         @Model.name *@
+@*     </h4> *@
+@*     <ul> *@
+@*         <li>Year: @Model.year</li> *@
+@*         <li>Number of Parts: @Model.num_parts</li> *@
+@*         <li>Price: @Model.price</li> *@
+@*         <li>Image Link: @Model.img_link</li> *@
+@*         <li>Primary Color: @Model.primary_color</li> *@
+@*         <li>Secondary Color: @Model.secondary_color</li> *@
+@*         <li>Description: @Model.description</li> *@
+@*         <li>Category: @Model.category</li> *@
+@* *@
+@*     </ul> *@
+@* *@
+@*     <form id="@Model.product_ID" method="post" asp-page="/Cart"> *@
+@*         <input type="hidden" asp-for="@Model.product_ID" /> *@
+@*         <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" /> *@
+@*         <button type="submit" class="btn-outline-success btn-sm float-end"></button> *@
+@*     </form> *@
+@* </div> *@
 
-    </ul>
 
-    <form id="@Model.product_ID" method="post" asp-page="/Cart">
-        <input type="hidden" asp-for="@Model.product_ID" />
-        <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
-        <button type="submit" class="btn-outline-success btn-sm float-end"></button>
-    </form>
+<div class="col-md-4" style="height: 75px;">
+    <div class="card d-flex">
+        <h4 class="card-header">@Model.name</h4> <!-- Displaying the book title -->
+        <div class="card-body">
+            <img src="@Model.img_link" class="img-fluid"/> <!-- Displaying the img of the product -->
+            <ul>
+                <li>Category: @Model.category</li> <!-- Displaying the category of the product -->
+                <li>Price: $@Model.price</li> <!-- Displaying the price of the product -->
+            </ul>
+        </div>
+    </div>
 </div>
+<!-- Dynamically rendering pagination using the PaginationTagHelper -->

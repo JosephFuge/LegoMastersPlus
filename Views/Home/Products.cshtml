@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿@{
     ViewData["Title"] = "Products Page";
 }
 
@@ -6,14 +6,18 @@
 
 <h1>Title</h1>
 
+<div class="container container-fluid">
+    <div class="row" style="height: 75px;">
+        @foreach (Product p in Model.Products)
+            {
+                <partial name="ProductSummary" model="p"/>
+            }
+    </div>
+    
+</div>
 
-@foreach (Product p in Model.Products)
-{
-    <partial name="ProductSummary" model="p" />
-}
 
-<div 
-    page-model="@Model.PaginationInfo" page-action="Products" page-classes-enabled="true"
-    page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary"
-     page-url-projectType="@Model.Products" class="btn-group pull-right m-1">
- </div>
+<div class="col d-flex justify-content-end">
+        <div page-model="@Model.PaginationInfo" page-action="Products" page-controller="Home"
+             page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+     </div>

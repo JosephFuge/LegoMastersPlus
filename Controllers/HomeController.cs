@@ -340,29 +340,45 @@ namespace LegoMastersPlus.Controllers
 
         public IActionResult Products(int pageNum, int pageSize, string productPrimColor, string productSecColor, string productCategory)
         {
-            //int pageSize = 5;
 
             var filteredProducts = _legoRepo.Products
                 .Where(x => (productPrimColor == null || x.primary_color == productPrimColor) &&
                             (productSecColor == null || x.secondary_color == productSecColor) &&
                             (productCategory == null || x.category == productCategory));
 
-            var data = new ProductsListViewModel
-            {
-                Products = filteredProducts
-                    .OrderBy(x => x.name)
-                    .Skip((pageNum - 1) * pageSize)
-                    .Take(pageSize),
-                PaginationInfo = new ProductPaginationInfo
-                {
+        
 
-                    CurrentPage = pageNum,
-                    ItemsPerPage = pageSize,
-                    TotalItems = filteredProducts.Count()
-                }};
+            
+            pageSize = 12;
+            // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
+            pageNum = pageNum == 0 ? 1 : pageNum;
 
-            return View(data);
+            // Get the correct list of products based on page size and page number
+            var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
+
+            // Gather paging info and product list into a ViewModel
+            var productCount = _legoRepo.Products.Count();
+            PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
+            var productPagingModel = new ProductsListViewModel(productList, pagingInfo);
+            
+            // var data = new ProductsListViewModel
+            // {
+            //     Products = filteredProducts
+            //         .OrderBy(x => x.name)
+            //         .Skip((pageNum - 1) * pageSize)
+            //         .Take(pageSize),
+            //     
+            //     PaginationInfo = new ProductPaginationInfo
+            //     {
+            //
+            //         CurrentPage = pageNum,
+            //         ItemsPerPage = pageSize,
+            //         TotalItems = filteredProducts.Count()
+            //     }};
+
+            return View(productPagingModel);
         }
+        
 
     }
 }
