@@ -43,6 +43,20 @@ namespace LegoMastersPlus.Controllers
 
             return View(productPagingModel);
         }
+        
+        [HttpPost]
+        public  IActionResult DeleteProduct(int productId)
+        {
+            // Logic to delete the product from the repository
+            var product = _legoRepo.Products.FirstOrDefault(p => p.product_ID == productId);
+            if (product != null)
+            {
+                _legoRepo.DeleteProduct(product); 
+                _legoRepo.SaveChanges(); 
+            }
+
+            return RedirectToAction("Products");
+        }
 
         [HttpGet]
         public IActionResult AddProduct()
@@ -116,7 +130,7 @@ namespace LegoMastersPlus.Controllers
         
         public IActionResult ReviewOrders(int pageNum)
         {
-            const int pageSize = 250;
+            const int pageSize = 100;
 
             // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
             pageNum = pageNum == 0 ? 1 : pageNum;
