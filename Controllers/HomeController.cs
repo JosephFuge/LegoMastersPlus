@@ -1,4 +1,4 @@
-//using Humanizer;
+using Humanizer;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
