@@ -365,7 +365,7 @@ namespace LegoMastersPlus.Controllers
             var filteredProducts = _legoRepo.Products
                 .Where(x => (productPrimColor == null || x.primary_color == productPrimColor) &&
                             (productSecColor == null || x.secondary_color == productSecColor) &&
-                            (productCategory == null || x.category == productCategory));
+                            (productCategory == null));
 
         
 

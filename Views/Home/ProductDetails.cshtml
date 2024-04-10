@@ -15,7 +15,10 @@
             </div>
             <div class="row">
                 <div class="card text-center">
-                    <div class="card-body">Category: @Model.RecProduct.category</div>
+                    <div class="card-body">
+                        Categories: @(Model.RecProduct.ProductCategories.Any() ? string.Join(" - ", Model.RecProduct.ProductCategories.Select(pc => pc.Category.Name)) : "N/A")
+                    </div>
+
                 </div>
             </div>
             <div class="row">
