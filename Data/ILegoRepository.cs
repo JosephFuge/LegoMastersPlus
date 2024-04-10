@@ -10,5 +10,9 @@ namespace LegoMastersPlus.Data
         public void AddProduct(Product product);
         public void UpdateProduct(Product product);
         public IQueryable<Order> Orders { get; }
+        public void DeleteProduct(Product product);
+        public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int productId);
+        public void DeleteOrder(Order order);
+        public void SaveChanges();
     }
 }

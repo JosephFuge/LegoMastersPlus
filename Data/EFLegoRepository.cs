@@ -31,7 +31,38 @@ namespace LegoMastersPlus.Data
             _context.Products.Update(product);
             _context.SaveChanges();
         }
+        
+        public void DeleteProduct(Product product)
+        {
+            _context.Products.Remove(product);
+        }
 
+        // Get item recommendations for a specific product and all the products of the associated recommendations
+        public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int productId) => _context.ProductItemRecommendations
+                                                                                    .Where(pir => pir.product_ID == productId)
+                                                                                    .Include(pir => pir.RecProduct)
+                                                                                    .Include(x => x.Product_1)
+                                                                                    .Include(x => x.Product_2)
+                                                                                    .Include(x => x.Product_3)
+                                                                                    .Include(x => x.Product_4)
+                                                                                    .Include(x => x.Product_5)
+                                                                                    .Include(x => x.Product_6)
+                                                                                    .Include(x => x.Product_7)
+                                                                                    .Include(x => x.Product_8)
+                                                                                    .Include(x => x.Product_9)
+                                                                                    .Include(x => x.Product_10);
+        
+        public void DeleteOrder(Order order)
+        {
+            _context.Orders.Remove(order);
+        }
+        
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+        
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
     }
 }

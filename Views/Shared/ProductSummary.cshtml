@@ -1,0 +1,47 @@
+﻿@using LegoMastersPlus.Infrastructure
+@model Product
+
+@* <div class="card m-1 p-1"> *@
+@*     <h4> *@
+@*         @Model.name *@
+@*     </h4> *@
+@*     <ul> *@
+@*         <li>Year: @Model.year</li> *@
+@*         <li>Number of Parts: @Model.num_parts</li> *@
+@*         <li>Price: @Model.price</li> *@
+@*         <li>Image Link: @Model.img_link</li> *@
+@*         <li>Primary Color: @Model.primary_color</li> *@
+@*         <li>Secondary Color: @Model.secondary_color</li> *@
+@*         <li>Description: @Model.description</li> *@
+@*         <li>Category: @Model.category</li> *@
+@* *@
+@*     </ul> *@
+@* *@
+@*     <form id="@Model.product_ID" method="post" asp-page="/Cart"> *@
+@*         <input type="hidden" asp-for="@Model.product_ID" /> *@
+@*         <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" /> *@
+@*         <button type="submit" class="btn-outline-success btn-sm float-end"></button> *@
+@*     </form> *@
+@* </div> *@
+
+
+<div class="col-md-3">
+    <div class="card d-flex justify-content-center mb-4">
+        <div class="card-body">
+            <!-- Displaying the img of the product -->
+            <div class="card justify-content-center">
+                <a asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID">
+                    <img src="@Model.img_link" class="product-image"/>
+                </a>
+            </div>
+            <!-- Display the Product name and link to product details -->
+            <div class="row">
+                <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID"><h6>@Model.name</h6></a>
+            </div>
+            <div class="fw-bold row">@Model.category</div>
+            <div class="fw-bold row">Price: $@Model.price</div>
+        </div>
+    </div>
+</div>
+
+<!-- Dynamically rendering pagination using the PaginationTagHelper -->

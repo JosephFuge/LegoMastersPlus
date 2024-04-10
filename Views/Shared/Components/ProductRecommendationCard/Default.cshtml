@@ -1,0 +1,16 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model Product
+
+<div class="card" style="width: 18rem;">
+    <img class="card-img-top img-fluid" src="@Model.img_link" alt="Card image cap" style="object-fit: cover; height: 200px;">
+    <div class="card-body">
+        <h5 class="card-title">@Model.name</h5>
+        <p class="card-text">Price: $@Model.price</p>
+        <a asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID" class="btn btn-primary">See Details</a>
+    </div>
+</div>

@@ -30,37 +30,72 @@ namespace LegoMastersPlus.Infrastructure
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (ViewContext != null && PageAction != null)
+            if (ViewContext == null || PageAction == null) return;
+
+            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+            TagBuilder result = new TagBuilder("div");
+
+            if (PageModel.TotalPages > 1)
             {
-                IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+                // First page
+                AppendPageLink(result, urlHelper, 1);
+                
+                // Determine if ellipses are needed based on the total number of pages
+                bool useEllipses = PageModel.TotalPages >= 6;
 
-                TagBuilder result = new TagBuilder("div");
-
-                // Don't add pagination if there's only one page
-                if (PageModel.TotalPages > 1)
+                // Ellipsis after first page if needed
+                if (useEllipses && PageModel.CurrentPage > 3)
                 {
-                    // Build out a link for each page
-                    for (int i = 1; i <= PageModel.TotalPages; i++)
-                    {
-                        TagBuilder aTag = new TagBuilder("a");
-
-                        aTag.Attributes["href"] = urlHelper.ActionLink(PageAction, PageController, new { pageNum = i });
-
-                        // Add class styling if applicable
-                        if (PageClassesEnabled)
-                        {
-                            aTag.AddCssClass(PageClass);
-                            aTag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
-                        }
-
-                        aTag.InnerHtml.Append(i.ToString());
-
-                        result.InnerHtml.AppendHtml(aTag);
-                    }
+                    AppendEllipsis(result);
                 }
-                // Put the resulting built HTML tag into the containing div that has HTML attributes
-                output.Content.AppendHtml(result.InnerHtml);
+
+                // Middle pages - current page - 1 to current page + 1 (or as many as available)
+                int startPage = Math.Max(2, PageModel.CurrentPage - 1);
+                int endPage = Math.Min(PageModel.TotalPages - 1, PageModel.CurrentPage + 1);
+
+                if (!useEllipses)
+                {
+                    startPage = 2;
+                    endPage = PageModel.TotalPages - 1;
+                }
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    AppendPageLink(result, urlHelper, i);
+                }
+
+                // Ellipsis before last page if needed
+                if (useEllipses && PageModel.CurrentPage < PageModel.TotalPages - 2)
+                {
+                    AppendEllipsis(result);
+                }
+
+                // Last page
+                AppendPageLink(result, urlHelper, PageModel.TotalPages);
             }
+
+            output.Content.AppendHtml(result.InnerHtml);
         }
+
+        private void AppendPageLink(TagBuilder container, IUrlHelper urlHelper, int pageNumber)
+        {
+            TagBuilder aTag = new TagBuilder("a");
+            aTag.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { pageNum = pageNumber });
+            if (PageClassesEnabled)
+            {
+                aTag.AddCssClass(PageClass);
+                aTag.AddCssClass(pageNumber == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+            }
+            aTag.InnerHtml.Append(pageNumber.ToString());
+            container.InnerHtml.AppendHtml(aTag);
+        }
+
+        private static void AppendEllipsis(TagBuilder container)
+        {
+            TagBuilder spanTag = new TagBuilder("span");
+            spanTag.AddCssClass("pagination-ellipsis");
+            spanTag.InnerHtml.Append("...");
+            container.InnerHtml.AppendHtml(spanTag);
+        }
+
     }
 }
