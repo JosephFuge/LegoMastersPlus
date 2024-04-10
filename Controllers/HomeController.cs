@@ -361,11 +361,6 @@ namespace LegoMastersPlus.Controllers
                 plvm.Categories = _legoRepo.Categories.ToList();
             }
 
-            //var filteredProducts = _legoRepo.Products
-            //    .Where(x => plvm == null || ((plvm.PrimaryColor == null || x.primary_color == plvm.PrimaryColor) &&
-            //                (plvm.SecondaryColor == null || x.secondary_color == plvm.SecondaryColor) &&
-            //                (plvm.Categories == null || plvm.Categories!.IntersectBy(x.ProductCategories.Select((pc) => pc.CategoryId), c => c.CategoryId).Any())));
-
             // Filter by color in the query
             var filteredProducts = _legoRepo.Products
                 .Where(x => plvm.NoFilters || ((plvm.PrimaryColor == null || x.primary_color == plvm.PrimaryColor) &&

@@ -25,7 +25,13 @@
                     <option value="@secColor">@secColor</option>
                 }
             </select>
-            <input asp-for="PageSize" />
+
+            <div>
+                <label>Page Size:</label>
+                <label><input type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") /> 5</label>
+                <label><input type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "") /> 10</label>
+                <label><input type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "") /> 20</label>
+            </div>
 
             @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
             {
