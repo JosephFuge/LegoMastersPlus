@@ -68,6 +68,11 @@ namespace LegoMastersPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> CustomerRegister(CustomerRegisterViewModel customerRegister)
         {
+            if (!_isCookieConsentAccepted())
+            {
+                return View(customerRegister);
+            }
+
             if (ModelState.IsValid)
             {
                 var newUser = new IdentityUser();
@@ -150,10 +155,23 @@ namespace LegoMastersPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginRequest)
         {
-            var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
-            if (result.Succeeded)
+            if (!_isCookieConsentAccepted())
             {
-                return RedirectToAction("Index");
+                return View(loginRequest);
+            }
+
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {      
+                    ModelState.AddModelError(string.Empty, "Invalid login information.");
+                    return View(loginRequest);
+                }
             } else
             {
                 return View(loginRequest);
@@ -222,6 +240,11 @@ namespace LegoMastersPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAccountInfo(CreateAccountInfoViewModel newCustomerInfo)
         {
+            if (!_isCookieConsentAccepted())
+            {
+                return View(newCustomerInfo);
+            }
+
             // Get the information about the user from the external login provider
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
@@ -284,10 +307,35 @@ namespace LegoMastersPlus.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public IActionResult Consent()
+        {
+            Response.Cookies.Append("CookieConsent", "true", new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+            return Ok();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private bool _isCookieConsentAccepted()
+        {
+            if (!Request.Cookies.ContainsKey("CookieConsent"))
+            {
+                ViewBag.ShowCookieConsentButton = true;
+                ModelState.AddModelError("", "You must accept cookies before logging in.");
+                return false;
+            } else
+            {
+                ViewBag.ShowCookieConsentButton = false;
+                //if (ModelState.ContainsKey("Cookies"))
+                //{
+                //    ModelState.Remove("Cookies");
+                //}
+                return true;
+            }
         }
     }
 }

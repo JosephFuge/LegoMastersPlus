@@ -87,6 +87,12 @@
                 <td></td>
                 <td>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</td>
             </tr>
+            @if (ViewBag.ShowCookieConsentButton != null && ViewBag.ShowCookieConsentButton)
+            {
+                <tr>
+                    <td><button type="button" class="btn btn-outline-info rounded-pill show-cookie-btn" onclick="showCookiePopup();">See Cookie Info</button></td>
+                </tr>
+            }
 
         </table>
         <button type="submit">Register</button>

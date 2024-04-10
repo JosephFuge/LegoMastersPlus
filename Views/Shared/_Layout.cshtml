@@ -37,9 +37,39 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - LegoMastersPlus - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - LegoMastersPlus - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    @* <div class="modal modal-dialog modal-dialog-centered" id="cookieConsentContainer">
+        <p class="modal-content">
+            We use cookies to improve your experience on our site. By continuing to use our site, you accept our use of cookies.
+            <br />
+            <a asp-controller="Home" asp-action="Privacy">Learn more.</a>
+            <button class="rounded-pill btn btn-success" id="acceptCookieConsent" onclick="acceptCookieConsent()">Accept</button>
+        </p>
+    </div> *@
+
+    <div class="modal fade" id="cookieConsentModal" tabindex="-1" role="dialog" aria-labelledby="cookieConsentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cookieConsentModalLabel">Cookie Consent</h5>
+                    <button type="button" class="close close-modal btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    We use cookies to improve your experience on our site. By continuing to use our site, you accept our use of cookies. <a asp-controller="Home" asp-action="Privacy">Learn more</a>.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="acceptCookieConsent">Accept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
