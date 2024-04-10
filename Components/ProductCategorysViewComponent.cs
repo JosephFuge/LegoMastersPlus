@@ -4,11 +4,26 @@ using LegoMastersPlus.Data;
 
 namespace LegoMastersPlus.Components
 {
-    public class ProductCategorysViewComponent
+    public class ProductCategorysViewComponent : ViewComponent
     {
-        public string Invoke()
+        private ILegoRepository _legoRepo;
+
+        // Constructor
+        public ProductCategorysViewComponent(ILegoRepository temp)
         {
-            return "This worked";
+            _legoRepo = temp;
+        }
+
+        public IViewComponentResult Invoke()
+        {
+            ViewBag.SelectedProductCategory = RouteData?.Values["productCategory"];
+
+            var productCategorys = _legoRepo.Products
+                .Select(x => x.category)
+                .Distinct()
+                .OrderBy(x => x);
+
+            return View(productCategorys);
         }
     }
 }

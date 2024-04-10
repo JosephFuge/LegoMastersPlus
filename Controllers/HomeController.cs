@@ -32,6 +32,7 @@ namespace LegoMastersPlus.Controllers
         public IActionResult Index()
         {
             return View();
+
         }
 
         public IActionResult ProductDetails(int productId)
@@ -383,7 +384,10 @@ namespace LegoMastersPlus.Controllers
             //     }};
 
             return View(productPagingModel);
+
         }
+
+
         
 
     }

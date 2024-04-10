@@ -1,8 +1,63 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<LegoMastersPlus.Models.Product>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Shop</title>
+    <link rel="stylesheet" href="~/css/styles.css"> <!-- Link to your CSS file -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const products = @Html.Raw(Json.Serialize(Model));
+
+            const featuredProductsContainer = document.querySelector(".featured-products");
+
+            // Dynamically generate product cards
+            products.forEach(product => {
+                const productCard = document.createElement("div");
+                productCard.classList.add("product");
+
+                productCard.innerHTML = `
+                            <img src="${product.img_link}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <span>$${product.price.toFixed(2)}</span>
+                            <button class="btn">Add to Cart</button>
+                        `;
+
+                featuredProductsContainer.appendChild(productCard);
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Product Shop</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Discover Amazing Products</h2>
+        <p>Explore our collection of high-quality products and find exactly what you need.</p>
+        <a href="#" class="btn">Shop Now</a>
+    </section>
+
+    <section class="featured-products">
+        <h2>Featured Products</h2>
+        <!-- Dynamically generated product cards will be inserted here -->
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Product Shop. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+
