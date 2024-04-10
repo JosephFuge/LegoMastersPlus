@@ -1,4 +1,4 @@
-using Humanizer;
+//using Humanizer;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
@@ -453,7 +453,12 @@ namespace LegoMastersPlus.Controllers
 
             return View(productPagingModel);
         }
-        
+
+        [HttpGet]
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
 
     }
 }
