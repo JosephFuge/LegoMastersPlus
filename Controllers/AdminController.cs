@@ -113,5 +113,22 @@ namespace LegoMastersPlus.Controllers
 
             return View(usersPagingModel);
         }
+        
+        public IActionResult ReviewOrders(int pageNum)
+        {
+            const int pageSize = 250;
+
+            // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
+            pageNum = pageNum == 0 ? 1 : pageNum;
+
+            // Get the correct list of products based on page size and page number
+            var orderList = _legoRepo.Orders.Skip((pageNum - 1) * pageSize).Take(pageSize);
+
+            // Gather paging info and product list into a ViewModel
+            var orderCount = _legoRepo.Orders.Count();
+            PaginationInfo pagingInfo = new PaginationInfo(orderCount, pageSize, pageNum);
+            var orderPagingModel = new OrdersListViewModel(orderList, pagingInfo);   
+            return View(orderPagingModel);
+        }
     }
 }

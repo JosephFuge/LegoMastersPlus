@@ -1,0 +1,44 @@
+@model OrdersListViewModel
+
+
+<table class=" table table-striped">
+    <thead>
+    <tr>
+        <td>Transaction ID</td>
+        <td>Customer ID</td>
+        <td>Date</td>
+        <td>Time</td>
+        <td>Entry Mode</td>
+        <td>Type of Transaction</td>
+        <td>Country of Transaction</td>
+        <td>Shipping Address</td>
+        <td>Bank</td>
+        <td>Type of Card</td>
+        <td>Fraud</td>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            <tr>
+                <td>@order.transaction_ID</td>
+                <td>@order.customer_ID</td>
+                <td>@order.date</td>
+                <td>@order.time</td>
+                <td>@order.entry_mode</td>
+                <td>@order.type_of_card</td>
+                <td>@order.country_of_transaction</td>
+                <td>@order.shipping_address</td>
+                <td>@order.bank</td>
+                <td>@order.type_of_card</td>
+                @if (@order.fraud == true){<td>yes</td>}
+                @if (@order.fraud == false){<td>no</td>}
+                
+            </tr>
+        }
+    </tbody>
+    
+</table>
+
+<div page-model="@Model.PaginationInfo" page-action="ReviewOrders" page-controller="Admin"
+     page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
