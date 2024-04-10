@@ -31,8 +31,18 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <div class="row m-1 p-1">
+        <div class="col-3">
+            <vc:product-categorys />
+        </div>
+    </div>
+
+
+    <div class="container col-9">
+        <main role="main" class="pb-3">
             @RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">
