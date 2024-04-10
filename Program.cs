@@ -1,9 +1,6 @@
 using LegoMastersPlus.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -17,6 +14,7 @@ builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Set up Microsoft Identity and add restrictions to passwords
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
@@ -34,6 +32,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<LegoMastersDbContext>();
 builder.Services.AddControllersWithViews();
 
+// Add HSTS
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
@@ -51,6 +50,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 builder.Services.AddControllersWithViews();
 
+// Add Third Party Google Auth
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = config["Authentication:Google:ClientId"];
@@ -101,7 +101,7 @@ using (var scope = app.Services.CreateScope())
 
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com;");
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com; ");
     // Add more directives as needed
     await next();
 });
