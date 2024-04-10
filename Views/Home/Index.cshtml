@@ -1,63 +1,95 @@
-﻿@model IEnumerable<LegoMastersPlus.Models.Product>
+﻿@{
+    Layout = "_Layout"; // Using a shared layout file for consistency
+}
+@model ProductsListViewModel
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Shop</title>
-    <link rel="stylesheet" href="~/css/styles.css"> <!-- Link to your CSS file -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const products = @Html.Raw(Json.Serialize(Model));
+    <title>LEGO Store - Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
 
-            const featuredProductsContainer = document.querySelector(".featured-products");
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-            // Dynamically generate product cards
-            products.forEach(product => {
-                const productCard = document.createElement("div");
-                productCard.classList.add("product");
+        .container {
+            margin-top: 30px;
+        }
 
-                productCard.innerHTML = `
-                            <img src="${product.img_link}" alt="${product.name}">
-                            <h3>${product.name}</h3>
-                            <p>${product.description}</p>
-                            <span>$${product.price.toFixed(2)}</span>
-                            <button class="btn">Add to Cart</button>
-                        `;
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+        }
 
-                featuredProductsContainer.appendChild(productCard);
-            });
-        });
-    </script>
+            .product-card img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 5px;
+            }
+
+        .product-title {
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: #007bff;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .btn-add-to-cart {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .btn-add-to-cart:hover {
+                background-color: #0056b3;
+            }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to Product Shop</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Products</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
+        <h1>Welcome to the LEGO Store</h1>
+        <p>Your ultimate destination for all things LEGO!</p>
     </header>
-
-    <section class="hero">
-        <h2>Discover Amazing Products</h2>
-        <p>Explore our collection of high-quality products and find exactly what you need.</p>
-        <a href="#" class="btn">Shop Now</a>
-    </section>
-
-    <section class="featured-products">
-        <h2>Featured Products</h2>
-        <!-- Dynamically generated product cards will be inserted here -->
-    </section>
-
-    <footer>
-        <p>&copy; 2024 Product Shop. All rights reserved.</p>
-    </footer>
+    <div class="container">
+        <div class="row">
+            @foreach (Product p in Model.Products)
+            {
+                <partial name="ProductSummary" model="p" />
+            }
+        </div>
+    </div>
 </body>
 </html>
+
+
 

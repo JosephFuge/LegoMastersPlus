@@ -26,5 +26,7 @@ namespace LegoMastersPlus.Data
             modelBuilder.Entity<Customer>().ToTable("Customers");
             //modelBuilder.Entity<Admin>().ToTable("Admins");
         }
+
+
     }
 }

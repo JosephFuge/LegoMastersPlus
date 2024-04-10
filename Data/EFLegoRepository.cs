@@ -64,5 +64,7 @@ namespace LegoMastersPlus.Data
         }
         
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
+
+
     }
 }
