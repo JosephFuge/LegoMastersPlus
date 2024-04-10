@@ -1,4 +1,4 @@
-using Humanizer;
+//using Humanizer;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
@@ -13,6 +13,13 @@ using System.Diagnostics;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using System.Numerics.Tensors;
+using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.HttpResults;
+
 
 namespace LegoMastersPlus.Controllers
 {
@@ -21,12 +28,24 @@ namespace LegoMastersPlus.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILegoRepository _legoRepo;
+        private readonly InferenceSession _session;
 
         public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> tempSignIn, ILegoRepository tempLegoRepo)
         {
             _logger = logger;
             _signInManager = tempSignIn;
             _legoRepo = tempLegoRepo;
+
+            // Initialize the InferenceSession
+            try
+            {
+                _session = new InferenceSession("C:\\Users\\theul\\source\\repos\\LegoMastersPlus\\fraud_catch_model.onnx");
+                _logger.LogInformation("ONNX model loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error loading the ONNX model: {ex.Message}");
+            }
         }
 
         public IActionResult Index()
@@ -132,7 +151,7 @@ namespace LegoMastersPlus.Controllers
         {
             // If there's already a logged in user, redirect them to home page
             var curUserClaim = HttpContext.User;
-           
+
             if (curUserClaim != null)
             {
                 IdentityUser? curUser = await _signInManager.UserManager.GetUserAsync(curUserClaim);
@@ -140,16 +159,19 @@ namespace LegoMastersPlus.Controllers
                 if (curUser != null)
                 {
                     return RedirectToAction("Index", "Home");
-                } else {
+                }
+                else
+                {
                     return View(new LoginViewModel
                     {
                         ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
                     });
                 }
-            } else
+            }
+            else
             {
                 return View();
-            }            
+            }
         }
 
         [HttpPost]
@@ -168,11 +190,12 @@ namespace LegoMastersPlus.Controllers
                     return RedirectToAction("Index");
                 }
                 else
-                {      
+                {
                     ModelState.AddModelError(string.Empty, "Invalid login information.");
                     return View(loginRequest);
                 }
-            } else
+            }
+            else
             {
                 return View(loginRequest);
             }
@@ -255,7 +278,8 @@ namespace LegoMastersPlus.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser {
+                var user = new IdentityUser
+                {
                     Email = newCustomerInfo.Email,
                     UserName = newCustomerInfo.Email
                 };
@@ -327,7 +351,8 @@ namespace LegoMastersPlus.Controllers
                 ViewBag.ShowCookieConsentButton = true;
                 ModelState.AddModelError("", "You must accept cookies before logging in.");
                 return false;
-            } else
+            }
+            else
             {
                 ViewBag.ShowCookieConsentButton = false;
                 //if (ModelState.ContainsKey("Cookies"))
@@ -336,6 +361,57 @@ namespace LegoMastersPlus.Controllers
                 //}
                 return true;
             }
+        }
+
+        //ONNX Prediction
+        //Review for later; it only predicts 1 (not fradulent) for some reason
+        [HttpPost]
+        public IActionResult Predict(int time_hour, int amount, int Mon, int Sat, int Sun, int Thr, int Tue, int Wed, int Pin, int Tap, int Online, int POS, int India, int Russia, int USA, int UK, int HSBC, int Halifax, int Lloyds, int Metro, int Monzo, int RBS, int Visa)
+        {
+            //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
+            var fraud_dict = new Dictionary<int, string>()
+            {
+                { 1, "Not fraudulent"},
+                { 2, "Possibly fradulent, please review"}
+            };
+            try
+            {
+                var input = new List<float> { time_hour, amount, Mon, Sat, Sun, Thr, Tue, Wed, Pin, Tap, Online, POS, India, Russia, USA, UK, HSBC, Halifax, Lloyds, Metro, Monzo, RBS, Visa };
+                var inputTensor = new DenseTensor<float>(input.ToArray(), new[] { 1, input.Count });
+
+                var inputs = new List<NamedOnnxValue>
+                { NamedOnnxValue.CreateFromTensor("float_input", inputTensor)};
+
+                using (var results = _session.Run(inputs)) //Make the predicton from the Order input
+                {
+                    var prediction = results.FirstOrDefault(item => item.Name == "output_label")?.AsTensor<long>().ToArray();
+                    if (prediction != null && prediction.Length > 0)
+                    {
+                        //Get the proper fraud text
+                        var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
+                        ViewBag.Prediction = fraudCheck;
+                    }
+                    else
+                    {
+                        ViewBag.Prediction = "Error: Unable to make a prediction.";
+                    }
+                }
+                _logger.LogInformation("Prediction executed successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error during prediction: {ex.Message}");
+                ViewBag.Prediction = "Error during prediction.";
+            }
+
+            return View(); //Return view of dummy data so I can check if it works
+        }
+
+        //For the Predict view; delete when connceted to the database
+        [HttpGet]
+        public IActionResult Predict()
+        {
+            return View();
         }
     }
 }
