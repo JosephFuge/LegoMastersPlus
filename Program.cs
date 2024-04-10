@@ -101,7 +101,7 @@ using (var scope = app.Services.CreateScope())
 
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com;");
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com; ");
     // Add more directives as needed
     await next();
 });

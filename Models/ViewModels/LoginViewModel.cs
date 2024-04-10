@@ -16,7 +16,7 @@ namespace LegoMastersPlus.Models.ViewModels
         [Required(AllowEmptyStrings = false, ErrorMessage = "Password is required.")]
         public string Password { get; set; } = string.Empty;
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
         //public string ReturnUrl { get; set; } = Url.Content("~/");
     }
