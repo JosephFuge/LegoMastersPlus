@@ -127,7 +127,7 @@ namespace LegoMastersPlus.Controllers
         {
             // If there's already a logged in user, redirect them to home page
             var curUserClaim = HttpContext.User;
-           
+
             if (curUserClaim != null)
             {
                 IdentityUser? curUser = await _signInManager.UserManager.GetUserAsync(curUserClaim);
@@ -144,7 +144,7 @@ namespace LegoMastersPlus.Controllers
             } else
             {
                 return View();
-            }            
+            }
         }
 
         [HttpPost]
@@ -289,5 +289,32 @@ namespace LegoMastersPlus.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Products(int pageNum, int pageSize, string productPrimColor, string productSecColor, string productCategory)
+        {
+            //int pageSize = 5;
+
+            var filteredProducts = _legoRepo.Products
+                .Where(x => (productPrimColor == null || x.primary_color == productPrimColor) &&
+                            (productSecColor == null || x.secondary_color == productSecColor) &&
+                            (productCategory == null || x.category == productCategory));
+
+            var data = new ProductsListViewModel
+            {
+                Products = filteredProducts
+                    .OrderBy(x => x.name)
+                    .Skip((pageNum - 1) * pageSize)
+                    .Take(pageSize),
+                PaginationInfo = new ProductPaginationInfo
+                {
+
+                    CurrentPage = pageNum,
+                    ItemsPerPage = pageSize,
+                    TotalItems = filteredProducts.Count()
+                }};
+
+            return View(data);
+        }
+
     }
 }
