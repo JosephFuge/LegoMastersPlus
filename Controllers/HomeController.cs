@@ -34,6 +34,13 @@ namespace LegoMastersPlus.Controllers
             return View();
         }
 
+        public IActionResult ProductDetails(int productId=3)
+        {
+
+            var details = _legoRepo.Products.Single(p => p.product_ID == productId);
+            return View(details);
+        }
+
         public IActionResult Privacy()
         {
             return View();

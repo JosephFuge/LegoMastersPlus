@@ -1,0 +1,46 @@
+
+@* eventually will get to this page with something like this: *@
+@* <a class="rounded-pill btn btn-danger btn-pill" data-url="@Url.Action("DeleteProduct", "Admin", new { productId = tempProd.product_ID })" data-productid="@tempProd.product_ID">Delete Product</a> *@
+
+@model Product
+
+<div class="container container-fluid d-flex">
+    <div class="row">
+        <div class="col-7 align-items-stretch"><img src="@Model.img_link" class="img-fluid"/></div>
+        <div class="col">
+            <div class="row">
+                <div class="card text-center">
+                    <div class="card-body">@Model.name</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card text-center">
+                    <div class="card-body">Category: @Model.category</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card text-center">
+                    <div class="card-body">Release Year: @Model.year</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card text-center">
+                    <div class="card-body">Number of Parts: @Model.num_parts</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card text-center">
+                    <div class="card-body">@Model.description</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card fw-bold text-md-end">
+                    <div class="card-body">
+                        Price: $@Model.price
+                        <button class="btn btn-outline-success">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
