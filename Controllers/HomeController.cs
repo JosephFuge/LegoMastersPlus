@@ -59,11 +59,24 @@ namespace LegoMastersPlus.Controllers
             // Get the correct list of products based on page size and page number
             //var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
+            //var topRatedProductIDs = _legoRepo.LineItems
+            //                .OrderByDescending(li => li.rating)
+            //                .Select(li => li.product_ID)
+            //                .Take(5)
+            //                .ToList();
+
             var topRatedProductIDs = _legoRepo.LineItems
-                            .OrderByDescending(li => li.rating)
-                            .Select(li => li.product_ID)
-                            .Take(5)
-                            .ToList();
+                .GroupBy(li => li.product_ID)
+                .Select(group => new
+                {
+                    ProductID = group.Key,
+                    NumberOfOrders = group.Count()
+                })
+                .OrderByDescending(result => result.NumberOfOrders)
+                .Take(5)
+                .Select(result => result.ProductID)
+                .ToList();
+
 
             var productList = _legoRepo.Products
                 .Where(p => topRatedProductIDs.Contains(p.product_ID))
