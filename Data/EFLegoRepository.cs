@@ -22,6 +22,9 @@ namespace LegoMastersPlus.Data
 
         public IQueryable<Product> Products => _context.Products.Include(p => p.ProductCategories).ThenInclude(pc => pc.Category);
 
+        public IQueryable<string> PrimaryColors => _context.Products.Select(p => p.primary_color).Distinct();
+        public IQueryable<string> SecondaryColors => _context.Products.Select(p => p.secondary_color).Distinct();
+
         public void AddProduct(Product product) {
             _context.Products.Add(product);
             _context.SaveChanges();
@@ -64,6 +67,8 @@ namespace LegoMastersPlus.Data
         {
             _context.SaveChanges();
         }
+
+        public IQueryable<Category> Categories => _context.Categories;
         
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
     }

@@ -39,7 +39,7 @@ namespace LegoMastersPlus.Controllers
             // Gather paging info and product list into a ViewModel
             var productCount = _legoRepo.Products.Count();
             PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
-            var productPagingModel = new ProductsListViewModel(productList, pagingInfo);
+            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, Enumerable.Empty<Category>().ToList(), null, null);
 
             return View(productPagingModel);
         }
@@ -75,6 +75,7 @@ namespace LegoMastersPlus.Controllers
         [HttpGet]
         public IActionResult AddProduct()
         {
+            ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
             return View("AddEditProduct", new Product());
         }
         
@@ -87,14 +88,16 @@ namespace LegoMastersPlus.Controllers
                 return RedirectToAction("Products");
             } else
             {
-                return View(newProduct);
+                ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
+                return View("AddEditProduct", newProduct);
             }
         }
 
         [HttpGet]
         public IActionResult EditProduct(int product_ID)
         {
-            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == product_ID);
+            ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
+            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == productId);
             return View("AddEditProduct", editProduct);
         }
 

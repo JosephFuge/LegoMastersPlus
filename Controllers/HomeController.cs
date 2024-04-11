@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
+using System.Linq;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -344,45 +345,59 @@ namespace LegoMastersPlus.Controllers
             }
         }
 
-        public IActionResult Products(int pageNum, int pageSize, string productPrimColor, string productSecColor, string productCategory)
+        public IActionResult Products(ProductsListViewModel plvm)
         {
+            plvm.Categories = _legoRepo.Categories.ToList();
 
+            if (/*plvm.Categories != null || */plvm.PrimaryColor != null || plvm.SecondaryColor != null || (plvm.SelectedCategories != null && plvm.Categories != null && plvm.SelectedCategories.Count() < plvm.Categories.Count()))
+            {
+                plvm.NoFilters = false;
+            }
+            int defaultPageSize = 10;
+
+            // Fetch the list of possible colors based on the colors that products already have in the database
+            plvm.PrimaryColors = _legoRepo.PrimaryColors.ToList();
+            plvm.SecondaryColors = _legoRepo.SecondaryColors.ToList();
+
+            if (plvm.SelectedCategories == null)
+            {
+                plvm.SelectedCategories = _legoRepo.Categories.Select(x => x.CategoryId).ToList();
+            }
+
+            // Filter by color in the query
             var filteredProducts = _legoRepo.Products
-                .Where(x => (productPrimColor == null || x.primary_color == productPrimColor) &&
-                            (productSecColor == null || x.secondary_color == productSecColor) &&
-                            (productCategory == null));
-
-        
-
+                .Where(x => plvm.NoFilters || ((plvm.PrimaryColor == null || x.primary_color == plvm.PrimaryColor) &&
+                            (plvm.SecondaryColor == null || x.secondary_color == plvm.SecondaryColor))).ToList();
             
-            pageSize = 12;
-            // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
-            pageNum = pageNum == 0 ? 1 : pageNum;
-
-            // Get the correct list of products based on page size and page number
-            var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
-
-            // Gather paging info and product list into a ViewModel
-            var productCount = _legoRepo.Products.Count();
-            PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
-            var productPagingModel = new ProductsListViewModel(productList, pagingInfo);
+            // Now filter by category
+            if (!plvm.NoFilters)
+            {
+                filteredProducts = filteredProducts.Where(prod => prod.ProductCategories.Select(pc => pc.Category.CategoryId).Intersect(plvm.SelectedCategories).Any()).ToList();
+            }
             
-            // var data = new ProductsListViewModel
-            // {
-            //     Products = filteredProducts
-            //         .OrderBy(x => x.name)
-            //         .Skip((pageNum - 1) * pageSize)
-            //         .Take(pageSize),
-            //     
-            //     PaginationInfo = new ProductPaginationInfo
-            //     {
-            //
-            //         CurrentPage = pageNum,
-            //         ItemsPerPage = pageSize,
-            //         TotalItems = filteredProducts.Count()
-            //     }};
+            if (!plvm.Products.Any())
+            {
+                plvm.PageSize = plvm.PageSize == 0 ? 10 : plvm.PageSize;
+                // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
+                plvm.PageNum = plvm.PageNum == 0 ? 1 : plvm.PageNum;
 
-            return View(productPagingModel);
+                // Get the correct list of products based on page size and page number
+                var productList = filteredProducts.Skip(((plvm.PageNum ?? 1) - 1) * (plvm.PageSize ?? defaultPageSize)).Take(plvm.PageSize ?? defaultPageSize);
+
+                // Gather paging info and product list into a ViewModel
+                var productCount = filteredProducts.Count();
+                PaginationInfo pagingInfo = new PaginationInfo(productCount, plvm.PageSize ?? defaultPageSize, plvm.PageNum ?? 1);
+                plvm.Products = productList.ToList();
+                plvm.PaginationInfo = pagingInfo;
+            } else
+            {
+                var allProducts = _legoRepo.Products;
+                PaginationInfo pagingInfo = new PaginationInfo(allProducts.Count(), defaultPageSize, 1);
+                var allCategories = _legoRepo.Categories;
+                plvm = new ProductsListViewModel(allProducts.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
+            }
+
+            return View(plvm);
         }
         
 
