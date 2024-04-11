@@ -44,7 +44,8 @@ namespace LegoMastersPlus.Controllers
             // Gather paging info and product list into a ViewModel
             var productCount = _legoRepo.Products.Count();
             PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
-            var productPagingModel = new ProductsListViewModel(productList, pagingInfo);
+            var allCategories = _legoRepo.Categories;
+            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
 
             return View(productPagingModel);
 
