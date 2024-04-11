@@ -359,9 +359,6 @@ namespace LegoMastersPlus.Controllers
             plvm.PrimaryColors = _legoRepo.PrimaryColors.ToList();
             plvm.SecondaryColors = _legoRepo.SecondaryColors.ToList();
 
-            
-
-            
             if (plvm.SelectedCategories == null)
             {
                 plvm.SelectedCategories = _legoRepo.Categories.Select(x => x.CategoryId).ToList();

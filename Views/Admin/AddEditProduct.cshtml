@@ -61,13 +61,14 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="ProductCategories" class="control-label"></label>
-            <select asp-for="ProductCategories" class="form-control" >
-                @foreach (Category cat in ViewBag.Categories)
-                {
-                    <option value="@cat.CategoryId">@cat.Name</option>
-                }
-            </select>
+            <h5>Categories</h5>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <label>@category.Name</label>
+                <input type="checkbox" name="ProductCategories" value="@category.CategoryId" @((Model != null && 
+                                                                                                Model.ProductCategories != null && 
+                                                                                                Model.ProductCategories.Select((pc) => pc.CategoryId).ToList().Contains(category.CategoryId)) ? "checked" : "") />
+            }
             <span asp-validation-for="ProductCategories" class="text-danger"></span>
         </div>
 
