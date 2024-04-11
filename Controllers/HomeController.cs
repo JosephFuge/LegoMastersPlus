@@ -53,11 +53,12 @@ namespace LegoMastersPlus.Controllers
             // Get the correct list of products based on page size and page number
             var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
+            var lineitems = new LineItem();
             // Gather paging info and product list into a ViewModel
             var productCount = _legoRepo.Products.Count();
             PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
             var allCategories = _legoRepo.Categories;
-            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
+            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null, lineitems);
 
             return View(productPagingModel);
 
@@ -588,7 +589,7 @@ namespace LegoMastersPlus.Controllers
                 var allProducts = _legoRepo.Products;
                 PaginationInfo pagingInfo = new PaginationInfo(allProducts.Count(), defaultPageSize, 1);
                 var allCategories = _legoRepo.Categories;
-                plvm = new ProductsListViewModel(allProducts.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
+                plvm = new ProductsListViewModel(allProducts.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null, new LineItem());
             }
 
             return View(plvm);
