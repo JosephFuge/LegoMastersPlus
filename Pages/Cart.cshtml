@@ -31,11 +31,11 @@
                 @* <a class="rounded-pill btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#deleteConfirmationModal" data-productid="@line.Product.product_ID">Delete</a> *@
                 
                 @* this works for deleting *@
-                @* <form asp-page-handler="Remove" method="post"> *@
-                @*     <input type="hidden" name="Product_ID" value="@line.Product.product_ID" /> *@
-                @*     <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" /> *@
-                @*     <button type="submit" class="btn btn-sm btn-danger">Remove</button> *@
-                @* </form> *@
+                <form asp-page-handler="Remove" method="post">
+                    <input type="hidden" name="Product_ID" value="@line.Product.product_ID" />
+                    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                </form>
                  
             </td>
         </tr>
@@ -54,6 +54,7 @@
 
 <div class="text-center">
     <a class="btn btn-primary" asp-controller="Home" asp-action="Products">Continue Shopping</a>
+    <a class="btn btn-success" asp-page="/Checkout">Checkout</a>
 </div>
 
 
