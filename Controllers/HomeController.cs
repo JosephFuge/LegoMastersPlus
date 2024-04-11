@@ -228,12 +228,15 @@ namespace LegoMastersPlus.Controllers
                 }
             } else
             {
-                return View();
+                return View(new LoginViewModel
+                    {
+                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                    });
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel loginRequest)
+        public async Task<IActionResult> Login(LoginViewModel loginRequest, string returnUrl = null)
         {
             if (!_isCookieConsentAccepted())
             {
@@ -245,7 +248,20 @@ namespace LegoMastersPlus.Controllers
                 var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToPage("Areas/Identity/Pages/Account/LoginWith2f.cshtml");
+                    // var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+                    // if user != null && await _userManager.GetTwoFactorEnabledAsync(user)
+                //     if (loginRequest.Email == "maxsweet@testfake.com")
+                //     {
+                //         return RedirectToAction("Index");
+                //     }
+                //     else
+                //     {
+                //         // Redirect to the LoginWith2fa page
+                //         // Redirect to the LoginWith2fa Razor Page
+                //         return RedirectToPage("/Account/LoginWith2fa", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                //     }
+                
                 }
                 else
                 {
@@ -254,7 +270,17 @@ namespace LegoMastersPlus.Controllers
                 }
             } else
             {
-                return View(loginRequest);
+                return RedirectToPage("/Account/LoginWith2fa");
+                // if (loginRequest.Email == "maxsweet@testfake.com")
+                // {
+                //     return RedirectToAction("Index");
+                // }
+                // else
+                // {
+                //     // Redirect to the LoginWith2fa page
+                //     // Redirect to the LoginWith2fa Razor Page
+                //     return RedirectToPage("/Account/LoginWith2fa", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                // }
             }
         }
 
