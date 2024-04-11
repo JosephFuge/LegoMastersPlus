@@ -51,7 +51,4 @@ public class CartModel : PageModel
 
         return RedirectToPage(new { returnUrl = returnUrl });
     }
-    
-    
-    
 }
