@@ -36,11 +36,11 @@
                 {
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="product-card">
-                            <img src="@product.img_link" alt="@product.name" class="img-fluid product-image">
-                            <h2 class="product-title">@product.name</h2>
+                            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@product.product_ID">
+                                <img src="@product.img_link" alt="@product.name" class="img-fluid product-image">
+                                <h2 class="product-title custom-product-name">@product.name</h2>
+                            </a>
                             <p class="product-price">$@product.price</p>
-                            <button type="button" class="btn btn-primary">Add To Cart</button>
-
                         </div>
                     </div>
                 }
