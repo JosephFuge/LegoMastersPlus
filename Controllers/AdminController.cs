@@ -45,10 +45,10 @@ namespace LegoMastersPlus.Controllers
         }
         
         [HttpPost]
-        public  IActionResult DeleteProduct(int productId)
+        public  IActionResult DeleteProduct(int product_ID)
         {
             // Logic to delete the product from the repository
-            var product = _legoRepo.Products.FirstOrDefault(p => p.product_ID == productId);
+            var product = _legoRepo.Products.FirstOrDefault(p => p.product_ID == product_ID);
             if (product != null)
             {
                 _legoRepo.DeleteProduct(product); 
@@ -92,9 +92,9 @@ namespace LegoMastersPlus.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditProduct(int productId)
+        public IActionResult EditProduct(int product_ID)
         {
-            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == productId);
+            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == product_ID);
             return View("AddEditProduct", editProduct);
         }
 

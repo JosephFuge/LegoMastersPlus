@@ -2,7 +2,10 @@
 @using LegoMastersPlus.Infrastructure
 @using LegoMastersPlus.Models
 @model LegoMastersPlus.Pages.CartModel
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
 <h2>Your cart</h2>
 
 <table class="table table-bordered table-striped table-hover">
@@ -25,24 +28,13 @@
             <td>@line.Product.price</td>
             <td>@((line.Quantity * line.Product.price).ToString("C"))</td>
             <td class="text-center">
-                @* <form id="@line.Product.product_ID" method="post" asp-page="/Cart"> *@
-                @*     <input type="hidden" name="action" value="remove"> *@
-                @*     <input type="hidden" name="productId" value="@line.Product.product_ID"> *@
-                @*     <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/> *@
-                @*     <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button> *@
+                <a class="rounded-pill btn btn-sm btn-danger btn-pill" data-toggle="modal" data-target="#deleteConfirmationModal" data-productid="@line.Product.product_ID">Delete</a>
+                @* <form asp-page-handler="Remove" method="post"> *@
+                @*     <input type="hidden" name="product_ID" value="@line.Product.product_ID"/> *@
+                @*     <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/> *@
+                @*     <button type="button" class="btn btn-sm btn-outline-danger>Remove</button> *@
                 @* </form> *@
-
-                <form asp-page-handler="Remove" method="post">
-                    <input type="hidden" name="product_ID" value="@line.Product.product_ID"/>
-                    @* <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/> *@
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-                </form>
-
-                @* <form id="@Model.RecProduct.product_ID" method="post" asp-page="/Cart"> *@
-                @*     <input type="hidden" name="productId" value="@Model.RecProduct.product_ID"> *@
-                @*     <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/> *@
-                @*     <button type="submit" class="btn btn-outline-primary btn-sm float-end">Add to Cart</button> *@
-                @* </form> *@
+                 
             </td>
         </tr>
     }
@@ -50,7 +42,8 @@
     
     <tfoot>
     <tr>
-        <td colspan="3" class="text-md-end">Total:</td>
+        
+        <td colspan="4" class="text-md-end">Total:</td>
         <td class="text-md-end">@Model.Cart?.CalculateTotal().ToString("C")</td>
     </tr>
     </tfoot>
@@ -58,5 +51,30 @@
 </table>
 
 <div class="text-center">
-    <a class="btn btn-primary" href="@Model.ReturnUrl">Continue Shopping</a>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Products">Continue Shopping</a>
 </div>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this product? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-page-handler="Remove" method="post">
+                    <input type="hidden" name="product_ID" value="">
+                    <input type="hidden" name="returnUrl" value="">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

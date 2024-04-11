@@ -34,9 +34,9 @@ namespace LegoMastersPlus.Controllers
             return View();
         }
 
-        public IActionResult ProductDetails(int productId)
+        public IActionResult ProductDetails(int product_ID)
         {
-            var details = _legoRepo.ProductItemRecommendations(productId).FirstOrDefault();
+            var details = _legoRepo.ProductItemRecommendations(product_ID).FirstOrDefault();
             return View(details);
         }
 
