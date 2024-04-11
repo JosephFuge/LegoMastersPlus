@@ -1,193 +1,143 @@
+/* Custom CSS for the header and other elements */
+
+/* General styling */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+        position: relative;
+        min-height: 100%;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-/*.nav-square {
-    width: 196px;
-    height: 196px;
-    background-color: lightslategrey;
-    border-radius: 16px 16px;
-    text-align: center;
-    align-content: center;
-    color: black;
-    link
-}*/
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
 
+
+/* Navbar styling */
+.navbar {
+    background-color: #95B8D1;
+    border-bottom: 1px solid #e5e5e5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-brand {
+    color: #333333;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: #333333;
+    font-weight: 500;
+}
+
+    .nav-link:hover {
+        color: #666A86;
+    }
+
+/* Cart summary styling */
+.navbar-text {
+    color: #333333;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Additional custom styling for specific elements */
 .nav-square {
-    min-width: 164px; /* Ensures the width doesn't shrink below 196px */
+    min-width: 164px;
     min-height: 164px;
     background-color: lightslategrey;
-    border-radius: 16px 16px;
+    border-radius: 16px;
     text-align: center;
-    align-content: center; /* Changed from align-content for better centering */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    display: flex;  /*Added for better centering */
-    flex-direction: column;  /*Added for better centering*/ 
-    justify-content: center; /* Added for better centering */
     color: black;
     margin: 0 auto;
 }
 
-a.nav-square:link, a.nav-square:hover, a.nav-square:visited, a.nav-square:active {
-    text-decoration: none;
-}
-
 .nav-square-group {
-    display: flex; /* Changed to flex to handle responsiveness */
-    flex-wrap: wrap; /* Allows items to wrap onto the next line */
-    justify-content: center; /* Centers the buttons in the row */
-    gap: 16px; /* Adds space between buttons */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
 }
 
 .bg-soft-purple {
-    background-color: #5654BF;
+    background-color: #5654bf;
 }
 
 .btn-pill {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    padding-right: 16px;
-    padding-left: 16px;
+    padding: 8px 16px;
     text-decoration: none;
     text-align: center;
     color: white;
 }
 
-#cookieConsentContainer {
-/*    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 250px;
-    background-color: #8fdeff;
-    color: black;
-    text-align: center;
-    padding: 16px;
-    z-index: 5;
-    border-radius: 12px 12px;*/
-}
-
-.field-validation-error {
-    color: red;
-}
-
 .custom-card-header {
-    min-height: 75px; /* Adjust based on your font size and spacing to fit 2 lines */
+    min-height: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     margin-bottom: 0;
-    background-color: rgba(0, 0, 0, .03);
-    border-bottom: 1px solid rgba(0, 0, 0, .125);
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
 }
 
 .custom-product-name {
-    color: #0F1111 !important;
+    color: #0f1111 !important;
     font-size: 13px !important;
     line-height: 24px !important;
     font-weight: 400 !important;
     font-style: normal !important;
     text-transform: none !important;
     text-decoration: none !important;
-    transition: color 0.3s ease; /* Adds a transition effect */
+    transition: color 0.3s ease;
 }
 
-.custom-product-name:hover {
-    color: #c07706 !important; /* Blue color on hover */
-}
+    .custom-product-name:hover {
+        color: #c07706 !important;
+    }
 
 .product-image {
-    width: 100%; /* Makes the image fill the container */
-    height: 150px; 
-    display: block; /* Removes bottom margin/whitespace inherent to inline elements */
-    object-fit: contain; /* Ensures the image fits nicely within the given dimensions without stretching. If you prefer to fill the area and are okay with cropping, use 'cover' instead. */
-}
-
-col-4{
-    flex-basis: 25%;
-    padding: 10px;
-    min-width: 200px;
-    margin-bottom: 50px;
-}
-
-.col-4 img{
     width: 100%;
+    height: 150px;
+    display: block;
+    object-fit: contain;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.container{
+/* Grid system */
+.container {
     max-width: 1300px;
     margin: auto;
     padding-left: 25px;
     padding-right: 25px;
 }
+
 .row {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.col-2 {
-    flex-basis: 50%;
-    min-width: 300px;
-}
-
-.col-2 img {
-    max-width: 100%;
-    padding: 50px 0;
-}
-
-.col-2 h1 {
-    font-size: 50px;
-    line-height: 60px;
-    margin: 25px 0;
-}
-
-.btn {
-    display: inline-block;
-    background: #ff523b;
-    color: #fff;
-    padding: 8px 30px;
-    margin: 30px 0;
-    border-radius: 30px;
+    justify-content: space-between; /* Change to space-between to move elements to the left and right edges */
 }

@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.NetworkInformation;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -76,10 +77,11 @@ namespace LegoMastersPlus.Controllers
                 .Take(5)
                 .Select(result => result.ProductID)
                 .ToList();
-            
+
             var popularProducts = _legoRepo.Products
                 .Where(p => topRatedProductIDs.Contains(p.product_ID))
                 .ToList();
+
 
 
             // Gather paging info and product list into a ViewModel
