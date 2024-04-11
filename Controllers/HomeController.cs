@@ -39,7 +39,7 @@ namespace LegoMastersPlus.Controllers
             // Initialize the InferenceSession
             try
             {
-                _session = new InferenceSession("/fraud_catch_model.onnx");
+                _session = new InferenceSession("C:\\Users\\theul\\source\\repos\\LegoMastersPlus\\fraud_catch_model.onnx");
                 _logger.LogInformation("ONNX model loaded successfully.");
             }
             catch (Exception ex)
@@ -384,7 +384,9 @@ namespace LegoMastersPlus.Controllers
         public IActionResult Predict(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
         //public IActionResult Predict(Dictionary<string, int> inputVariables)
         {
+            //Bring in the dummy-coded data to be predicted
             var inputVariables = Dummy(hour, amount, day, transaction_type, country, bank, card_type);
+
             //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
             var fraud_dict = new Dictionary<int, string>()
             {
@@ -603,8 +605,5 @@ namespace LegoMastersPlus.Controllers
         {
             return View();
         }
-
-        
-
     }
 }
