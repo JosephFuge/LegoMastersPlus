@@ -29,23 +29,17 @@ namespace LegoMastersPlus.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILegoRepository _legoRepo;
         private readonly InferenceSession _session;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> tempSignIn, ILegoRepository tempLegoRepo)
+        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> tempSignIn, ILegoRepository tempLegoRepo, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _signInManager = tempSignIn;
             _legoRepo = tempLegoRepo;
+            _webHostEnvironment = webHostEnvironment;
 
-            // Initialize the InferenceSession
-            try
-            {
-                _session = new InferenceSession("C:\\Users\\theul\\source\\repos\\LegoMastersPlus\\fraud_catch_model.onnx");
-                _logger.LogInformation("ONNX model loaded successfully.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error loading the ONNX model: {ex.Message}");
-            }
+            var modelPath = Path.Combine(webHostEnvironment.WebRootPath, "models", "fraud_catch_model.onnx");
+            _session = new InferenceSession(modelPath);
         }
 
         public IActionResult Index()
