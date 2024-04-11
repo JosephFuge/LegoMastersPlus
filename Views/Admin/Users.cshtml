@@ -38,10 +38,10 @@
                     <p>@(userRoles.Value.Any() ? string.Join(", ", userRoles.Value) : "No Roles")</p>
                 </td>
                 <td>
-                    <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditUser" asp-route-user-id="@userRoles.Key.Id">Edit User</a>
+                    <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditUser" asp-route-userId="@userRoles.Key.Id">Edit User</a>
                 </td>
                 <td>
-                    <a class="rounded-pill btn btn-danger btn-pill" asp-controller="Admin" asp-action="DeleteUser" asp-route-user-id="@userRoles.Key.Id">Delete User</a>
+                    <a class="rounded-pill btn btn-danger btn-pill" id="deleteUserButton" data-url="@Url.Action("DeleteUser", "Admin", new { userId = userRoles.Key.Id })" data-customerId="@userRoles.Key.Id">Delete User</a>
                 </td>
             </tr>
         }
@@ -53,7 +53,98 @@
         <a class="rounded-pill btn-success btn-pill" asp-controller="Admin" asp-action="AddUser">Add User</a>
     </div>
     <div class="col d-flex justify-content-end">
-        <div page-model="@Model.PaginationInfo" page-action="Users" page-controller="Admin"
+        <div page-model="@Model.UserPaginationInfo" page-action="Users" page-controller="Admin"
              page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+    </div>
+</div>
+<div class="row">
+    <table class="table table-striped">
+        <tr>
+            <td></td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Gender</td>
+            <td>Birthdate</td>
+            <td>Country of Residence</td>
+            <td></td>
+            <td></td>
+        </tr>
+        @foreach (Customer customer in Model.Customers)
+        {
+            <tr>
+                <td>
+                    @* <img src="@tempUser" width="182" /> *@
+                </td>
+                <td>
+                    <p>@customer.first_name</p>
+                </td>
+                <td>
+                    <p>@customer.last_name</p>
+                </td>
+                <td>
+                    <p>@customer.gender</p>
+                </td>
+                <td>
+                    <p>@customer.birth_date</p>
+                </td>
+                <td>
+                    <p>@customer.country_of_residence</p>
+                </td>
+                <td>
+                    <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditCustomer" asp-route-customerId="@customer.customer_ID">Edit Customer</a>
+                </td>
+                <td>
+                    <a class="rounded-pill btn btn-danger btn-pill" id="deleteCustomerButton" data-url="@Url.Action("DeleteCustomer", "Admin", new { customerId = customer.customer_ID })" data-customerId="@customer.customer_ID">Delete Customer</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div class="row">
+    <div class="col"></div>
+    <div class="col d-flex justify-content-center">
+        <a class="rounded-pill btn-success btn-pill" asp-controller="Admin" asp-action="AddUser">Add Customer</a>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <div page-model="@Model.CustomerPaginationInfo" page-action="Users" page-controller="Admin"
+             page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="userDeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="userDeleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDeleteConfirmationModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
+                <button type="button" class="btn btn-danger" id="userConfirmDelete">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="customerDeleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="customerDeleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customerDeleteConfirmationModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close close-modal" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this customer? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal" data-bs-dismiss="modal">No, Cancel</button>
+                <button type="button" class="btn btn-danger" id="customerConfirmDelete">Yes, Delete</button>
+            </div>
+        </div>
     </div>
 </div>

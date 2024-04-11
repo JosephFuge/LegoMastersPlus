@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -59,7 +61,50 @@ namespace LegoMastersPlus.Controllers
 
             return RedirectToAction("Products");
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCustomer(int customerId)
+        {
+            // Logic to delete the user from the repository
+            var customer = _legoRepo.Customers.FirstOrDefault(c => c.customer_ID == customerId);
+
+            if (customer != null)
+            {
+                if (customer.IdentityID != null)
+                {
+                    var user = await _signInManager.UserManager.FindByIdAsync(customer.IdentityID);
+                    if (user != null)
+                    {
+                        await _signInManager.UserManager.DeleteAsync(user);
+                    }
+                }
+
+                _legoRepo.DeleteCustomer(customer);
+            }
+
+            return RedirectToAction("Users");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            // Delete matching customer from customers table if it exists
+            var customer = _legoRepo.Customers.FirstOrDefault(c => c.IdentityID == userId);
+            if (customer != null)
+            {
+                _legoRepo.DeleteCustomer(customer);
+            }
+
+            // Delete user if it exists
+            var user = await _signInManager.UserManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                await _signInManager.UserManager.DeleteAsync(user);
+            }
+
+            return RedirectToAction("Users");
+        }
+
         [HttpPost]
         public  IActionResult DeleteOrder(int transactionId)
         {
@@ -117,19 +162,21 @@ namespace LegoMastersPlus.Controllers
             }
         }
 
-        public async Task<IActionResult> Users(int pageNum)
+        public async Task<IActionResult> Users(int userPageNum, int customerPageNum)
         {
             const int pageSize = 10;
 
             // Set pageNum to 1 if it is 0 (as can happen for the default Users page request)
-            pageNum = pageNum == 0 ? 1 : pageNum;
+            userPageNum = userPageNum == 0 ? 1 : userPageNum;
+            customerPageNum = customerPageNum == 0 ? 1 : customerPageNum;
 
             Dictionary<IdentityUser, IList<string>> allUserRoles = new Dictionary<IdentityUser, IList<string>>();
 
             // Get the correct list of users based on page size and page number
             var allUsers = await _signInManager.UserManager.Users.ToListAsync();
-            var users = allUsers.Skip((pageNum - 1) * pageSize).Take(pageSize);
+            var users = allUsers.Skip((userPageNum - 1) * pageSize).Take(pageSize);
 
+            // Get all the roles for each user and display them
             foreach (var user in users)
             {
                 var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
@@ -141,8 +188,13 @@ namespace LegoMastersPlus.Controllers
 
             // Gather paging info and user list into a ViewModel
             var userCount = allUsers.Count();
-            PaginationInfo pagingInfo = new PaginationInfo(userCount, pageSize, pageNum);
-            var usersPagingModel = new UsersListViewModel(allUserRoles, pagingInfo);
+            PaginationInfo userPagingInfo = new PaginationInfo(userCount, pageSize, userPageNum);
+
+            var allCustomers = _legoRepo.Customers;
+            var customers = allCustomers.Skip((customerPageNum - 1) * pageSize).Take(pageSize).ToList();
+            PaginationInfo customerPagingInfo = new PaginationInfo(allCustomers.Count(), pageSize, customerPageNum);
+
+            var usersPagingModel = new UsersListViewModel(allUserRoles, userPagingInfo, customerPagingInfo, customers);
 
             return View(usersPagingModel);
         }
@@ -193,6 +245,117 @@ namespace LegoMastersPlus.Controllers
                 SignInAfter = false
             });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string userId)
+        {
+            var user = await _signInManager.UserManager.FindByIdAsync(userId);
+            var customer = await _legoRepo.Customers.FirstOrDefaultAsync(c => c.IdentityID == userId);
+
+            if (user != null && customer != null)
+            {
+                CustomerRegisterViewModel editAccountInfo = new CustomerRegisterViewModel
+                {
+                    Email = user.Email,
+                    birth_date = customer.birth_date.ToDateTime(TimeOnly.MinValue),
+                    gender = customer.gender,
+                    country_of_residence = customer.country_of_residence,
+                    first_name = customer.first_name,
+                    last_name = customer.last_name,
+                    SignInAfter = false,
+                };
+                return View("~/Views/Home/CustomerRegister.cshtml", editAccountInfo);
+            }
+
+            return RedirectToAction("Users");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(CustomerRegisterViewModel customerRegister)
+        {
+            ModelState.Remove("Password");
+            ModelState.Remove("ConfirmPassword");
+            if (ModelState.IsValid)
+            {
+                var user = await _signInManager.UserManager.FindByNameAsync(customerRegister.Email);
+
+                if (user != null)
+                {
+                    var customer = _legoRepo.Customers.FirstOrDefault(c => c.IdentityID == user.Id);
+
+                    if (customer != null)
+                    {
+
+                        customer.first_name = customerRegister.first_name;
+                        customer.gender = customerRegister.gender;
+                        customer.last_name = customerRegister.last_name;
+                        customer.birth_date = DateOnly.FromDateTime(customerRegister.birth_date);
+                        customer.country_of_residence = customerRegister.country_of_residence;
+                        customer.age = CalculateAge(customerRegister.birth_date, DateTime.Now);
+
+                        _legoRepo.UpdateCustomer(customer);
+
+                        if (customerRegister.Password != null && customerRegister.Password.Length > 0 && !(await _signInManager.UserManager.CheckPasswordAsync(user, customerRegister.Password)))
+                        {
+                            var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+                            if (token != null)
+                            {
+                                await _signInManager.UserManager.ResetPasswordAsync(user, token, customerRegister.Password);
+                            }
+
+                        }
+
+                        return RedirectToAction("Users");
+                    }
+                }
+            }
+            
+            return View("~/Views/Home/CustomerRegister.cshtml", customerRegister);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditCustomer(int customerId)
+        {
+            var customer = _legoRepo.Customers.Single(c => c.customer_ID == customerId);
+            CreateAccountInfoViewModel createAccountInfo = new CreateAccountInfoViewModel {
+                Email = null,
+                birth_date = customer.birth_date.ToDateTime(TimeOnly.MinValue),
+                gender = customer.gender,
+                country_of_residence = customer.country_of_residence,
+                first_name = customer.first_name,
+                last_name = customer.last_name,
+                ReturnUrl = "/Admin/Users"
+            };
+            return View("~/Views/Home/CreateAccountInfo.cshtml", createAccountInfo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCustomer(CreateAccountInfoViewModel newCustomerInfo)
+        {
+            // Remove email from model validation since customers with no login don't have an email
+            ModelState.Remove("Email");
+
+            // Update customer if model is valid, otherwise return to form with errors
+            if (ModelState.IsValid)
+            {
+                Customer customer = new Customer
+                {
+                    first_name = newCustomerInfo.first_name,
+                    last_name = newCustomerInfo.last_name,
+                    gender = newCustomerInfo.gender,
+                    birth_date = DateOnly.FromDateTime(newCustomerInfo.birth_date),
+                    country_of_residence = newCustomerInfo.country_of_residence,
+                    age = CalculateAge(newCustomerInfo.birth_date, DateTime.Now)
+                };
+
+                _legoRepo.UpdateCustomer(customer);
+                return RedirectToAction("Users");
+            } else
+            {
+                return View("~/Views/Home/CreateAccountInfo.cshtml", newCustomerInfo);
+            }
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddUser(CustomerRegisterViewModel customerRegister)
@@ -293,10 +456,6 @@ namespace LegoMastersPlus.Controllers
             else
             {
                 ViewBag.ShowCookieConsentButton = false;
-                //if (ModelState.ContainsKey("Cookies"))
-                //{
-                //    ModelState.Remove("Cookies");
-                //}
                 return true;
             }
         }
