@@ -79,7 +79,33 @@ namespace LegoMastersPlus.Infrastructure
         private void AppendPageLink(TagBuilder container, IUrlHelper urlHelper, int pageNumber)
         {
             TagBuilder aTag = new TagBuilder("a");
-            aTag.Attributes["href"] = urlHelper.Action(PageAction, PageController, new { pageNum = pageNumber });
+
+            //var routeValues = new RouteValueDictionary(ViewContext?.HttpContext?.Request?.Query);
+
+
+            // Initialize a new RouteValueDictionary
+            var routeValues = new RouteValueDictionary();
+
+            // Add current query parameters to the dictionary, excluding page-related parameters
+            foreach (var param in ViewContext?.HttpContext?.Request?.Query)
+            {
+                if (param.Key.ToLower() != "pagenum")
+                {
+                    // Handle multi-value parameters like CategoryIds
+                    if (param.Value.Count > 1)
+                    {
+                        routeValues.Add(param.Key, param.Value.ToArray());
+                    }
+                    else
+                    {
+                        routeValues.Add(param.Key, param.Value.ToString());
+                    }
+                }
+            }
+
+            routeValues["pageNum"] = pageNumber;
+
+            aTag.Attributes["href"] = urlHelper.Action(PageAction, PageController, routeValues);
             if (PageClassesEnabled)
             {
                 aTag.AddCssClass(PageClass);

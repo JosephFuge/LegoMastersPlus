@@ -7,6 +7,9 @@ namespace LegoMastersPlus.Data
         public IQueryable<Customer> Customers { get; }
         public void AddCustomer(Customer customer);
         public IQueryable<Product> Products { get; }
+
+        public IQueryable<string> PrimaryColors { get; }
+        public IQueryable<string> SecondaryColors { get; }
         public void AddProduct(Product product);
         public void UpdateProduct(Product product);
         public IQueryable<Order> Orders { get; }
@@ -14,5 +17,7 @@ namespace LegoMastersPlus.Data
         public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int productId);
         public void DeleteOrder(Order order);
         public void SaveChanges();
+
+        public IQueryable<Category> Categories { get; }
     }
 }

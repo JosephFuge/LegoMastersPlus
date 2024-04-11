@@ -6,14 +6,51 @@
 
 <h1>Title</h1>
 
-<div class="container container-fluid">
-    <div class="row">
-        @foreach (Product p in Model.Products)
+<div class="row">
+    <div class="col-3">
+        <form asp-controller="Home" asp-action="Products" method="get">
+            <label asp-for="PrimaryColor">Primary Color:</label>
+            <select asp-for="PrimaryColor">
+                <option value="">Select Color</option>
+                @foreach (var primColor in Model.PrimaryColors)
+                {
+                    <option value="@primColor">@primColor</option>
+                }
+            </select>
+            <label asp-for="SecondaryColor" />Secondary Color:</label>
+            <select asp-for="SecondaryColor">
+                <option value="">Select Color</option>
+                @foreach (var secColor in Model.SecondaryColors)
+                {
+                    <option value="@secColor">@secColor</option>
+                }
+            </select>
+
+            <div>
+                <label>Page Size:</label>
+                <label><input type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") /> 5</label>
+                <label><input type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "") /> 10</label>
+                <label><input type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "") /> 20</label>
+            </div>
+
+            <h5>Categories</h5>
+            @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
             {
-                <partial name="ProductSummary" model="p"/>
+                <label>@category.value.Name</label>
+                <input type="checkbox" name="SelectedCategories" value="@category.value.CategoryId" checked="@Model.SelectedCategories.Contains(category.value.CategoryId)" />
             }
+            <input type="submit" value="Filter" />
+        </form>
     </div>
+    <div class="col container container-fluid">
+        <div class="row">
+            @foreach (Product p in Model.Products)
+                {
+                    <partial name="ProductSummary" model="p"/>
+                }
+        </div>
     
+    </div>
 </div>
 
 
