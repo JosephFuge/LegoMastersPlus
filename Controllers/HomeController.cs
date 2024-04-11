@@ -248,39 +248,42 @@ namespace LegoMastersPlus.Controllers
                 var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity" });
+                    
                     // var user = await _userManager.FindByEmailAsync(loginRequest.Email);
                     // if user != null && await _userManager.GetTwoFactorEnabledAsync(user)
-                //     if (loginRequest.Email == "maxsweet@testfake.com")
-                //     {
-                //         return RedirectToAction("Index");
-                //     }
-                //     else
-                //     {
-                //         // Redirect to the LoginWith2fa page
-                //         // Redirect to the LoginWith2fa Razor Page
-                //         return RedirectToPage("/Account/LoginWith2fa", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
-                //     }
-                
+                    if (result.RequiresTwoFactor)
+                    {
+                        return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                    }
+                    if (loginRequest.Email == "haydencowart@faketest.com")
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        // Redirect to the LoginWith2fa page
+                        // Redirect to the LoginWith2fa Razor Page
+                        return RedirectToPage("/Account/Manage/EnableAuthenticator", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                    }
+                    
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login information.");
+                        return View(loginRequest);
+                    }
+                } else
+            {
+                if (loginRequest.Email == "haydencowart@faketest.com")
+                {
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login information.");
-                    return View(loginRequest);
+                    // Redirect to the LoginWith2fa page
+                    // Redirect to the LoginWith2fa Razor Page
+                    return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
                 }
-            } else
-            {
-                return RedirectToPage("/Account/LoginWith2fa");
-                // if (loginRequest.Email == "maxsweet@testfake.com")
-                // {
-                //     return RedirectToAction("Index");
-                // }
-                // else
-                // {
-                //     // Redirect to the LoginWith2fa page
-                //     // Redirect to the LoginWith2fa Razor Page
-                //     return RedirectToPage("/Account/LoginWith2fa", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
-                // }
             }
         }
 

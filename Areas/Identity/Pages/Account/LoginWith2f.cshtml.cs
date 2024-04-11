@@ -73,7 +73,8 @@ public class LoginWith2f : PageModel
     public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
     {
         // Ensure the user has gone through the username & password screen first
-        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+        var curUserClaim = HttpContext.User;
+        var user = await _signInManager.UserManager.GetUserAsync(curUserClaim);
 
         if (user == null)
         {

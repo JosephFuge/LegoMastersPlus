@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V5.Pages.Account.Manage.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 namespace LegoMastersPlus.Areas.Identity.Pages.Account.Manage;
 
@@ -132,11 +133,11 @@ public class EnableAuthenticator : PageModel
         {
             var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
             RecoveryCodes = recoveryCodes.ToArray();
-            return RedirectToPage("./ShowRecoveryCodes");
+            return RedirectToAction("Index", "Home");
         }
         else
         {
-            return RedirectToPage("./TwoFactorAuthentication");
+            return Page();
         }
     }
 
