@@ -91,17 +91,15 @@ $(document).ready(function () {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var productID = button.data('productid'); // Extract product ID from data-* attributes
         // Ensure you have a returnUrl set correctly in your model, or adjust as necessary
-        var returnUrl = '@Model?.ReturnUrl';
+        
 
         // Set the form's action to include the handler
         // Make sure to replace '/YourPage' with the actual path to your Razor Page
-        $(this).find('#deleteForm').attr('action', '/YourPage?handler=Remove');
+        $(this).find('#deleteForm').attr('action', '/Cart?handler=Remove');
 
         // Update the form inputs
         $(this).find('input[name="product_ID"]').val(productID);
-        if (returnUrl) {
-            $(this).find('input[name="returnUrl"]').val(returnUrl);
-        }
+        
     });
 
     // This part is optional, shown here for completeness
