@@ -6,7 +6,7 @@ namespace LegoMastersPlus.Models.ViewModels
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Email is required.")]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Gender is required.")]
         public string gender { get; set; }

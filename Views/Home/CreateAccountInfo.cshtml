@@ -17,14 +17,17 @@
     <form method="post" class="auth-form col">
         <h2>Important Details</h2>
         <table>
-            <tr>
-                <td class="form-label"><label asp-for="Email">Email:</label></td>
-                <td><input asp-for="Email" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>@Html.ValidationMessageFor(model => model.Email)</td>
-            </tr>
+            @if (Model.Email != null)
+            {
+                <tr>
+                    <td class="form-label"><label asp-for="Email">Email:</label></td>
+                    <td><input asp-for="Email" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>@Html.ValidationMessageFor(model => model.Email)</td>
+                </tr>
+            }
             <tr>
                 <td class="form-label"><label asp-for="first_name">First Name:</label></td>
                 <td><input asp-for="first_name" /></td>
