@@ -17,7 +17,7 @@
                     <option value="@primColor">@primColor</option>
                 }
             </select>
-            <label asp-for="SecondaryColor" />Secondary Color:</label>
+            <label asp-for="SecondaryColor">Secondary Color:</label>
             <select asp-for="SecondaryColor">
                 <option value="">Select Color</option>
                 @foreach (var secColor in Model.SecondaryColors)

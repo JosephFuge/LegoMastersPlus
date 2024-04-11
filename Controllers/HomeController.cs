@@ -30,23 +30,17 @@ namespace LegoMastersPlus.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILegoRepository _legoRepo;
         private readonly InferenceSession _session;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> tempSignIn, ILegoRepository tempLegoRepo)
+        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> tempSignIn, ILegoRepository tempLegoRepo, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _signInManager = tempSignIn;
             _legoRepo = tempLegoRepo;
+            _webHostEnvironment = webHostEnvironment;
 
-            // Initialize the InferenceSession
-            try
-            {
-                _session = new InferenceSession("/fraud_catch_model.onnx");
-                _logger.LogInformation("ONNX model loaded successfully.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error loading the ONNX model: {ex.Message}");
-            }
+            var modelPath = Path.Combine(webHostEnvironment.WebRootPath, "models", "fraud_catch_model.onnx");
+            _session = new InferenceSession(modelPath);
         }
 
         public IActionResult Index()
@@ -60,27 +54,22 @@ namespace LegoMastersPlus.Controllers
             // Get the correct list of products based on page size and page number
            var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
-            //var topRatedProductIDs = _legoRepo.LineItems
-            //                .OrderByDescending(li => li.rating)
-            //                .Select(li => li.product_ID)
-            //                .Take(5)
-            //                .ToList();
+           var topProductIds = _legoRepo.LineItems
+               .GroupBy(li => li.product_ID)
+               .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
+               .OrderByDescending(x => x.PurchaseCount)
+               .Take(5) // Taking only the top 5
+               .Select(x => x.ProductId)
+               .ToList();
 
-            var topRatedProductIDs = _legoRepo.LineItems
-                .GroupBy(li => li.product_ID)
-                .Select(group => new
-                {
-                    ProductID = group.Key,
-                    NumberOfOrders = group.Count()
-                })
-                .OrderByDescending(result => result.NumberOfOrders)
-                .Take(5)
-                .Select(result => result.ProductID)
-                .ToList();
+           // 2. Join with Product details
+           var topProducts = _legoRepo.Products
+               .Where(p => topProductIds.Contains(p.product_ID))
+               .ToList();
 
-            var popularProducts = _legoRepo.Products
-                .Where(p => topRatedProductIDs.Contains(p.product_ID))
-                .ToList();
+            // Store the ordered LineItems in the ViewBag
+            ViewBag.TopProducts = topProducts;
+
 
 
 
@@ -125,10 +114,14 @@ namespace LegoMastersPlus.Controllers
 
             return years + decimalAge;
         }
+
         [HttpGet]
         public IActionResult CustomerRegister()
         {
-            return View();
+            return View(new CustomerRegisterViewModel
+            {
+                SignInAfter = true
+            });
         }
 
         [HttpPost]
@@ -164,8 +157,30 @@ namespace LegoMastersPlus.Controllers
                     _legoRepo.AddCustomer(newCustomer);
 
                     _logger.LogInformation("Customer created with name " + customerRegister.first_name + " " + customerRegister.last_name);
-                    await _signInManager.SignInAsync(newUser, isPersistent: false);
-                    return View("Index");
+
+
+                    // If they should sign in (defaults to yes), go to the home page
+                    if (customerRegister.SignInAfter)
+                    {
+                        await _signInManager.SignInAsync(newUser, isPersistent: false);
+                        return RedirectToAction("Index");
+                    } else
+                    {
+                        // Otherwise, check if they are an admin and if so, take them back to the Users page
+                        var userClaim = HttpContext.User;
+                        if (userClaim != null)
+                        {
+                            var user = await _signInManager.UserManager.GetUserAsync(userClaim);
+                            if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                            {
+                                return RedirectToAction("Users", "Admin");
+                            } else
+                            {
+                                return RedirectToAction("Index");
+                            }
+                        }
+                        return RedirectToAction("Index");
+                    }
                 }
                 else
                 {
@@ -409,7 +424,9 @@ namespace LegoMastersPlus.Controllers
         public IActionResult Predict(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
         //public IActionResult Predict(Dictionary<string, int> inputVariables)
         {
+            //Bring in the dummy-coded data to be predicted
             var inputVariables = Dummy(hour, amount, day, transaction_type, country, bank, card_type);
+
             //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
             var fraud_dict = new Dictionary<int, string>()
             {
@@ -628,8 +645,5 @@ namespace LegoMastersPlus.Controllers
         {
             return View();
         }
-
-        
-
     }
 }

@@ -80,7 +80,7 @@ namespace LegoMastersPlus.Data
         
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
 
-        public IQueryable<LineItem> LineItems => _context.LineItems.Include(lineItem => lineItem.product_ID);
+        public IQueryable<LineItem> LineItems => _context.LineItems.Include(lineItem => lineItem.Product);
 
 
 
