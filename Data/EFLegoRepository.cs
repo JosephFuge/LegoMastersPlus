@@ -71,5 +71,7 @@ namespace LegoMastersPlus.Data
         public IQueryable<Category> Categories => _context.Categories;
         
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
+
+
     }
 }

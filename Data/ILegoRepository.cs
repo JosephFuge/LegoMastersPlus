@@ -1,4 +1,5 @@
 ﻿using LegoMastersPlus.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LegoMastersPlus.Data
 {
