@@ -32,7 +32,7 @@
                 @*     <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button> *@
                 @* </form> *@
 
-                <form asp-page-handler="Remove" method="post" action="Remove">
+                <form asp-page-handler="Remove" method="post">
                     <input type="hidden" name="product_ID" value="@line.Product.product_ID"/>
                     @* <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/> *@
                     <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
