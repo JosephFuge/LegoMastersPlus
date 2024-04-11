@@ -27,7 +27,7 @@ public class Cart
 
     public virtual void RemoveLine(Product prod) => Lines.RemoveAll(x => x.Product.product_ID == prod.product_ID);
     public virtual void Clear() => Lines.Clear();
-    public decimal CalculateTotal() => Lines.Sum(x => 25 * x.Quantity);
+    public decimal CalculateTotal() => Lines.Sum(x => x.Product.price * x.Quantity);
 
     public class CartLine
     {

@@ -1,4 +1,5 @@
 @page
+@using LegoMastersPlus.Infrastructure
 @using LegoMastersPlus.Models
 @model LegoMastersPlus.Pages.CartModel
 
@@ -7,7 +8,7 @@
 <table class="table table-bordered table-striped table-hover">
     <thead>
     <tr>
-        <th>ProjectName</th>
+        <th>Product Name</th>
         <th>Quantity</th>
         <th class="text-md-end">Amount</th>
         <th class="text-md-end">Subtotal</th>
@@ -22,13 +23,26 @@
             <td>@line.Product.name</td>
             <td>@line.Quantity</td>
             <td>@line.Product.price</td>
-            <td>@((line.Quantity * 25).ToString("C"))</td>
+            <td>@((line.Quantity * line.Product.price).ToString("C"))</td>
             <td class="text-center">
-                <form asp-page-handler="Remove" method="post">
-                    <input type="hidden" name="productId" value="@line.Product.name"/>
-                    <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/>
-                    <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                @* <form id="@line.Product.product_ID" method="post" asp-page="/Cart"> *@
+                @*     <input type="hidden" name="action" value="remove"> *@
+                @*     <input type="hidden" name="productId" value="@line.Product.product_ID"> *@
+                @*     <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/> *@
+                @*     <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button> *@
+                @* </form> *@
+
+                <form asp-page-handler="Remove" method="post" action="Remove">
+                    <input type="hidden" name="product_ID" value="@line.Product.product_ID"/>
+                    @* <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/> *@
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
                 </form>
+
+                @* <form id="@Model.RecProduct.product_ID" method="post" asp-page="/Cart"> *@
+                @*     <input type="hidden" name="productId" value="@Model.RecProduct.product_ID"> *@
+                @*     <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/> *@
+                @*     <button type="submit" class="btn btn-outline-primary btn-sm float-end">Add to Cart</button> *@
+                @* </form> *@
             </td>
         </tr>
     }

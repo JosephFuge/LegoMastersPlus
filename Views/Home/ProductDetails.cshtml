@@ -42,7 +42,8 @@
                     <div class="card-body">
                         Price: $@Model.RecProduct.price
                         <form id="@Model.RecProduct.product_ID" method="post" asp-page="/Cart">
-                            <input type="hidden" asp-for="product_ID">
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="productId" value="@Model.RecProduct.product_ID">
                             <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/>
                             <button type="submit" class="btn btn-outline-primary btn-sm float-end">Add to Cart</button>
                         </form>
