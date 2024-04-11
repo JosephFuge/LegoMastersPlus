@@ -38,7 +38,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
 })
-    .AddEntityFrameworkStores<LegoMastersDbContext>();
+    .AddEntityFrameworkStores<LegoMastersDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 
 // Add HSTS
