@@ -19,6 +19,7 @@ using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net.NetworkInformation;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -363,19 +364,24 @@ namespace LegoMastersPlus.Controllers
         }
 
         //ONNX Prediction
-        //Review for later; it only predicts 1 (not fradulent) for some reason
         [HttpPost]
-        public IActionResult Predict(int time_hour, int amount, int Mon, int Sat, int Sun, int Thr, int Tue, int Wed, int Pin, int Tap, int Online, int POS, int India, int Russia, int USA, int UK, int HSBC, int Halifax, int Lloyds, int Metro, int Monzo, int RBS, int Visa)
+        //public IActionResult Predict(int time_hour, int amount, int Mon, int Sat, int Sun, int Thu, int Tue, int Wed, int Pin, int Tap, int Online, int POS, int India, int Russia, int USA, int UK, int HSBC, int Halifax, int Lloyds, int Metro, int Monzo, int RBS, int Visa)
+        public IActionResult Predict(Dictionary<string, int> inputVariables)
         {
             //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
             var fraud_dict = new Dictionary<int, string>()
             {
-                { 1, "Not fraudulent"},
-                { 2, "Possibly fradulent, please review"}
+                { 0, "Not fraudulent"},
+                { 1, "Possibly fradulent, please review"}
             };
             try
             {
-                var input = new List<float> { time_hour, amount, Mon, Sat, Sun, Thr, Tue, Wed, Pin, Tap, Online, POS, India, Russia, USA, UK, HSBC, Halifax, Lloyds, Metro, Monzo, RBS, Visa };
+                //var input = new List<float> { time_hour, amount, Mon, Sat, Sun, Thu, Tue, Wed, Pin, Tap, Online, POS, India, Russia, USA, UK, HSBC, Halifax, Lloyds, Metro, Monzo, RBS, Visa };
+                var input = new List<float>();
+                foreach (var kvp in inputVariables)
+                {
+                    input.Add(kvp.Value);
+                }
                 var inputTensor = new DenseTensor<float>(input.ToArray(), new[] { 1, input.Count });
 
                 var inputs = new List<NamedOnnxValue>
@@ -406,12 +412,120 @@ namespace LegoMastersPlus.Controllers
             return View(); //Return view of dummy data so I can check if it works
         }
 
-        //For the Predict view; delete when connceted to the database
+        //For the Predict view; delete when connected to the database
         [HttpGet]
         public IActionResult Predict()
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Dummy(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        {
+            // Dummy code day of the week
+            Dictionary<string, int> dayDict = new Dictionary<string, int>()
+        {
+            { "Mon", 0 },
+            { "Tue", 0 },
+            { "Wed", 0 },
+            { "Thu", 0 },
+            { "Fri", 0 },
+            { "Sat", 0 },
+            { "Sun", 0 }
+        };
+
+            if (day != "Fri")
+            {
+                dayDict[day] = 1; // Set the selected day to 1, others remain 0
+            }
+
+            // Dummy code transaction type
+            Dictionary<string, int> transactionTypeDict = new Dictionary<string, int>()
+        {
+            { "pin", 0 },
+            { "tap", 0 },
+            { "online", 0 },
+            { "pos", 0 },
+            { "atm", 0 }
+        };
+
+            if (transaction_type != "atm")
+            {
+                transactionTypeDict[transaction_type] = 1; // Set the selected transaction type to 1, others remain 0
+            }
+
+            // Dummy code country
+            Dictionary<string, int> countryDict = new Dictionary<string, int>()
+        {
+            { "china", 0 },
+            { "india", 0 },
+            { "russia", 0 },
+            { "uk", 0 },
+            { "usa", 0 }
+        };
+
+            if (country != "china")
+            {
+                countryDict[country] = 1; // Set the selected country to 1, others remain 0
+            }
+
+            // Dummy code bank
+            Dictionary<string, int> bankDict = new Dictionary<string, int>()
+        {
+            { "barclay", 0 },
+            { "hsbc", 0 },
+            { "halifax", 0 },
+            { "lloyd", 0 },
+            { "metro", 0 },
+            { "monzo", 0 },
+            { "rbs", 0 }
+        };
+            if (bank != "barclay")
+            {
+                bankDict[bank] = 1; // Set the selected bank to 1, others remain 0
+            }
+
+            // Dummy code card type
+            Dictionary<string, int> cardTypeDict = new Dictionary<string, int>()
+        {
+            { "mastercard", 0 },
+            { "visa", 0 }
+        };
+            if (card_type != "mastercard")
+            {
+                cardTypeDict[card_type] = 1; // Set the selected card type to 1, others remain 0
+            }
+
+            var inputVariables = new Dictionary<string, int>()
+                {
+                    { "time_hour", hour },
+                    { "amount", amount },
+                    { "Mon", dayDict["Mon"] },
+                    { "Sat", dayDict["Sat"] },
+                    { "Sun", dayDict["Sun"] },
+                    { "Thu", dayDict["Thu"] },
+                    { "Tue", dayDict["Tue"] },
+                    { "Wed", dayDict["Wed"] },
+                    { "Pin", transactionTypeDict["pin"] },
+                    { "Tap", transactionTypeDict["tap"] },
+                    { "Online", transactionTypeDict["online"] },
+                    { "POS", transactionTypeDict["pos"] },
+                    { "India", countryDict["india"] },
+                    { "Russia", countryDict["russia"] },
+                    { "USA", countryDict["usa"] },
+                    { "UK", countryDict["uk"] },
+                    { "HSBC", bankDict["hsbc"] },
+                    { "Halifax", bankDict["halifax"] },
+                    { "Lloyds", bankDict["lloyd"] },
+                    { "Metro", bankDict["metro"] },
+                    { "Monzo", bankDict["monzo"] },
+                    { "RBS", bankDict["rbs"] },
+                    { "Visa", cardTypeDict["visa"] }
+                };
+
+            return RedirectToAction("Predict", inputVariables);
+        }
+
 
         public IActionResult Products(int pageNum, int pageSize, string productPrimColor, string productSecColor, string productCategory)
         {

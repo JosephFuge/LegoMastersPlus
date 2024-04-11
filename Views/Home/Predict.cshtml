@@ -7,6 +7,7 @@
 @* <h2>Prediction Results</h2>
 <p>@ViewBag.Prediction</p> *@
 
+
 @* Test page for prediction; delete when connected to actual database*@
 
 <style>
@@ -58,35 +59,92 @@
 <div class="text-center">
     <h2>Prediction Results</h2>
 
-    <div class="form-box">
-        <form action="/Home/Predict" method="post">
-            <div class="form-group"><label>Hour:</label><input type="number" name="hour" /></div>
+@*     <div class="form-box">
+        <form asp-controller="Home" asp-action="Predict" method="post">
+            <div class="form-group"><label>Hour:</label><input type="number" name="time_hour" /></div>
             <div class="form-group"><label>Amount:</label><input type="number" name="amount" /></div>
-            <div class="form-group"><label>Mon:</label><input type="number" name="mon" /></div>
-            <div class="form-group"><label>Sat:</label><input type="number" name="sat" /></div>
-            <div class="form-group"><label>Sun:</label><input type="number" name="sun" /></div>
-            <div class="form-group"><label>Thr:</label><input type="number" name="thr" /></div>
-            <div class="form-group"><label>Tue:</label><input type="number" name="tue" /></div>
-            <div class="form-group"><label>Wed:</label><input type="number" name="wed" /></div>
-            <div class="form-group"><label>Pin:</label><input type="number" name="pin" /></div>
-            <div class="form-group"><label>Tap:</label><input type="number" name="tap" /></div>
-            <div class="form-group"><label>Online:</label><input type="number" name="online" /></div>
+            <div class="form-group"><label>Mon:</label><input type="number" name="Mon" /></div>
+            <div class="form-group"><label>Sat:</label><input type="number" name="Sat" /></div>
+            <div class="form-group"><label>Sun:</label><input type="number" name="Sun" /></div>
+            <div class="form-group"><label>Thu:</label><input type="number" name="Thu" /></div>
+            <div class="form-group"><label>Tue:</label><input type="number" name="Tue" /></div>
+            <div class="form-group"><label>Wed:</label><input type="number" name="Wed" /></div>
+            <div class="form-group"><label>Pin:</label><input type="number" name="Pin" /></div>
+            <div class="form-group"><label>Tap:</label><input type="number" name="Tap" /></div>
+            <div class="form-group"><label>Online:</label><input type="number" name="Online" /></div>
             <div class="form-group"><label>POS:</label><input type="number" name="POS" /></div>
-            <div class="form-group"><label>India:</label><input type="number" name="india" /></div>
-            <div class="form-group"><label>Russia:</label><input type="number" name="russia" /></div>
-            <div class="form-group"><label>USA:</label><input type="number" name="usa" /></div>
-            <div class="form-group"><label>UK:</label><input type="number" name="uk" /></div>
-            <div class="form-group"><label>HSBC:</label><input type="number" name="hsbc" /></div>
-            <div class="form-group"><label>Halifax:</label><input type="number" name="halifax" /></div>
-            <div class="form-group"><label>Lloyd's:</label><input type="number" name="lloyds" /></div>
-            <div class="form-group"><label>Metro:</label><input type="number" name="metro" /></div>
-            <div class="form-group"><label>Monzo:</label><input type="number" name="monzo" /></div>
-            <div class="form-group"><label>RBS:</label><input type="number" name="rbs" /></div>
-            <div class="form-group"><label>Visa:</label><input type="number" name="visa" /></div>
+            <div class="form-group"><label>India:</label><input type="number" name="India" /></div>
+            <div class="form-group"><label>Russia:</label><input type="number" name="Russia" /></div>
+            <div class="form-group"><label>USA:</label><input type="number" name="USA" /></div>
+            <div class="form-group"><label>UK:</label><input type="number" name="UK" /></div>
+            <div class="form-group"><label>HSBC:</label><input type="number" name="HSBC" /></div>
+            <div class="form-group"><label>Halifax:</label><input type="number" name="Halifax" /></div>
+            <div class="form-group"><label>Lloyd's:</label><input type="number" name="Lloyds" /></div>
+            <div class="form-group"><label>Metro:</label><input type="number" name="Metro" /></div>
+            <div class="form-group"><label>Monzo:</label><input type="number" name="Monzo" /></div>
+            <div class="form-group"><label>RBS:</label><input type="number" name="RBS" /></div>
+            <div class="form-group"><label>Visa:</label><input type="number" name="Visa" /></div>
             <div class="form-group"><input type="submit" value="Predict" /></div>
         </form>
-    </div>
+    </div> *@
 
+    <div class="form-box">
+        <form asp-controller="Home" asp-action="Dummy" method="post">
+            <div class="form-group"><label>Hour</label><input type="number" name="hour" /></div>
+            <div class="form-group"><label>Amount</label><input type="number" name="amount" /></div>
+            <div class="form-group">
+                <label>Day of week</label>           
+                <select id="day" name="day">
+                    <option value="Mon">Monday</option>
+                    <option value="Tue">Tuesday</option>
+                    <option value="Wed">Wednesday</option>
+                    <option value="Thu">Thursday</option>
+                    <option value="Fri">Friday</option>
+                    <option value="Sat">Saturday</option>
+                    <option value="Sun">Sunday</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Transaction Type</label>
+                <select name="transaction_type">
+                    <option value="pin">Pin</option>
+                    <option value="tap">Tap</option>
+                    <option value="online">Online</option>
+                    <option value="pos">POS</option>
+                    <option value="atm">ATM</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Country</label>
+                <select name="country">
+                    <option value="china">China</option>
+                    <option value="india">India</option>
+                    <option value="russia">Russia</option>
+                    <option value="uk">UK</option>
+                    <option value="usa">USA</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bank</label>
+                <select name="bank">
+                    <option value="barclay">Barclays</option>
+                    <option value="hsbc">HSBC</option>
+                    <option value="halifax">Halifax</option>
+                    <option value="lloyd">Lloyd's</option>
+                    <option value="metro">Metro</option>
+                    <option value="monzo">Monzo</option>
+                    <option value="rbs">RBS</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Card Type</label>
+                <select name="card_type">
+                    <option value="mastercard">Mastercard</option>
+                    <option value="visa">Visa</option>
+                </select>
+            </div>
+            <div class="form-group"><input type="submit" value="Dummy" /></div>
+        </form>
+    </div>
 
     <div class="text-center" id="predictionResult">
         @if (ViewBag.Prediction != null)
