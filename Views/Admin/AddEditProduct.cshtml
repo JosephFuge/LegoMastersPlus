@@ -7,7 +7,7 @@
 <div class="text-center">
     @model Product
 
-    <form method="post">
+    <form  method="post">
         @if (Model != null && Model.product_ID > 0)
         {
             <input asp-for="product_ID" hidden />
@@ -62,7 +62,12 @@
 
         <div class="form-group">
             <label asp-for="ProductCategories" class="control-label"></label>
-            <input asp-for="ProductCategories" class="form-control" />
+            <select asp-for="ProductCategories" class="form-control" >
+                @foreach (Category cat in ViewBag.Categories)
+                {
+                    <option value="@cat.CategoryId">@cat.Name</option>
+                }
+            </select>
             <span asp-validation-for="ProductCategories" class="text-danger"></span>
         </div>
 

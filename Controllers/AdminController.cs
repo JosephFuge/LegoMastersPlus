@@ -75,6 +75,7 @@ namespace LegoMastersPlus.Controllers
         [HttpGet]
         public IActionResult AddProduct()
         {
+            ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
             return View("AddEditProduct", new Product());
         }
         
@@ -87,13 +88,15 @@ namespace LegoMastersPlus.Controllers
                 return RedirectToAction("Products");
             } else
             {
-                return View(newProduct);
+                ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
+                return View("AddEditProduct", newProduct);
             }
         }
 
         [HttpGet]
         public IActionResult EditProduct(int productId)
         {
+            ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
             var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == productId);
             return View("AddEditProduct", editProduct);
         }
@@ -108,6 +111,7 @@ namespace LegoMastersPlus.Controllers
             }
             else
             {
+                ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
                 return View("AddEditProduct", product);
             }
         }

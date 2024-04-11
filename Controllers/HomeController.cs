@@ -353,6 +353,7 @@ namespace LegoMastersPlus.Controllers
             }
             int defaultPageSize = 10;
 
+            // Fetch the list of possible colors based on the colors that products already have in the database
             plvm.PrimaryColors = _legoRepo.PrimaryColors.ToList();
             plvm.SecondaryColors = _legoRepo.SecondaryColors.ToList();
 
@@ -390,21 +391,6 @@ namespace LegoMastersPlus.Controllers
                 var allCategories = _legoRepo.Categories;
                 plvm = new ProductsListViewModel(allProducts.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
             }
-
-            // var data = new ProductsListViewModel
-            // {
-            //     Products = filteredProducts
-            //         .OrderBy(x => x.name)
-            //         .Skip((pageNum - 1) * pageSize)
-            //         .Take(pageSize),
-            //     
-            //     PaginationInfo = new ProductPaginationInfo
-            //     {
-            //
-            //         CurrentPage = pageNum,
-            //         ItemsPerPage = pageSize,
-            //         TotalItems = filteredProducts.Count()
-            //     }};
 
             return View(plvm);
         }
