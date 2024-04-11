@@ -32,15 +32,15 @@
         <div>
             <h1>Featured Products</h1>
             <div class="row">
-                @foreach (var product in Model.Products)
+                @foreach (var prod in ViewBag.popularProducts)
                 {
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="product-card">
-                            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@product.product_ID">
-                                <img src="@product.img_link" alt="@product.name" class="img-fluid product-image">
-                                <h2 class="product-title custom-product-name">@product.name</h2>
+                            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
+                                <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
+                                <h2 class="product-title custom-product-name">@prod.name</h2>
                             </a>
-                            <p class="product-price">$@product.price</p>
+                            <p class="product-price">$@prod.price</p>
                         </div>
                     </div>
                 }

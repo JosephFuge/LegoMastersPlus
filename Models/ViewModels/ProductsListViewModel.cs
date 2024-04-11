@@ -15,13 +15,10 @@
         public int? PageSize { get; set; }
         public int? PageNum { get; set; }
         
-        public LineItem LineItems { get; set; }
-
         public PaginationInfo PaginationInfo { get; set; } = new PaginationInfo();
 
         public ProductsListViewModel(List<Product> tempProducts, PaginationInfo tempPaginationInfo, int? tempPageSize,
-            int? tempPageNum, List<Category> tempCategories, string? tempPrimaryColor, string? tempSecondaryColor,
-            LineItem lineitems)
+            int? tempPageNum, List<Category> tempCategories, string? tempPrimaryColor, string? tempSecondaryColor)
         {
             this.Products = tempProducts;
             this.PaginationInfo = tempPaginationInfo;
