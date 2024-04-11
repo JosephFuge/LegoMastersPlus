@@ -19,7 +19,7 @@ namespace LegoMastersPlus.Components
             ViewBag.SelectedProductCategory = RouteData?.Values["productCategory"];
 
             var productCategorys = _legoRepo.Products
-                .Select(x => x.category)
+                .Select(x => x.ProductCategories)
                 .Distinct()
                 .OrderBy(x => x);
 

@@ -33,7 +33,7 @@ namespace LegoMastersPlus.Controllers
         {
             var products = _legoRepo.Products; // Assuming you have a method to retrieve all products
 
-            var pageSize = 12;
+            var pageSize = 4;
             // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
             var pageNum = 1;
 

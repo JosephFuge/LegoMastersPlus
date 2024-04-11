@@ -1,6 +1,4 @@
-﻿@{
-    Layout = "_Layout"; // Using a shared layout file for consistency
-}
+﻿
 @model ProductsListViewModel
 
 <!DOCTYPE html>
@@ -10,86 +8,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEGO Store - Home</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Custom CSS */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        header {
-            background-color: #007bff;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .container {
-            margin-top: 30px;
-        }
-
-        .product-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #fff;
-        }
-
-            .product-card img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 5px;
-            }
-
-        .product-title {
-            font-weight: bold;
-            margin-top: 10px;
-            margin-bottom: 5px;
-        }
-
-        .product-price {
-            color: #007bff;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .product-description {
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-
-        .btn-add-to-cart {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 3px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-            .btn-add-to-cart:hover {
-                background-color: #0056b3;
-            }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome to the LEGO Store</h1>
-        <p>Your ultimate destination for all things LEGO!</p>
-    </header>
+    <div class="bg-soft-purple">
+        <div class="container">
+            <div class="row">
+                <div class="col-2">
+                    <h1>Welcome to the<br>LegoMastersPlus store!</h1>
+                    <p>Your ultimate destination for all things LEGO!</p>
+                    <a href="" class="btn">Explore Now</a>
+                </div>
+                <div class="col-2">
+                    <img src="home.jpg">
+                </div>
+            </div>
+        </div>
+     </div>
+     <div>
+        
+     </div>
     <div class="container">
-        <div class="row">
-            @foreach (Product p in Model.Products)
-            {
-                <partial name="ProductSummary" model="p" />
-            }
+        <div>
+            <h1>Featured Products</h1>
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="product-card">
+                            <img src="@product.img_link" alt="@product.name" class="img-fluid product-image">
+                            <h2 class="product-title">@product.name</h2>
+                            <p class="product-price">$@product.price</p>
+                            <button type="button" class="btn btn-primary">Add To Cart</button>
+
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </body>
 </html>
+
+
+
+
+
 
 
 
