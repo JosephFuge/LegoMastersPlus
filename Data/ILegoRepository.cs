@@ -22,5 +22,6 @@ namespace LegoMastersPlus.Data
 
         public IQueryable<LineItem> LineItems { get; }
 
+        void SaveOrder(Order order);
     }
 }
