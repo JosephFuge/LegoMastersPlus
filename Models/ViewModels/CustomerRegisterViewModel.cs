@@ -31,5 +31,7 @@ namespace LegoMastersPlus.Models.ViewModels
         [Required]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public bool SignInAfter { get; set; } = true;
     }
 }
