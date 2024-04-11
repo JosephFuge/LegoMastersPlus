@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace LegoMastersPlus.Controllers
@@ -243,6 +244,73 @@ namespace LegoMastersPlus.Controllers
             {
                 SignInAfter = false
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string userId)
+        {
+            var user = await _signInManager.UserManager.FindByIdAsync(userId);
+            var customer = await _legoRepo.Customers.FirstOrDefaultAsync(c => c.IdentityID == userId);
+
+            if (user != null && customer != null)
+            {
+                CustomerRegisterViewModel editAccountInfo = new CustomerRegisterViewModel
+                {
+                    Email = user.Email,
+                    birth_date = customer.birth_date.ToDateTime(TimeOnly.MinValue),
+                    gender = customer.gender,
+                    country_of_residence = customer.country_of_residence,
+                    first_name = customer.first_name,
+                    last_name = customer.last_name,
+                    SignInAfter = false,
+                };
+                return View("~/Views/Home/CustomerRegister.cshtml", editAccountInfo);
+            }
+
+            return RedirectToAction("Users");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(CustomerRegisterViewModel customerRegister)
+        {
+            ModelState.Remove("Password");
+            ModelState.Remove("ConfirmPassword");
+            if (ModelState.IsValid)
+            {
+                var user = await _signInManager.UserManager.FindByNameAsync(customerRegister.Email);
+
+                if (user != null)
+                {
+                    var customer = _legoRepo.Customers.FirstOrDefault(c => c.IdentityID == user.Id);
+
+                    if (customer != null)
+                    {
+
+                        customer.first_name = customerRegister.first_name;
+                        customer.gender = customerRegister.gender;
+                        customer.last_name = customerRegister.last_name;
+                        customer.birth_date = DateOnly.FromDateTime(customerRegister.birth_date);
+                        customer.country_of_residence = customerRegister.country_of_residence;
+                        customer.age = CalculateAge(customerRegister.birth_date, DateTime.Now);
+
+                        _legoRepo.UpdateCustomer(customer);
+
+                        if (customerRegister.Password != null && customerRegister.Password.Length > 0 && !(await _signInManager.UserManager.CheckPasswordAsync(user, customerRegister.Password)))
+                        {
+                            var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+                            if (token != null)
+                            {
+                                await _signInManager.UserManager.ResetPasswordAsync(user, token, customerRegister.Password);
+                            }
+
+                        }
+
+                        return RedirectToAction("Users");
+                    }
+                }
+            }
+            
+            return View("~/Views/Home/CustomerRegister.cshtml", customerRegister);
         }
 
         [HttpGet]
