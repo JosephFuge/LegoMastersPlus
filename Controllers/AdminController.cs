@@ -97,7 +97,7 @@ namespace LegoMastersPlus.Controllers
         public IActionResult EditProduct(int product_ID)
         {
             ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
-            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == productId);
+            var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == product_ID);
             return View("AddEditProduct", editProduct);
         }
 
