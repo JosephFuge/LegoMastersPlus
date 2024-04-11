@@ -248,7 +248,7 @@ namespace LegoMastersPlus.Controllers
                 var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return RedirectToPage("Areas/Identity/Pages/Account/LoginWith2f.cshtml");
+                    return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity" });
                     // var user = await _userManager.FindByEmailAsync(loginRequest.Email);
                     // if user != null && await _userManager.GetTwoFactorEnabledAsync(user)
                 //     if (loginRequest.Email == "maxsweet@testfake.com")
