@@ -125,8 +125,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute("pagination", "{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
 app.MapDefaultControllerRoute();
+app.MapControllerRoute("pagination", "/{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
 
 app.MapRazorPages();
 
