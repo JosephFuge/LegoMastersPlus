@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.NetworkInformation;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -59,27 +60,22 @@ namespace LegoMastersPlus.Controllers
             // Get the correct list of products based on page size and page number
            var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
-            //var topRatedProductIDs = _legoRepo.LineItems
-            //                .OrderByDescending(li => li.rating)
-            //                .Select(li => li.product_ID)
-            //                .Take(5)
-            //                .ToList();
+           var topProductIds = _legoRepo.LineItems
+               .GroupBy(li => li.product_ID)
+               .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
+               .OrderByDescending(x => x.PurchaseCount)
+               .Take(5) // Taking only the top 5
+               .Select(x => x.ProductId)
+               .ToList();
 
-            var topRatedProductIDs = _legoRepo.LineItems
-                .GroupBy(li => li.product_ID)
-                .Select(group => new
-                {
-                    ProductID = group.Key,
-                    NumberOfOrders = group.Count()
-                })
-                .OrderByDescending(result => result.NumberOfOrders)
-                .Take(5)
-                .Select(result => result.ProductID)
-                .ToList();
-            
-            var popularProducts = _legoRepo.Products
-                .Where(p => topRatedProductIDs.Contains(p.product_ID))
-                .ToList();
+           // 2. Join with Product details
+           var topProducts = _legoRepo.Products
+               .Where(p => topProductIds.Contains(p.product_ID))
+               .ToList();
+
+            // Store the ordered LineItems in the ViewBag
+            ViewBag.TopProducts = topProducts;
+
 
 
             // Gather paging info and product list into a ViewModel
