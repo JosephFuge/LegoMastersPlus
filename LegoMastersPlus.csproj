@@ -27,4 +27,8 @@
     <PackageReference Include="System.Numerics.Tensors" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\models\fraud_catch_model.onnx" />
+  </ItemGroup>
+
 </Project>
