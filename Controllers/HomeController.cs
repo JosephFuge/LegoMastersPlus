@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net.NetworkInformation;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace LegoMastersPlus.Controllers
 {
@@ -44,16 +45,33 @@ namespace LegoMastersPlus.Controllers
 
         public IActionResult Index()
         {
-            var products = _legoRepo.Products; // Assuming you have a method to retrieve all products
+            //var products = _legoRepo.Products; // Assuming you have a method to retrieve all products
 
             var pageSize = 4;
             // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
             var pageNum = 1;
 
             // Get the correct list of products based on page size and page number
-            var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
+           var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
 
-            var lineitems = new LineItem();
+           var topProductIds = _legoRepo.LineItems
+               .GroupBy(li => li.product_ID)
+               .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
+               .OrderByDescending(x => x.PurchaseCount)
+               .Take(5) // Taking only the top 5
+               .Select(x => x.ProductId)
+               .ToList();
+
+           // 2. Join with Product details
+           var topProducts = _legoRepo.Products
+               .Where(p => topProductIds.Contains(p.product_ID))
+               .ToList();
+
+            // Store the ordered LineItems in the ViewBag
+            ViewBag.TopProducts = topProducts;
+
+
+
             // Gather paging info and product list into a ViewModel
             var productCount = _legoRepo.Products.Count();
             PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);

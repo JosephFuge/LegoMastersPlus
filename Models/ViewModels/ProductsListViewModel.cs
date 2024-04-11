@@ -14,6 +14,7 @@
         public string? SecondaryColor { get; set; }
         public int? PageSize { get; set; }
         public int? PageNum { get; set; }
+        
 
         public PaginationInfo PaginationInfo { get; set; } = new PaginationInfo();
 
