@@ -64,7 +64,7 @@ namespace LegoMastersPlus.Controllers
             var productCount = _legoRepo.Products.Count();
             PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
             var allCategories = _legoRepo.Categories;
-            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null, lineitems);
+            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
 
             return View(productPagingModel);
 
@@ -101,10 +101,14 @@ namespace LegoMastersPlus.Controllers
 
             return years + decimalAge;
         }
+
         [HttpGet]
         public IActionResult CustomerRegister()
         {
-            return View();
+            return View(new CustomerRegisterViewModel
+            {
+                SignInAfter = true
+            });
         }
 
         [HttpPost]
@@ -140,8 +144,30 @@ namespace LegoMastersPlus.Controllers
                     _legoRepo.AddCustomer(newCustomer);
 
                     _logger.LogInformation("Customer created with name " + customerRegister.first_name + " " + customerRegister.last_name);
-                    await _signInManager.SignInAsync(newUser, isPersistent: false);
-                    return View("Index");
+
+
+                    // If they should sign in (defaults to yes), go to the home page
+                    if (customerRegister.SignInAfter)
+                    {
+                        await _signInManager.SignInAsync(newUser, isPersistent: false);
+                        return RedirectToAction("Index");
+                    } else
+                    {
+                        // Otherwise, check if they are an admin and if so, take them back to the Users page
+                        var userClaim = HttpContext.User;
+                        if (userClaim != null)
+                        {
+                            var user = await _signInManager.UserManager.GetUserAsync(userClaim);
+                            if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                            {
+                                return RedirectToAction("Users", "Admin");
+                            } else
+                            {
+                                return RedirectToAction("Index");
+                            }
+                        }
+                        return RedirectToAction("Index");
+                    }
                 }
                 else
                 {
@@ -593,7 +619,7 @@ namespace LegoMastersPlus.Controllers
                 var allProducts = _legoRepo.Products;
                 PaginationInfo pagingInfo = new PaginationInfo(allProducts.Count(), defaultPageSize, 1);
                 var allCategories = _legoRepo.Categories;
-                plvm = new ProductsListViewModel(allProducts.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null, new LineItem());
+                plvm = new ProductsListViewModel(allProducts.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
             }
 
             return View(plvm);
