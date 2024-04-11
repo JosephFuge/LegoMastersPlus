@@ -1,5 +1,4 @@
 ﻿using LegoMastersPlus.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace LegoMastersPlus.Data
 {
@@ -15,7 +14,7 @@ namespace LegoMastersPlus.Data
         public void UpdateProduct(Product product);
         public IQueryable<Order> Orders { get; }
         public void DeleteProduct(Product product);
-        public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int productId);
+        public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int product_ID);
         public void DeleteOrder(Order order);
         public void SaveChanges();
 

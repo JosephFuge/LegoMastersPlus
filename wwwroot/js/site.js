@@ -84,3 +84,26 @@ $(document).ready(function () {
     });
 });
 
+//confirm cart item remove
+
+$(document).ready(function () {
+    $('#deleteConfirmationModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var productID = button.data('productid'); // Extract product ID from data-* attributes
+        // Ensure you have a returnUrl set correctly in your model, or adjust as necessary
+        
+
+        // Set the form's action to include the handler
+        // Make sure to replace '/YourPage' with the actual path to your Razor Page
+        $(this).find('#deleteForm').attr('action', '/Cart?handler=Remove');
+
+        // Update the form inputs
+        $(this).find('input[name="product_ID"]').val(productID);
+        
+    });
+
+    // This part is optional, shown here for completeness
+    // If you need AJAX submission, you'd handle it here
+});
+
+

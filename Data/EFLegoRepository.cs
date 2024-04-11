@@ -41,8 +41,8 @@ namespace LegoMastersPlus.Data
         }
 
         // Get item recommendations for a specific product and all the products of the associated recommendations
-        public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int productId) => _context.ProductItemRecommendations
-                                                                                    .Where(pir => pir.product_ID == productId)
+        public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int product_ID) => _context.ProductItemRecommendations
+                                                                                    .Where(pir => pir.product_ID == product_ID)
                                                                                     .Include(x => x.Product_1)
                                                                                     .Include(x => x.Product_2)
                                                                                     .Include(x => x.Product_3)

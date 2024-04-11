@@ -37,10 +37,10 @@
                     <p>$@tempProd.price</p>
                 </td>
                 <td>
-                    <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditProduct" asp-route-productId="@tempProd.product_ID">Edit Product</a>
+                    <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditProduct" asp-route-product_ID="@tempProd.product_ID">Edit Product</a>
                 </td>
                 <td>
-                    <a class="rounded-pill btn btn-danger btn-pill" data-url="@Url.Action("DeleteProduct", "Admin", new { productId = tempProd.product_ID })" data-productid="@tempProd.product_ID">Delete Product</a>
+                    <a class="rounded-pill btn btn-danger btn-pill" data-url="@Url.Action("DeleteProduct", "Admin", new { product_ID = tempProd.product_ID })" data-productid="@tempProd.product_ID">Delete Product</a>
                 </td>
             </tr>
         }
