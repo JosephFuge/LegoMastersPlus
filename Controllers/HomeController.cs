@@ -347,7 +347,9 @@ namespace LegoMastersPlus.Controllers
 
         public IActionResult Products(ProductsListViewModel plvm)
         {
-            if (plvm.Categories != null || plvm.PrimaryColor != null || plvm.SecondaryColor != null)
+            plvm.Categories = _legoRepo.Categories.ToList();
+
+            if (/*plvm.Categories != null || */plvm.PrimaryColor != null || plvm.SecondaryColor != null || (plvm.SelectedCategories != null && plvm.Categories != null && plvm.SelectedCategories.Count() < plvm.Categories.Count()))
             {
                 plvm.NoFilters = false;
             }
@@ -357,19 +359,25 @@ namespace LegoMastersPlus.Controllers
             plvm.PrimaryColors = _legoRepo.PrimaryColors.ToList();
             plvm.SecondaryColors = _legoRepo.SecondaryColors.ToList();
 
-            if (plvm.Categories == null)
+            
+
+            
+            if (plvm.SelectedCategories == null)
             {
-                plvm.Categories = _legoRepo.Categories.ToList();
+                plvm.SelectedCategories = _legoRepo.Categories.Select(x => x.CategoryId).ToList();
             }
 
             // Filter by color in the query
             var filteredProducts = _legoRepo.Products
                 .Where(x => plvm.NoFilters || ((plvm.PrimaryColor == null || x.primary_color == plvm.PrimaryColor) &&
                             (plvm.SecondaryColor == null || x.secondary_color == plvm.SecondaryColor))).ToList();
-
+            
             // Now filter by category
-            filteredProducts = filteredProducts.Where(prod => prod.ProductCategories.Select(pc => pc.Category.CategoryId).IntersectBy(plvm.Categories.Select((pc) => pc.CategoryId), c => c).Any()).ToList();
-
+            if (!plvm.NoFilters)
+            {
+                filteredProducts = filteredProducts.Where(prod => prod.ProductCategories.Select(pc => pc.Category.CategoryId).Intersect(plvm.SelectedCategories).Any()).ToList();
+            }
+            
             if (!plvm.Products.Any())
             {
                 plvm.PageSize = plvm.PageSize == 0 ? 10 : plvm.PageSize;

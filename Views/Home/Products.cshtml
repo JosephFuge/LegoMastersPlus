@@ -33,9 +33,11 @@
                 <label><input type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "") /> 20</label>
             </div>
 
+            <h5>Categories</h5>
             @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
             {
-                <input type="checkbox" name="CategoryIds" value="@category.value" checked="checked" />
+                <label>@category.value.Name</label>
+                <input type="checkbox" name="SelectedCategories" value="@category.value.CategoryId" checked="@Model.SelectedCategories.Contains(category.value.CategoryId)" />
             }
             <input type="submit" value="Filter" />
         </form>

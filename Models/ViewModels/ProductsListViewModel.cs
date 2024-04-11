@@ -5,6 +5,8 @@
         public bool NoFilters { get; set; }
         public List<Product> Products { get; set; }
         public List<Category> Categories { get; set; }
+        
+        public List<int> SelectedCategories { get; set; }
 
         public List<string> PrimaryColors { get; set; }
         public List<string> SecondaryColors { get; set; }
