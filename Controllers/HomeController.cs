@@ -1,4 +1,3 @@
-using Humanizer;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
@@ -13,6 +12,13 @@ using System.Diagnostics;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using System.Numerics.Tensors;
+using Microsoft.ML.OnnxRuntime;
+using Microsoft.ML.OnnxRuntime.Tensors;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net.NetworkInformation;
 using System.Linq;
 
 namespace LegoMastersPlus.Controllers
@@ -22,12 +28,24 @@ namespace LegoMastersPlus.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILegoRepository _legoRepo;
+        private readonly InferenceSession _session;
 
         public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> tempSignIn, ILegoRepository tempLegoRepo)
         {
             _logger = logger;
             _signInManager = tempSignIn;
             _legoRepo = tempLegoRepo;
+
+            // Initialize the InferenceSession
+            try
+            {
+                _session = new InferenceSession("/fraud_catch_model.onnx");
+                _logger.LogInformation("ONNX model loaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error loading the ONNX model: {ex.Message}");
+            }
         }
 
         public IActionResult Index()
@@ -155,7 +173,7 @@ namespace LegoMastersPlus.Controllers
         {
             // If there's already a logged in user, redirect them to home page
             var curUserClaim = HttpContext.User;
-
+           
             if (curUserClaim != null)
             {
                 IdentityUser? curUser = await _signInManager.UserManager.GetUserAsync(curUserClaim);
@@ -191,7 +209,7 @@ namespace LegoMastersPlus.Controllers
                     return RedirectToAction("Index");
                 }
                 else
-                {      
+                {
                     ModelState.AddModelError(string.Empty, "Invalid login information.");
                     return View(loginRequest);
                 }
@@ -361,6 +379,170 @@ namespace LegoMastersPlus.Controllers
             }
         }
 
+        //ONNX Prediction
+        [HttpPost]
+        public IActionResult Predict(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        //public IActionResult Predict(Dictionary<string, int> inputVariables)
+        {
+            var inputVariables = Dummy(hour, amount, day, transaction_type, country, bank, card_type);
+            //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
+            var fraud_dict = new Dictionary<int, string>()
+            {
+                { 0, "Not fraudulent"},
+                { 1, "Possibly fradulent, please review"}
+            };
+            try
+            {
+                //var input = new List<float> { time_hour, amount, Mon, Sat, Sun, Thu, Tue, Wed, Pin, Tap, Online, POS, India, Russia, USA, UK, HSBC, Halifax, Lloyds, Metro, Monzo, RBS, Visa };
+                var input = new List<float>();
+                foreach (var kvp in inputVariables)
+                {
+                    input.Add(kvp.Value);
+                }
+                var inputTensor = new DenseTensor<float>(input.ToArray(), new[] { 1, input.Count });
+
+                var inputs = new List<NamedOnnxValue>
+                { NamedOnnxValue.CreateFromTensor("float_input", inputTensor)};
+
+                using (var results = _session.Run(inputs)) //Make the predicton from the Order input
+                {
+                    var prediction = results.FirstOrDefault(item => item.Name == "output_label")?.AsTensor<long>().ToArray();
+                    if (prediction != null && prediction.Length > 0)
+                    {
+                        //Get the proper fraud text
+                        var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
+                        ViewBag.Prediction = fraudCheck;
+                    }
+                    else
+                    {
+                        ViewBag.Prediction = "Error: Unable to make a prediction.";
+                    }
+                }
+                _logger.LogInformation("Prediction executed successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error during prediction: {ex.Message}");
+                ViewBag.Prediction = "Error during prediction.";
+            }
+
+            return View(); //Return view of dummy data so I can check if it works
+        }
+
+        //For the Predict view; delete when connected to the database
+        [HttpGet]
+        public IActionResult Predict()
+        {
+            return View();
+        }
+
+        public Dictionary<String, int> Dummy(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        {
+            // Dummy code day of the week
+            Dictionary<string, int> dayDict = new Dictionary<string, int>()
+        {
+            { "Mon", 0 },
+            { "Tue", 0 },
+            { "Wed", 0 },
+            { "Thu", 0 },
+            { "Fri", 0 },
+            { "Sat", 0 },
+            { "Sun", 0 }
+        };
+
+            if (day != "Fri")
+            {
+                dayDict[day] = 1; // Set the selected day to 1, others remain 0
+            }
+
+            // Dummy code transaction type
+            Dictionary<string, int> transactionTypeDict = new Dictionary<string, int>()
+        {
+            { "pin", 0 },
+            { "tap", 0 },
+            { "online", 0 },
+            { "pos", 0 },
+            { "atm", 0 }
+        };
+
+            if (transaction_type != "atm")
+            {
+                transactionTypeDict[transaction_type] = 1; // Set the selected transaction type to 1, others remain 0
+            }
+
+            // Dummy code country
+            Dictionary<string, int> countryDict = new Dictionary<string, int>()
+        {
+            { "china", 0 },
+            { "india", 0 },
+            { "russia", 0 },
+            { "uk", 0 },
+            { "usa", 0 }
+        };
+
+            if (country != "china")
+            {
+                countryDict[country] = 1; // Set the selected country to 1, others remain 0
+            }
+
+            // Dummy code bank
+            Dictionary<string, int> bankDict = new Dictionary<string, int>()
+        {
+            { "barclay", 0 },
+            { "hsbc", 0 },
+            { "halifax", 0 },
+            { "lloyd", 0 },
+            { "metro", 0 },
+            { "monzo", 0 },
+            { "rbs", 0 }
+        };
+            if (bank != "barclay")
+            {
+                bankDict[bank] = 1; // Set the selected bank to 1, others remain 0
+            }
+
+            // Dummy code card type
+            Dictionary<string, int> cardTypeDict = new Dictionary<string, int>()
+        {
+            { "mastercard", 0 },
+            { "visa", 0 }
+        };
+            if (card_type != "mastercard")
+            {
+                cardTypeDict[card_type] = 1; // Set the selected card type to 1, others remain 0
+            }
+
+            var inputVariables = new Dictionary<string, int>()
+                {
+                    { "time_hour", hour },
+                    { "amount", amount },
+                    { "Mon", dayDict["Mon"] },
+                    { "Sat", dayDict["Sat"] },
+                    { "Sun", dayDict["Sun"] },
+                    { "Thu", dayDict["Thu"] },
+                    { "Tue", dayDict["Tue"] },
+                    { "Wed", dayDict["Wed"] },
+                    { "Pin", transactionTypeDict["pin"] },
+                    { "Tap", transactionTypeDict["tap"] },
+                    { "Online", transactionTypeDict["online"] },
+                    { "POS", transactionTypeDict["pos"] },
+                    { "India", countryDict["india"] },
+                    { "Russia", countryDict["russia"] },
+                    { "USA", countryDict["usa"] },
+                    { "UK", countryDict["uk"] },
+                    { "HSBC", bankDict["hsbc"] },
+                    { "Halifax", bankDict["halifax"] },
+                    { "Lloyds", bankDict["lloyd"] },
+                    { "Metro", bankDict["metro"] },
+                    { "Monzo", bankDict["monzo"] },
+                    { "RBS", bankDict["rbs"] },
+                    { "Visa", cardTypeDict["visa"] }
+                };
+
+            return inputVariables;
+        }
+
+
         public IActionResult Products(ProductsListViewModel plvm)
         {
             plvm.Categories = _legoRepo.Categories.ToList();
@@ -416,6 +598,11 @@ namespace LegoMastersPlus.Controllers
             return View(plvm);
         }
 
+        [HttpGet]
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
 
         
 
