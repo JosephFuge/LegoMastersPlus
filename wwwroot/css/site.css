@@ -61,7 +61,7 @@ body {
     }
 
 .navigation-display {
-    color: #cd4b5e;
+    color: #794F56;
     font-weight: 500;
     line-height: 1.5;
 }
@@ -86,7 +86,8 @@ body {
     justify-content: center;
     align-items: center;
     color: black;
-    margin: 0 auto;
+    margin-left: 24px;
+    margin-right: 24px;
 }
 
 .nav-square-group {
@@ -330,7 +331,12 @@ a.no-decoration-link, a.no-decoration-link:active, a.no-decoration-link:visited 
     transition: 0.3s;
 }
 
-    /* On mouse-over, add a deeper shadow */
-    .card:hover {
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    }
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+
+.margin-top-lg {
+    margin-top: 96px;
+}
