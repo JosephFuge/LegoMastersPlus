@@ -2,6 +2,7 @@
 {
     public class ProductDetailsViewModel
     {
+        public int product_ID { get; set; }
         public Product RecProduct { get; set; }
         public List<Product>? StaticRecommendations { get; set; }
 
