@@ -8,32 +8,18 @@
     Layout = "_Layout";
 }
 
-<style>
-    /* Center the content horizontally and vertically */
-    confirmBody {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
+<div class="container pt-5">
+    <div class="row justify-content-center align-items-center text-center h-100">
+        @if (Model.IsFraudulent == true)
+        {
+            <h1 class="color-darkblue">Your order is currently under review</h1>
 
-    /* Style for the message box */
-    .message-box {
-
-        text-align: center; /* Center the text horizontally */
-        background-color: #f0f0f0;
-        padding: 20px;
-        border-radius: 5px;
-    }
-</style>
-
-@if (Model.IsFraudulent == true)
-{
-    <div class="confirmBody message-box"><h1>Your order is currently under review</h1></div>
-}
-@if (Model.IsFraudulent == false)
-{
-    <div class="confirmBody message-box"><h1>Your order has been placed, thank you!</h1></div>
-}
-
+            <img src="~/img/legos_being_built.jpg" style="height: 50px; width: auto"/>
+        }
+        @if (Model.IsFraudulent == false)
+        {
+            <h1 class="color-darkblue">Your order has been placed, thank you!</h1>
+            <img src="~/img/lego-delivery.jpg" style="height: 50px; width: auto" />    
+        }
+    </div>
+</div>

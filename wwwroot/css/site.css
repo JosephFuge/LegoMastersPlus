@@ -198,6 +198,14 @@ body {
     color: #95B8D1
 }
 
+.color-red {
+    color: crimson
+}
+
+.color-darkblue {
+    color: blue
+}
+
 .custom-class {
     line-height: 1.5; /* Adjust the value to increase or decrease spacing */
 }
@@ -209,5 +217,3 @@ body {
 .color-black {
     color: #333333
 }
-
-
