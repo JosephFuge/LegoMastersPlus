@@ -85,8 +85,37 @@ namespace LegoMastersPlus.Controllers
 
         public IActionResult ProductDetails(int product_ID)
         {
+            Product? prod = _legoRepo.Products.FirstOrDefault(p => p.product_ID == product_ID);
+            
+            if (prod == null)
+            {
+                return RedirectToAction("Products");
+            }
+
             var details = _legoRepo.ProductItemRecommendations(product_ID).FirstOrDefault();
-            return View(details);
+            List<Product>? products = null;
+            if (details == null)
+            {
+                var productIds = _legoRepo.LineItems
+                   .Where(li => li.product_ID != product_ID)
+                   .GroupBy(li => li.product_ID)
+                   .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
+                   .OrderByDescending(x => x.PurchaseCount)
+                   .Take(5) // Taking only the top 5
+                   .Select(x => x.ProductId)
+                   .ToList();
+                products = _legoRepo.Products
+                    .Where(p => productIds.Contains(p.product_ID))
+                    .ToList();
+            }
+
+            ProductDetailsViewModel prodDetails = new ProductDetailsViewModel
+            {
+                RecProduct = prod,
+                Recommendation = details,
+                StaticRecommendations = products,
+            };
+            return View(prodDetails);
         }
 
         public IActionResult Privacy()
@@ -232,12 +261,15 @@ namespace LegoMastersPlus.Controllers
                 }
             } else
             {
-                return View();
+                return View(new LoginViewModel
+                    {
+                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+                    });
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel loginRequest)
+        public async Task<IActionResult> Login(LoginViewModel loginRequest, string returnUrl = null)
         {
             if (!_isCookieConsentAccepted())
             {
@@ -247,18 +279,45 @@ namespace LegoMastersPlus.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                }
                 if (result.Succeeded)
+                {
+                    
+                    // var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+                    // if user != null && await _userManager.GetTwoFactorEnabledAsync(user)
+                    
+                    if (loginRequest.Email == "haydencowart@faketest.com" || loginRequest.Email == "aurorabrickwell@legomasters.com")
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        // Redirect to the LoginWith2fa page
+                        // Redirect to the LoginWith2fa Razor Page
+                        return RedirectToPage("/Account/Manage/EnableAuthenticator", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                    }
+                    
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login information.");
+                        return View(loginRequest);
+                    }
+                } else
+            {
+                if (loginRequest.Email == "haydencowart@faketest.com" || loginRequest.Email == "aurorabrickwell@legomasters.com")
                 {
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login information.");
-                    return View(loginRequest);
+                    // Redirect to the LoginWith2fa page
+                    // Redirect to the LoginWith2fa Razor Page
+                    return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
                 }
-            } else
-            {
-                return View(loginRequest);
             }
         }
 
@@ -424,11 +483,11 @@ namespace LegoMastersPlus.Controllers
 
         //ONNX Prediction
         [HttpPost]
-        public IActionResult Predict(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        public IActionResult Predict(int hour, int amount, string day, string entry_mode, string transaction_type, string country, string bank, string card_type)
         //public IActionResult Predict(Dictionary<string, int> inputVariables)
         {
             //Bring in the dummy-coded data to be predicted
-            var inputVariables = Dummy(hour, amount, day, transaction_type, country, bank, card_type);
+            var inputVariables = Dummy(hour, amount, day, entry_mode, transaction_type, country, bank, card_type);
 
             //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
             var fraud_dict = new Dictionary<int, string>()
@@ -438,7 +497,6 @@ namespace LegoMastersPlus.Controllers
             };
             try
             {
-                //var input = new List<float> { time_hour, amount, Mon, Sat, Sun, Thu, Tue, Wed, Pin, Tap, Online, POS, India, Russia, USA, UK, HSBC, Halifax, Lloyds, Metro, Monzo, RBS, Visa };
                 var input = new List<float>();
                 foreach (var kvp in inputVariables)
                 {
@@ -455,8 +513,9 @@ namespace LegoMastersPlus.Controllers
                     if (prediction != null && prediction.Length > 0)
                     {
                         //Get the proper fraud text
-                        var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
-                        ViewBag.Prediction = fraudCheck;
+                        //var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
+                        //ViewBag.Prediction = fraudCheck;
+                        ViewBag.Prediction = prediction[0];
                     }
                     else
                     {
@@ -481,7 +540,7 @@ namespace LegoMastersPlus.Controllers
             return View();
         }
 
-        public Dictionary<String, int> Dummy(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        public Dictionary<String, int> Dummy(int hour, int amount, string day, string entry_mode, string transaction_type, string country, string bank, string card_type)
         {
             // Dummy code day of the week
             Dictionary<string, int> dayDict = new Dictionary<string, int>()
@@ -498,6 +557,19 @@ namespace LegoMastersPlus.Controllers
             if (day != "Fri")
             {
                 dayDict[day] = 1; // Set the selected day to 1, others remain 0
+            }
+
+            // Dummy code entry mode
+            Dictionary<string, int> entryModeDict = new Dictionary<string, int>()
+        {
+            { "pin", 0 },
+            { "tap", 0 },
+            { "cvc", 0 }
+        };
+
+            if (entry_mode != "cvc")
+            {
+                entryModeDict[entry_mode] = 1;
             }
 
             // Dummy code transaction type

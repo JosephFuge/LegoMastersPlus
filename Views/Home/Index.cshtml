@@ -25,13 +25,19 @@
             <div class="row">
                 @foreach (var prod in ViewBag.TopProducts)
                 {
-                    <partial name="ProductSummary" model="prod"/>
+                    <div class="col-lg-2 col-md-2 col-sm-6">
+                        <div class="product-card">
+                            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
+                                <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
+                                <h2 class="product-title custom-product-name">@prod.name</h2>
+                            </a>
+                            <p class="product-price">$@prod.price</p>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
     </div>
-</div>
-
 
 
 

@@ -264,6 +264,7 @@ namespace LegoMastersPlus.Controllers
                     last_name = customer.last_name,
                     SignInAfter = false,
                 };
+                ViewBag.IsEdit = true;
                 return View("~/Views/Home/CustomerRegister.cshtml", editAccountInfo);
             }
 
@@ -377,10 +378,12 @@ namespace LegoMastersPlus.Controllers
                 if (registerResult.Succeeded)
                 {
                     await _signInManager.UserManager.AddToRoleAsync(newUser, "Customer");
+                    var user = await _signInManager.UserManager.FindByEmailAsync(customerRegister.Email);
 
                     // Create customer model. Calculate age based off of time since birth date
                     var newCustomer = new Customer
                     {
+                        IdentityID = user?.Id,
                         first_name = customerRegister.first_name,
                         gender = customerRegister.gender,
                         last_name = customerRegister.last_name,
@@ -406,8 +409,8 @@ namespace LegoMastersPlus.Controllers
                         var userClaim = HttpContext.User;
                         if (userClaim != null)
                         {
-                            var user = await _signInManager.UserManager.GetUserAsync(userClaim);
-                            if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                            var tempUser = await _signInManager.UserManager.GetUserAsync(userClaim);
+                            if (await _signInManager.UserManager.IsInRoleAsync(tempUser, "Admin"))
                             {
                                 return RedirectToAction("Users", "Admin");
                             }

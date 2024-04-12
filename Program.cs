@@ -1,3 +1,4 @@
+using LegoMastersPlus.Controllers;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;
@@ -38,7 +39,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
 })
-    .AddEntityFrameworkStores<LegoMastersDbContext>().AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<LegoMastersDbContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 
 // Add HSTS
@@ -110,7 +112,7 @@ using (var scope = app.Services.CreateScope())
 
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com; ");
+    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src 'self' https://m.media-amazon.com https://www.brickeconomy.com https://www.lego.com https://images.brickset.com; script-src 'self' 'nonce-91556876980036' ");
     // Add more directives as needed
     await next();
 });
@@ -125,7 +127,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute("pagination", "{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
+
+app.MapControllerRoute("pagination", "/{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
 app.MapDefaultControllerRoute();
 
 app.MapRazorPages();
