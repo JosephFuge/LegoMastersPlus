@@ -7,7 +7,7 @@
 
 <div class="container container-fluid d-flex">
     <div class="row">
-        <div class="col-7 align-items-stretch"><img src="@Model.RecProduct.img_link" class="img-fluid"/></div>
+        <div class="col-7 align-items-stretch"><img src="@Model.RecProduct.img_link" class="img-fluid custom-details-image"/></div>
         <div class="col">
             <div class="row">
                 <div class="card text-center">
@@ -56,25 +56,38 @@
 <div class="row">
     <h3>If you like @Model.RecProduct.name, you might like:</h3>
 </div>
-<div class="row">
-    @if (Model.Recommendation != null)
-    {
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_1"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_2"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_3"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_4"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_5"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_6"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_7"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_8"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_9"></vc:product-recommendation-card>
-        <vc:product-recommendation-card product="@Model.Recommendation.Product_10"></vc:product-recommendation-card>
-    } else if (Model.StaticRecommendations != null)
-    {
-        @foreach (Product prod in Model.StaticRecommendations)
-        {
-            <vc:product-recommendation-card product="@prod"></vc:product-recommendation-card>
-        }
-    }
 
+<div class="container horizontal-scroll">
+    <div class="row">
+        @if (Model.Recommendation != null)
+        {
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_1"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_2"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_3"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_4"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_5"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_6"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_7"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_8"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_9"></vc:product-recommendation-card>
+            <vc:product-recommendation-card product="@Model.Recommendation.Product_10"></vc:product-recommendation-card>
+        } else if (Model.StaticRecommendations != null)
+        {
+            @foreach (Product prod in Model.StaticRecommendations)
+            {
+                <vc:product-recommendation-card product="@prod"></vc:product-recommendation-card>
+            }
+        }
+    </div>
 </div>
+
+@* <div class="card scroll-card"> *@
+@*     <div class="card-body"> *@
+@*         <img class="card-img-top product-image img-fluid" src="@Model.img_link" alt="Card image cap"> *@
+@*         <div> *@
+@*             <h5 class="card-title">@Model.name</h5> *@
+@*             <p class="card-text">Price: $@Model.price</p> *@
+@*             <a asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID" class="btn btn-primary">See Details</a> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
