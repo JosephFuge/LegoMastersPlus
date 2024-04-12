@@ -135,6 +135,10 @@ body {
         color: #648D54 !important;
     }
     
+.form-check {
+    margin-left: 0;
+    margin-right: 0;
+}
 .custom-details-image{
     height: 75%;
     object-fit: contain;
@@ -158,6 +162,13 @@ body {
 
 .scroll-card{
     width: 25%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scroll-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2), 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
 .card .card-body h5 {

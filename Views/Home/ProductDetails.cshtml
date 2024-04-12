@@ -6,7 +6,7 @@
 @model ProductDetailsViewModel
 
 <div class="container container-fluid d-flex">
-    <div class="row">
+    <div class="row pt-5">
         <div class="col-7 align-items-stretch"><img src="@Model.RecProduct.img_link" class="img-fluid custom-details-image"/></div>
         <div class="col">
             <div class="row">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="card fw-bold text-md-end">
+                <div class="card fw-bold text-md-end pt-2">
                     <div class="card-body">
                         Price: $@Model.RecProduct.price
                         <form id="@Model.RecProduct.product_ID" method="post" asp-page="/Cart">

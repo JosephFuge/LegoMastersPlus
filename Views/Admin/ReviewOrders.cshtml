@@ -1,53 +1,147 @@
 @model OrdersListViewModel
 
-<div class="card d-flex justify-content-center">
-    <table class="table table-striped table-hover table-bordered">
-        <thead>
-        <tr>
-            <td>Transaction ID</td>
-            <td>Customer ID</td>
-            <td>Date</td>
-            <td>Day of Week</td>
-            <td>Time</td>
-            <td>Entry Mode</td>
-            <td>Amount</td>
-            <td>Type of Transaction</td>
-            <td>Country of Transaction</td>
-            <td>Shipping Address</td>
-            <td>Bank</td>
-            <td>Type of Card</td>
-            <td>Fraud</td>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var order in Model.Orders)
-        {
-            <tr>
-                <td>@order.transaction_ID</td>
-                <td>@order.customer_ID</td>
-                <td>@order.date</td>
-                <td>@order.day_of_week</td>
-                <td>@order.time</td>
-                <td>@order.entry_mode</td>
-                <td>@order.amount</td>
-                <td>@order.type_of_card</td>
-                <td>@order.country_of_transaction</td>
-                <td>@order.shipping_address</td>
-                <td>@order.bank</td>
-                <td>@order.type_of_card</td>
-                @if (@order.fraud == true){<td>yes</td>}
-                @if (@order.fraud == false){<td>no</td>}
-                <td><a class="rounded-pill btn btn-sm btn-danger btn-pill" data-url="@Url.Action("DeleteOrder", "Admin", new { transactionId = order.transaction_ID })" data-productid="@order.transaction_ID">Delete</a></td>
-            </tr>
-        }
-        </tbody>
-        
-    </table>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Summary of All Orders</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered align-middle">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Customer ID</th>
+                        <th>Date</th>
+                        <th>Day of Week</th>
+                        <th>Time</th>
+                        <th>Entry Mode</th>
+                        <th>Amount</th>
+                        <th>Type of Transaction</th>
+                        <th>Country of Transaction</th>
+                        <th>Shipping Address</th>
+                        <th>Bank</th>
+                        <th>Type of Card</th>
+                        <th>Fraud</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var order in Model.Orders)
+                    {
+                        <tr>
+                            <td>@order.transaction_ID</td>
+                            <td>@order.customer_ID</td>
+                            <td>@order.date</td>
+                            <td>@order.day_of_week</td>
+                            <td>@order.time</td>
+                            <td>@order.entry_mode</td>
+                            <td>@order.amount</td>
+                            <td>@order.type_of_transaction</td>
+                            <td>@order.country_of_transaction</td>
+                            <td>@order.shipping_address</td>
+                            <td>@order.bank</td>
+                            <td>@order.type_of_card</td>
+                            <td>
+                                @if (@order.fraud) {<span class="badge bg-danger">Yes</span>}
+                                else {<span class="badge bg-success">No</span>}
+                            </td>
+                            <td>
+                                <a class="rounded-pill btn btn-sm btn-danger" data-url="@Url.Action("DeleteOrder", "Admin", new { transactionId = order.transaction_ID })" data-productid="@order.transaction_ID">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-2">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <div class="col d-flex justify-content-end">
+                    <div page-model="@Model.PaginationInfo" page-action="ReviewOrders" page-controller="Admin"
+                         page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+                </div>  
+            </ul>
+        </nav>
+    </div>
 </div>
-<div class="col d-flex justify-content-end">
-    <div page-model="@Model.PaginationInfo" page-action="ReviewOrders" page-controller="Admin"
-     page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
-</div>     
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Fraudulent Orders</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Customer ID</th>
+                            <th>Date</th>
+                            <th>Day of Week</th>
+                            <th>Time</th>
+                            <th>Entry Mode</th>
+                            <th>Amount</th>
+                            <th>Type of Transaction</th>
+                            <th>Country of Transaction</th>
+                            <th>Shipping Address</th>
+                            <th>Bank</th>
+                            <th>Type of Card</th>
+                            <th>Fraud</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in ViewBag.fraudulent)
+                        {
+                            <tr>
+                                <td>@order.transaction_ID</td>
+                                <td>@order.customer_ID</td>
+                                <td>@order.date</td>
+                                <td>@order.day_of_week</td>
+                                <td>@order.time</td>
+                                <td>@order.entry_mode</td>
+                                <td>@order.amount</td>
+                                <td>@order.type_of_transaction</td>
+                                <td>@order.country_of_transaction</td>
+                                <td>@order.shipping_address</td>
+                                <td>@order.bank</td>
+                                <td>@order.type_of_card</td>
+                                <td>
+                                    @if (@order.fraud) {<span class="badge bg-danger">Yes</span>}
+                                    else {<span class="badge bg-success">No</span>}
+                                </td>
+                                <td>
+                                    <a class="rounded-pill btn btn-sm btn-danger" data-url="@Url.Action("DeleteOrder", "Admin", new { transactionId = order.transaction_ID })" data-productid="@order.transaction_ID">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-2">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <div class="col d-flex justify-content-end">
+                    <div page-model="@Model.PaginationInfo" page-action="ReviewOrders" page-controller="Admin"
+                     page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+                </div>  
+            </ul>
+        </nav>
+    </div>
+</div>
+    
      
 
 <!-- Delete Confirmation Modal -->
