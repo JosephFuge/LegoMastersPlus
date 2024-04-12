@@ -1,6 +1,8 @@
 @page
 @using LegoMastersPlus.Infrastructure
 @using LegoMastersPlus.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager;
 @model LegoMastersPlus.Pages.CartModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -54,7 +56,21 @@
 
 <div class="text-center">
     <a class="btn btn-primary" asp-controller="Home" asp-action="Products">Continue Shopping</a>
-    <a class="btn btn-success" asp-page="/Checkout">Checkout</a>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole("Customer"))
+        {
+            <a class="btn btn-success" asp-page="/Checkout">Checkout</a>
+        }
+        else
+        {
+            <a class="btn btn-success" asp-controller="Home" asp-action="Products">Checkout</a>
+        }
+    }
+    else
+    {
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Login">Login To Checkout</a>
+    }
 </div>
 
 

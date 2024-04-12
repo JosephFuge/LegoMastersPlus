@@ -15,7 +15,12 @@ builder.Services.AddDbContext<LegoMastersDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+    {
+        options.Conventions.AuthorizePage("/Checkout");
+        options.Conventions.AuthorizePage("/OrderConfirmation");
+    }
+); 
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
