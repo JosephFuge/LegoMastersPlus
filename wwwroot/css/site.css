@@ -474,3 +474,8 @@ footer {
     width: auto; /* Let the width adjust automatically */
 
 }
+
+.margin-horizontal-medium {
+    margin-left: 32px;
+    margin-right: 32px;
+}
