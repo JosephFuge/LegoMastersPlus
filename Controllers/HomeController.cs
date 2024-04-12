@@ -195,7 +195,7 @@ namespace LegoMastersPlus.Controllers
                     if (customerRegister.SignInAfter)
                     {
                         await _signInManager.SignInAsync(newUser, isPersistent: false);
-                        return RedirectToAction("Index");
+                        return RedirectToPage("/Account/Manage/EnableAuthenticator", new { Area = "Identity", RememberMe = false, returnUrl = "/" });
                     } else
                     {
                         // Otherwise, check if they are an admin and if so, take them back to the Users page
@@ -208,10 +208,10 @@ namespace LegoMastersPlus.Controllers
                                 return RedirectToAction("Users", "Admin");
                             } else
                             {
-                                return RedirectToAction("Index");
+                                return RedirectToPage("/Account/Manage/EnableAuthenticator", new { Area = "Identity", RememberMe = false, returnUrl = "/" });
                             }
                         }
-                        return RedirectToAction("Index");
+                        return RedirectToPage("/Account/Manage/EnableAuthenticator", new { Area = "Identity", RememberMe = false, returnUrl = "/" });
                     }
                 }
                 else
