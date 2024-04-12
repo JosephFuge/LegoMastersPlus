@@ -116,7 +116,7 @@ body {
 }
 
     .custom-product-name:hover {
-        color: #c07706 !important;
+        color: #648D54 !important;
     }
 
 .product-image {
@@ -128,16 +128,86 @@ body {
 
 
 /* Grid system */
-.container {
+/*.container {
     max-width: 1300px;
     margin: auto;
     padding-left: 25px;
     padding-right: 25px;
+}*/
+
+
+
+.home-img {
+    max-width: 400px; /* Adjust the max-width as needed */
+    height: auto; /* Maintain aspect ratio */
 }
 
-.row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Change to space-between to move elements to the left and right edges */
+.bg-tan {
+    background-color: #F6F3E7;
+    padding: 50px 0; /* Adjust padding as needed */
+    
 }
+
+
+/* styling for product page*/
+.page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #648D54;
+}
+
+.form-select {
+    width: 50%;
+    margin-bottom: 10px;
+    color: #666A86;
+}
+
+.form-radio-label {
+    margin-right: 10px;
+    color: #666A86;
+}
+
+.page-size {
+    margin-bottom: 20px;
+}
+
+.category-heading {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #648D54;
+}
+
+.category-label {
+    margin-right: 10px;
+    color: #666A86;
+}
+
+
+.color-text {
+    color: #648D54
+}
+
+.color-text2 {
+    color: #95B8D1
+}
+
+.custom-class {
+    line-height: 1.5; /* Adjust the value to increase or decrease spacing */
+}
+
+.backround-pink{
+    color: #EDAFB8
+}
+
+.color-black {
+    color: #333333
+}
+
+

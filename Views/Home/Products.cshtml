@@ -3,58 +3,66 @@
 }
 
 @model ProductsListViewModel
+<p></p>
 
-<h1>Title</h1>
+    <h1 class="page-title text-center color-black">All Lego Sets</h1>
+
+<p></p>
 
 <div class="row">
-    <div class="col-3">
+    <div class="col-2">
         <form asp-controller="Home" asp-action="Products" method="get">
-            <label asp-for="PrimaryColor">Primary Color:</label>
-            <select asp-for="PrimaryColor">
+            <label asp-for="PrimaryColor" class="form-label">Primary Color:</label>
+            <select asp-for="PrimaryColor" class="form-select">
                 <option value="">Select Color</option>
                 @foreach (var primColor in Model.PrimaryColors)
                 {
                     <option value="@primColor">@primColor</option>
                 }
             </select>
-            <label asp-for="SecondaryColor">Secondary Color:</label>
-            <select asp-for="SecondaryColor">
+            <p></p>
+            <label asp-for="SecondaryColor" class="form-label">Secondary Color:</label>
+            <select asp-for="SecondaryColor" class="form-select">
                 <option value="">Select Color</option>
                 @foreach (var secColor in Model.SecondaryColors)
                 {
                     <option value="@secColor">@secColor</option>
                 }
             </select>
+            <p></p>
 
-            <div>
-                <label>Page Size:</label>
-                <label><input type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") /> 5</label>
-                <label><input type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "") /> 10</label>
-                <label><input type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "") /> 20</label>
+            <div class="page-size">
+                <label class="form-label">Page Size:</label>
+                <label class="form-radio-label"><input type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") /> 5</label>
+                <label class="form-radio-label"><input type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "") /> 10</label>
+                <label class="form-radio-label"><input type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "") /> 20</label>
             </div>
 
-            <h5>Categories</h5>
+            <h5 class="category-heading">Categories</h5>
             @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
             {
-                <label>@category.value.Name</label>
+                <label class="category-label">@category.value.Name</label>
                 <input type="checkbox" name="SelectedCategories" value="@category.value.CategoryId" checked="@Model.SelectedCategories.Contains(category.value.CategoryId)" />
+                <div class="line-height"></div>
             }
-            <input type="submit" value="Filter" />
+            <p></p>
+            <p></p>
+            <input type="submit" value="Filter" class="btn btn-primary" />
         </form>
     </div>
     <div class="col container container-fluid">
         <div class="row">
             @foreach (Product p in Model.Products)
-                {
-                    <partial name="ProductSummary" model="p"/>
-                }
+            {
+                <partial name="ProductSummary" model="p" />
+            }
         </div>
-    
+
     </div>
 </div>
 
 
 <div class="col d-flex justify-content-end">
-        <div page-model="@Model.PaginationInfo" page-action="Products" page-controller="Home"
-             page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
-     </div>
+    <div page-model="@Model.PaginationInfo" page-action="Products" page-controller="Home"
+         page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+</div>

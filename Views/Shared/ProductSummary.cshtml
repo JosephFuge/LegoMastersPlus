@@ -27,7 +27,7 @@
 
 <div class="col-md-3">
     <div class="card d-flex justify-content-center mb-4">
-        <div class="card-body">
+        <div class="card-body color-text2 bg-tan">
             <!-- Displaying the img of the product -->
             <div class="card justify-content-center">
                 <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID">
@@ -36,10 +36,10 @@
             </div>
             <!-- Display the Product name and link to product details -->
             <div class="row">
-                <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID"><h6>@Model.name</h6></a>
+                <a class="custom-product-name " asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID"><h6>@Model.name</h6></a>
             </div>
             <div class="fw-bold row">@(Model.ProductCategories.Any() ? string.Join(" - ", Model.ProductCategories.Select(pc => pc.Category.Name)) : "N/A")</div>
-            <div class="fw-bold row">Price: $@Model.price</div>
+            <div class="fw-bold row color-text">Price: $@Model.price</div>
         </div>
     </div>
 </div>
