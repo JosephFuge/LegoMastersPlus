@@ -235,10 +235,18 @@ body {
 }*/
 
 
+.home-h1 {
+    font-size: 65px;
+}
+
+.home-p {
+    font-size: x-large;
+}
 
 .home-img {
-    max-width: 400px; /* Adjust the max-width as needed */
-    height: auto; /* Maintain aspect ratio */
+    max-width: 700px; /* Adjust the max-width as needed */
+    width: 600px;
+    height: 400px; /* Maintain aspect ratio */
 }
 
 .bg-tan {
