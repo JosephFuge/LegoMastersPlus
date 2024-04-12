@@ -45,9 +45,12 @@
                     <div class="ms-auto">
                         <partial name="_LoginPartial" />
                     </div>
-                    <div class="ms-2">
-                        <vc:cart-summary />
-                    </div>
+                    @if (!SignInManager.IsSignedIn(User) || !User.IsInRole("Admin"))
+                    {
+                        <div class="ms-2">
+                            <vc:cart-summary />
+                        </div>
+                    }
                 </div>
             </div>
         </nav>
@@ -76,6 +79,8 @@
             </div>
         </div>
     </div>
+
+    <div class="margin-top-lg"></div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
