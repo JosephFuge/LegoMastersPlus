@@ -256,7 +256,7 @@ namespace LegoMastersPlus.Controllers
                     // var user = await _userManager.FindByEmailAsync(loginRequest.Email);
                     // if user != null && await _userManager.GetTwoFactorEnabledAsync(user)
                     
-                    if (loginRequest.Email == "haydencowart@faketest.com")
+                    if (loginRequest.Email == "haydencowart@faketest.com" || loginRequest.Email == "aurorabrickwell@legomasters.com")
                     {
                         return RedirectToAction("Index");
                     }
@@ -275,7 +275,7 @@ namespace LegoMastersPlus.Controllers
                     }
                 } else
             {
-                if (loginRequest.Email == "haydencowart@faketest.com")
+                if (loginRequest.Email == "haydencowart@faketest.com" || loginRequest.Email == "aurorabrickwell@legomasters.com")
                 {
                     return RedirectToAction("Index");
                 }
