@@ -8,6 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
+/*
+ * Brickwell
+ * Section 4 Group 4
+ * Authors: Joseph Fuge, Cameron Klepacz, Ezekiel Goodman, Hannah Cameron
+ */
+
 namespace LegoMastersPlus.Controllers
 {
     // Ensure only Admins can access the pages and actions within AdminController

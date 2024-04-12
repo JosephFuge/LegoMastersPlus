@@ -22,6 +22,12 @@ using System.Net.NetworkInformation;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
+/*
+ * Brickwell
+ * Section 4 Group 4
+ * Authors: Joseph Fuge, Cameron Klepacz, Ezekiel Goodman, Hannah Cameron
+ */
+
 namespace LegoMastersPlus.Controllers
 {
     public class HomeController : Controller
