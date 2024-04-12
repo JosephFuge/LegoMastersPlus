@@ -25,7 +25,7 @@
             <div class="row">
                 @foreach (var prod in ViewBag.TopProducts)
                 {
-                    <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="col-lg-2 col-md-2 col-sm-6">
                         <div class="product-card">
                             <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
                                 <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
@@ -38,7 +38,6 @@
             </div>
         </div>
     </div>
-
 
 
 
