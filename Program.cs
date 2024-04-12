@@ -1,3 +1,4 @@
+using LegoMastersPlus.Controllers;
 using LegoMastersPlus.Data;
 using LegoMastersPlus.Models;
 using LegoMastersPlus.Models.ViewModels;

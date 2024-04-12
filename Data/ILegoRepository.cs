@@ -21,9 +21,9 @@ namespace LegoMastersPlus.Data
         public void SaveChanges();
 
         public IQueryable<Category> Categories { get; }
+        public int SaveOrder(Order order);
 
         public IQueryable<LineItem> LineItems { get; }
 
-        void SaveOrder(Order order);
     }
 }
