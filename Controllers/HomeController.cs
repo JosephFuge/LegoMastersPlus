@@ -177,11 +177,12 @@ namespace LegoMastersPlus.Controllers
         }
 
         [HttpGet]
-        public IActionResult CustomerRegister()
+        public async Task<IActionResult> CustomerRegister()
         {
             return View(new CustomerRegisterViewModel
             {
-                SignInAfter = true
+                SignInAfter = true,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
             });
         }
 

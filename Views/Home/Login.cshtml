@@ -44,7 +44,10 @@
                 }
             </table>
             <button class="btn btn-info rounded-pill login-button" type="submit">Login</button>
-            <vc:third-party-auth login-info="@Model" is-login="true" />
+            @if (Model.ExternalLogins != null)
+            {
+                <vc:third-party-auth external-login-info="@Model.ExternalLogins.ToList()" is-login="true" />
+            }
         </form>
     </div>
 </div>

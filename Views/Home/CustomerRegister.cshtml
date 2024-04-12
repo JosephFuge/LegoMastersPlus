@@ -6,8 +6,7 @@
 
 @model CustomerRegisterViewModel
 
-<div class="text-center d-flex row">
-    <div class="col-2"></div>
+<div class="login-body">
     <form method="post" class="auth-form col">
         <h2>Register Customer</h2>
         <input asp-for="SignInAfter" hidden/>
@@ -99,7 +98,11 @@
             </table>
         </div>
         
-        <button type="submit">@(ViewBag.IsEdit != null && ViewBag.IsEdit ? "Save Changes" : "Register")</button>
+        <button class="btn btn-info rounded-pill" type="submit">@(ViewBag.IsEdit != null && ViewBag.IsEdit ? "Save Changes" : "Register")</button>
+        @if (ViewBag.IsEdit == null || !ViewBag.IsEdit)
+        {
+            <vc:third-party-auth external-login-info="@Model.ExternalLogins" is-login="true" />
+        }
     </form>
-    <div class="col-2"></div>
 </div>
+<div class="margin-top-lg"></div>
