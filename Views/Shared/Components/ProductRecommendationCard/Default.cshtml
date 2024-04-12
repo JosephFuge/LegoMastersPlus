@@ -6,11 +6,15 @@
 
 @model Product
 
-<div class="card" style="width: 18rem;">
-    <img class="card-img-top img-fluid" src="@Model.img_link" alt="Card image cap" style="object-fit: cover; height: 200px;">
+<div class="card scroll-card">
     <div class="card-body">
-        <h5 class="card-title">@Model.name</h5>
-        <p class="card-text">Price: $@Model.price</p>
-        <a asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@Model.product_ID" class="btn btn-primary">See Details</a>
+        <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID">
+            <img class="card-img-top product-image img-fluid" src="@Model.img_link" alt="Card image cap">
+        </a>
+        <div>
+            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID"><h5 class="card-title">@Model.name</h5></a>
+            <p class="card-text">Price: $@Model.price</p>
+            <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID" class="btn btn-primary">See Details</a>
+        </div>
     </div>
 </div>

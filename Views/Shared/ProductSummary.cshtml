@@ -35,11 +35,14 @@
                 </a>
             </div>
             <!-- Display the Product name and link to product details -->
-            <div class="row">
-                <a class="custom-product-name " asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID"><h6>@Model.name</h6></a>
+            <div class="row ms-1">
+                <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID"><h6>@Model.name</h6></a>
             </div>
-            <div class="fw-bold row">@(Model.ProductCategories.Any() ? string.Join(" - ", Model.ProductCategories.Select(pc => pc.Category.Name)) : "N/A")</div>
-            <div class="fw-bold row color-text">Price: $@Model.price</div>
+            <div class="row ms-1">
+                <div class="fw-bold row">@(Model.ProductCategories.Any() ? string.Join(" - ", Model.ProductCategories.Select(pc => pc.Category.Name)) : "N/A")</div>
+                <div class="fw-bold row color-text">Price: $@Model.price</div>
+            </div>
+            
         </div>
     </div>
 </div>
