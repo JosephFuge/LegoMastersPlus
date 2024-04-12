@@ -60,6 +60,12 @@ body {
         color: #666A86;
     }
 
+.navigation-display {
+    color: #cd4b5e;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
 /* Cart summary styling */
 .navbar-text {
     color: #333333;
