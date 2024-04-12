@@ -168,13 +168,14 @@ namespace LegoMastersPlus.Controllers
             }
         }
 
-        public async Task<IActionResult> Users(int userPageNum, int customerPageNum)
+        public async Task<IActionResult> Users(int userPageNum)
         {
             const int pageSize = 10;
 
             // Set pageNum to 1 if it is 0 (as can happen for the default Users page request)
             userPageNum = userPageNum == 0 ? 1 : userPageNum;
-            customerPageNum = customerPageNum == 0 ? 1 : customerPageNum;
+            int customerPageNum = userPageNum;
+            //customerPageNum = customerPageNum == 0 ? 1 : customerPageNum;
 
             Dictionary<IdentityUser, IList<string>> allUserRoles = new Dictionary<IdentityUser, IList<string>>();
 
