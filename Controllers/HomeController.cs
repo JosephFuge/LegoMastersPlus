@@ -49,18 +49,51 @@ namespace LegoMastersPlus.Controllers
             _session = new InferenceSession(modelPath);
         }
 
-        public IActionResult Index()
+        
+        public async Task<IActionResult> Index()
         {
-            //var products = _legoRepo.Products; // Assuming you have a method to retrieve all products
+            var products = getTopProducts();
 
-            var pageSize = 4;
-            // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
-            var pageNum = 1;
+            var userClaim = HttpContext.User;
 
-            // Get the correct list of products based on page size and page number
-           var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
+            // If user is signed in, has a customer row in the customer table and has a pre-predicted recommendation for them in the database, show it
+            // Otherwise, show top-rated products
+            if (userClaim != null)
+            {
+                var user = await _signInManager.UserManager.GetUserAsync(userClaim);
+                if (user != null)
+                {
+                    var customer = _legoRepo.Customers.Single(c => c.IdentityID == user.Id);
 
-           var topProductIds = _legoRepo.LineItems
+                    if (customer != null)
+                    {
+                        var customerRecs = _legoRepo.ProductUserRecommendations(customer.customer_ID).FirstOrDefault();
+                        if (customerRecs != null)
+                        {
+                            products = [
+                                customerRecs.Product_1,
+                                customerRecs.Product_2,
+                                customerRecs.Product_3,
+                                customerRecs.Product_4,
+                                customerRecs.Product_5,
+                                customerRecs.Product_6,
+                                customerRecs.Product_7,
+                                customerRecs.Product_8,
+                                customerRecs.Product_9,
+                                customerRecs.Product_10
+                                ];
+                        }
+                    }
+                }
+            }
+
+            return View(products);
+        }
+
+        private List<Product> getTopProducts()
+        {
+            // 1. Get top-purchased product Ids
+            var topProductIds = _legoRepo.LineItems
                .GroupBy(li => li.product_ID)
                .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
                .OrderByDescending(x => x.PurchaseCount)
@@ -68,25 +101,12 @@ namespace LegoMastersPlus.Controllers
                .Select(x => x.ProductId)
                .ToList();
 
-           // 2. Join with Product details
-           var topProducts = _legoRepo.Products
-               .Where(p => topProductIds.Contains(p.product_ID))
-               .ToList();
+            // 2. Join with Product details
+            var topProducts = _legoRepo.Products
+                .Where(p => topProductIds.Contains(p.product_ID))
+                .ToList();
 
-            // Store the ordered LineItems in the ViewBag
-            ViewBag.TopProducts = topProducts;
-
-
-
-
-            // Gather paging info and product list into a ViewModel
-            var productCount = _legoRepo.Products.Count();
-            PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
-            var allCategories = _legoRepo.Categories;
-            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
-
-            return View(productPagingModel);
-
+            return topProducts;
         }
 
         public IActionResult AccessDenied(string ReturnUrl)
@@ -492,185 +512,6 @@ namespace LegoMastersPlus.Controllers
                 return true;
             }
         }
-
-        //ONNX Prediction
-        [HttpPost]
-        public IActionResult Predict(int hour, int amount, string day, string entry_mode, string transaction_type, string country, string bank, string card_type)
-        //public IActionResult Predict(Dictionary<string, int> inputVariables)
-        {
-            //Bring in the dummy-coded data to be predicted
-            var inputVariables = Dummy(hour, amount, day, entry_mode, transaction_type, country, bank, card_type);
-
-            //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
-            var fraud_dict = new Dictionary<int, string>()
-            {
-                { 0, "Not fraudulent"},
-                { 1, "Possibly fradulent, please review"}
-            };
-            try
-            {
-                var input = new List<float>();
-                foreach (var kvp in inputVariables)
-                {
-                    input.Add(kvp.Value);
-                }
-                var inputTensor = new DenseTensor<float>(input.ToArray(), new[] { 1, input.Count });
-
-                var inputs = new List<NamedOnnxValue>
-                { NamedOnnxValue.CreateFromTensor("float_input", inputTensor)};
-
-                using (var results = _session.Run(inputs)) //Make the predicton from the Order input
-                {
-                    var prediction = results.FirstOrDefault(item => item.Name == "output_label")?.AsTensor<long>().ToArray();
-                    if (prediction != null && prediction.Length > 0)
-                    {
-                        //Get the proper fraud text
-                        //var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
-                        //ViewBag.Prediction = fraudCheck;
-                        ViewBag.Prediction = prediction[0];
-                    }
-                    else
-                    {
-                        ViewBag.Prediction = "Error: Unable to make a prediction.";
-                    }
-                }
-                _logger.LogInformation("Prediction executed successfully");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error during prediction: {ex.Message}");
-                ViewBag.Prediction = "Error during prediction.";
-            }
-
-            return View(); //Return view of dummy data so I can check if it works
-        }
-
-        //For the Predict view; delete when connected to the database
-        [HttpGet]
-        public IActionResult Predict()
-        {
-            return View();
-        }
-
-        public Dictionary<String, int> Dummy(int hour, int amount, string day, string entry_mode, string transaction_type, string country, string bank, string card_type)
-        {
-            // Dummy code day of the week
-            Dictionary<string, int> dayDict = new Dictionary<string, int>()
-        {
-            { "Mon", 0 },
-            { "Tue", 0 },
-            { "Wed", 0 },
-            { "Thu", 0 },
-            { "Fri", 0 },
-            { "Sat", 0 },
-            { "Sun", 0 }
-        };
-
-            if (day != "Fri")
-            {
-                dayDict[day] = 1; // Set the selected day to 1, others remain 0
-            }
-
-            // Dummy code entry mode
-            Dictionary<string, int> entryModeDict = new Dictionary<string, int>()
-        {
-            { "pin", 0 },
-            { "tap", 0 },
-            { "cvc", 0 }
-        };
-
-            if (entry_mode != "cvc")
-            {
-                entryModeDict[entry_mode] = 1;
-            }
-
-            // Dummy code transaction type
-            Dictionary<string, int> transactionTypeDict = new Dictionary<string, int>()
-        {
-            { "pin", 0 },
-            { "tap", 0 },
-            { "online", 0 },
-            { "pos", 0 },
-            { "atm", 0 }
-        };
-
-            if (transaction_type != "atm")
-            {
-                transactionTypeDict[transaction_type] = 1; // Set the selected transaction type to 1, others remain 0
-            }
-
-            // Dummy code country
-            Dictionary<string, int> countryDict = new Dictionary<string, int>()
-        {
-            { "china", 0 },
-            { "india", 0 },
-            { "russia", 0 },
-            { "uk", 0 },
-            { "usa", 0 }
-        };
-
-            if (country != "china")
-            {
-                countryDict[country] = 1; // Set the selected country to 1, others remain 0
-            }
-
-            // Dummy code bank
-            Dictionary<string, int> bankDict = new Dictionary<string, int>()
-        {
-            { "barclay", 0 },
-            { "hsbc", 0 },
-            { "halifax", 0 },
-            { "lloyd", 0 },
-            { "metro", 0 },
-            { "monzo", 0 },
-            { "rbs", 0 }
-        };
-            if (bank != "barclay")
-            {
-                bankDict[bank] = 1; // Set the selected bank to 1, others remain 0
-            }
-
-            // Dummy code card type
-            Dictionary<string, int> cardTypeDict = new Dictionary<string, int>()
-        {
-            { "mastercard", 0 },
-            { "visa", 0 }
-        };
-            if (card_type != "mastercard")
-            {
-                cardTypeDict[card_type] = 1; // Set the selected card type to 1, others remain 0
-            }
-
-            var inputVariables = new Dictionary<string, int>()
-                {
-                    { "time_hour", hour },
-                    { "amount", amount },
-                    { "Mon", dayDict["Mon"] },
-                    { "Sat", dayDict["Sat"] },
-                    { "Sun", dayDict["Sun"] },
-                    { "Thu", dayDict["Thu"] },
-                    { "Tue", dayDict["Tue"] },
-                    { "Wed", dayDict["Wed"] },
-                    { "Pin", transactionTypeDict["pin"] },
-                    { "Tap", transactionTypeDict["tap"] },
-                    { "Online", transactionTypeDict["online"] },
-                    { "POS", transactionTypeDict["pos"] },
-                    { "India", countryDict["india"] },
-                    { "Russia", countryDict["russia"] },
-                    { "USA", countryDict["usa"] },
-                    { "UK", countryDict["uk"] },
-                    { "HSBC", bankDict["hsbc"] },
-                    { "Halifax", bankDict["halifax"] },
-                    { "Lloyds", bankDict["lloyd"] },
-                    { "Metro", bankDict["metro"] },
-                    { "Monzo", bankDict["monzo"] },
-                    { "RBS", bankDict["rbs"] },
-                    { "Visa", cardTypeDict["visa"] }
-                };
-
-            return inputVariables;
-        }
-
 
         public IActionResult Products(ProductsListViewModel plvm)
         {

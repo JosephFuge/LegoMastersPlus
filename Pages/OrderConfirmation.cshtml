@@ -5,15 +5,20 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-@if (Model.IsFraudulent == true)
-{
-    <div>Your order is currently under review</div>
-}
-@if (Model.IsFraudulent == false)
-{
-    <div>Your order has been placed, thank you!</div>
-}
-
+<div class="container pt-5">
+    <div class="row justify-content-center align-items-center text-center h-100">
+        @if (Model.IsFraudulent == true)
+        {
+            <h1 class="color-darkblue">Your order is currently under review</h1>
+            <img src="~/img/legos_being_built.jpg" style="height: 50px; width: auto"/>
+        }
+        @if (Model.IsFraudulent == false)
+        {
+            <h1 class="color-darkblue">Your order has been placed, thank you!</h1>
+            <img src="~/img/lego-delivery.jpg" style="height: 50px; width: auto" />    
+        }
+    </div>
+</div>

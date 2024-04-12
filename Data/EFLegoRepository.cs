@@ -68,7 +68,22 @@ namespace LegoMastersPlus.Data
                                                                                     .Include(pir => pir.RecProduct)
                                                                                         .ThenInclude(pr => pr.ProductCategories)
                                                                                             .ThenInclude(c => c.Category);
-        
+
+        public IQueryable<ProductUserRecommendation> ProductUserRecommendations(int customer_ID) => _context.ProductUserRecommendations
+                                                                                    .Where(pur => pur.customer_ID == customer_ID)
+                                                                                    .Include(x => x.Product_1)
+                                                                                    .Include(x => x.Product_2)
+                                                                                    .Include(x => x.Product_3)
+                                                                                    .Include(x => x.Product_4)
+                                                                                    .Include(x => x.Product_5)
+                                                                                    .Include(x => x.Product_6)
+                                                                                    .Include(x => x.Product_7)
+                                                                                    .Include(x => x.Product_8)
+                                                                                    .Include(x => x.Product_9)
+                                                                                    .Include(x => x.Product_10)
+                                                                                    .Include(pur => pur.Customer);
+
+
         public void DeleteOrder(Order order)
         {
             _context.Orders.Remove(order);
