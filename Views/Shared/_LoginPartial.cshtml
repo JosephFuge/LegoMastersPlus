@@ -5,28 +5,33 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+@*     <a  class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+
+ *@
+
     <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <div class="navigation-display">Hello @User.Identity?.Name!</div>
     </li>
-@*  TOD: D_
+
+ @*  TOD: D_
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
         </form>
     </li> *@
-    <li class="nav-item">
+    <div class="nav-item">
         <form asp-controller="Home" asp-action="Logout" method="post">
             <button type="submit" class="nav-link">Logout</button>
         </form>
-    </li>
+    </div>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="Home" asp-action="CustomerRegister">Register</a>
+        <a class="nav-link" asp-controller="Home" asp-action="CustomerRegister">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="Home" asp-action="Login">Login</a>
+        <a class="nav-link" asp-controller="Home" asp-action="Login">Login</a>
     </li>
 }
 </ul>

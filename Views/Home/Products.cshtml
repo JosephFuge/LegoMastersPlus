@@ -31,18 +31,21 @@
             </select>
             <p></p>
 
-            <div class="page-size">
-                <label class="form-label">Page Size:</label>
-                <label class="form-radio-label"><input type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") /> 5</label>
-                <label class="form-radio-label"><input type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "") /> 10</label>
-                <label class="form-radio-label"><input type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "") /> 20</label>
+            <label class="form-label">Results Per Page:</label>
+            <div class="page-size radioSelector">
+                <input id="first" type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") />
+                <label for="first" class="form-radio-label">5</label>
+                <input id="second" type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "")/>
+                <label for="second" class="form-radio-label">10</label>
+                <input id="third" type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "")/>
+                <label for="third" class="form-radio-label">20</label>
             </div>
 
             <h5 class="category-heading">Categories</h5>
             @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
             {
-                <label class="category-label">@category.value.Name</label>
                 <input type="checkbox" name="SelectedCategories" value="@category.value.CategoryId" checked="@Model.SelectedCategories.Contains(category.value.CategoryId)" />
+                <label class="category-label">@category.value.Name</label>
                 <div class="line-height"></div>
             }
             <p></p>
