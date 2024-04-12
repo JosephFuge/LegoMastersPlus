@@ -424,11 +424,11 @@ namespace LegoMastersPlus.Controllers
 
         //ONNX Prediction
         [HttpPost]
-        public IActionResult Predict(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        public IActionResult Predict(int hour, int amount, string day, string entry_mode, string transaction_type, string country, string bank, string card_type)
         //public IActionResult Predict(Dictionary<string, int> inputVariables)
         {
             //Bring in the dummy-coded data to be predicted
-            var inputVariables = Dummy(hour, amount, day, transaction_type, country, bank, card_type);
+            var inputVariables = Dummy(hour, amount, day, entry_mode, transaction_type, country, bank, card_type);
 
             //Change the fraud prediction (boolean 0 or 1) into "not fraud" or "fraud"
             var fraud_dict = new Dictionary<int, string>()
@@ -438,7 +438,6 @@ namespace LegoMastersPlus.Controllers
             };
             try
             {
-                //var input = new List<float> { time_hour, amount, Mon, Sat, Sun, Thu, Tue, Wed, Pin, Tap, Online, POS, India, Russia, USA, UK, HSBC, Halifax, Lloyds, Metro, Monzo, RBS, Visa };
                 var input = new List<float>();
                 foreach (var kvp in inputVariables)
                 {
@@ -455,8 +454,9 @@ namespace LegoMastersPlus.Controllers
                     if (prediction != null && prediction.Length > 0)
                     {
                         //Get the proper fraud text
-                        var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
-                        ViewBag.Prediction = fraudCheck;
+                        //var fraudCheck = fraud_dict.GetValueOrDefault((int)prediction[0], "Unknown");
+                        //ViewBag.Prediction = fraudCheck;
+                        ViewBag.Prediction = prediction[0];
                     }
                     else
                     {
@@ -481,7 +481,7 @@ namespace LegoMastersPlus.Controllers
             return View();
         }
 
-        public Dictionary<String, int> Dummy(int hour, int amount, string day, string transaction_type, string country, string bank, string card_type)
+        public Dictionary<String, int> Dummy(int hour, int amount, string day, string entry_mode, string transaction_type, string country, string bank, string card_type)
         {
             // Dummy code day of the week
             Dictionary<string, int> dayDict = new Dictionary<string, int>()
@@ -498,6 +498,19 @@ namespace LegoMastersPlus.Controllers
             if (day != "Fri")
             {
                 dayDict[day] = 1; // Set the selected day to 1, others remain 0
+            }
+
+            // Dummy code entry mode
+            Dictionary<string, int> entryModeDict = new Dictionary<string, int>()
+        {
+            { "pin", 0 },
+            { "tap", 0 },
+            { "cvc", 0 }
+        };
+
+            if (entry_mode != "cvc")
+            {
+                entryModeDict[entry_mode] = 1;
             }
 
             // Dummy code transaction type

@@ -2,16 +2,17 @@
 @using LegoMastersPlus.Models
 @using LegoMastersPlus.Pages
 @model LegoMastersPlus.Pages.OrderConfirmation
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = null;
 }
 
-@* @if (Order.fraud == false) *@
-@* { *@
-@*     <div>Your Order has been submitted!</div> *@
-@* } *@
-@* else *@
-@* { *@
-@*     <div>Your Order is being processed and under review!</div> *@
-@* } *@
+@if (Model.IsFraudulent == true)
+{
+    <div>Your order is currently under review</div>
+}
+@if (Model.IsFraudulent == false)
+{
+    <div>Your order has been placed, thank you!</div>
+}
