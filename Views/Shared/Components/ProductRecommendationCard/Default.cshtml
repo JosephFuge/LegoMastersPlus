@@ -6,12 +6,15 @@
 
 @model Product
 
-<div class="card scroll-card">
-    <div class="card-body">
-        <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID">
-            <img class="card-img-top product-image img-fluid" src="@Model.img_link" alt="Card image cap">
-        </a>
-        <div>
+<div class="card scroll-card d-flex justify-content-center mb-2 tan">
+    <div class="card-body color-text2" style="background-color: #F6F3E7;">
+        <div class="card justify-content-center">
+            <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID">
+                <img class="card-img-top product-image img-fluid" src="@Model.img_link" alt="Card image cap">
+            </a>
+        </div>
+        
+        <div class="justify-content-center">
             <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID"><h5 class="card-title">@Model.name</h5></a>
             <p class="card-text">Price: $@Model.price</p>
             <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@Model.product_ID" class="btn btn-primary">See Details</a>

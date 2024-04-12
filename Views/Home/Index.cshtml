@@ -25,13 +25,18 @@
             <div class="row">
                 @foreach (var prod in Model)
                 {
-                    <div class="card scroll-card pe-0">
-                        <div class="card-body product-card pe-0">
+                    <div class="card scroll-card pe-0 justify-content-center mb-2 tan">
+                        <div class="card-body product-card color-text2" style="background-color: #F6F3E7;">
+                            <div class="card justify-content-center">
+                                <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
+                                    <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
+                                </a>
+                            </div>
                             <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
-                                <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
-                                <h2 class="product-title custom-product-name">@prod.name</h2>
+                                <h5 class="card-title">@prod.name</h5>
                             </a>
                             <p class="product-price">$@prod.price</p>
+                            <a asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID" class="btn btn-primary">See Details</a>
                         </div>
                     </div>
                 }

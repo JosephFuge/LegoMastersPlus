@@ -27,6 +27,7 @@ html {
 /**/
 body {
     height: 100%;
+    background-color: #f1efef;
 }
 
 .btn:focus,
@@ -37,6 +38,9 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.tan {
+    background-color: #F6F3E7;
+}
 
 /* Navbar styling */
 .navbar {
