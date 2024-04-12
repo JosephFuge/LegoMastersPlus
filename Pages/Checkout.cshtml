@@ -11,11 +11,6 @@
         <div class="col-md-6 offset-md-3">
             <h2 class="mb-4">Order details:</h2>
             <form method="post">
-                @* <div class="form-group">
-                    <label for="Name">User Name</label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div> *@
 
                 <div class="form-group">
                     <label for="CountryOfTransaction">Country of Transaction:</label>
@@ -57,7 +52,6 @@
                         <option value="">Select a Card Type</option>
                         <option value="visa">Visa</option>
                         <option value="mastercard">MasterCard</option>
-                        <!-- Add more options as necessary -->
                     </select>
                     <span asp-validation-for="TypeOfCard" class="text-danger"></span>
                 </div>
