@@ -85,7 +85,7 @@ $(document).ready(function () {
 
 // delete customer: 
 $(document).ready(function () {
-    $('#deleteCustomerButton').click(function (event) {
+    $('a.deleteCustomerButton').click(function (event) {
         event.preventDefault(); // Prevent the default link behavior
 
         var deleteUrl = $(this).data('url'); // Use the URL from the data-url attribute
@@ -114,7 +114,7 @@ $(document).ready(function () {
 
 // delete user: 
 $(document).ready(function () {
-    $('#deleteUserButton').click(function (event) {
+    $('a.deleteUserButton').click(function (event) {
         event.preventDefault(); // Prevent the default link behavior
 
         var deleteUrl = $(this).data('url'); // Use the URL from the data-url attribute

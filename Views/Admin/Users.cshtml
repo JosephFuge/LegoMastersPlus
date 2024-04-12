@@ -41,7 +41,7 @@
                     <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditUser" asp-route-userId="@userRoles.Key.Id">Edit User</a>
                 </td>
                 <td>
-                    <a class="rounded-pill btn btn-danger btn-pill" id="deleteUserButton" data-url="@Url.Action("DeleteUser", "Admin", new { userId = userRoles.Key.Id })" data-customerId="@userRoles.Key.Id">Delete User</a>
+                    <a class="rounded-pill btn btn-danger btn-pill deleteUserButton" data-url="@Url.Action("DeleteUser", "Admin", new { userId = userRoles.Key.Id })" data-customerId="@userRoles.Key.Id">Delete User</a>
                 </td>
             </tr>
         }
@@ -94,7 +94,7 @@
                     <a class="rounded-pill btn bg-soft-purple btn-pill" asp-controller="Admin" asp-action="EditCustomer" asp-route-customerId="@customer.customer_ID">Edit Customer</a>
                 </td>
                 <td>
-                    <a class="rounded-pill btn btn-danger btn-pill" id="deleteCustomerButton" data-url="@Url.Action("DeleteCustomer", "Admin", new { customerId = customer.customer_ID })" data-customerId="@customer.customer_ID">Delete Customer</a>
+                    <a class="rounded-pill btn btn-danger btn-pill deleteCustomerButton" data-url="@Url.Action("DeleteCustomer", "Admin", new { customerId = customer.customer_ID })" data-customerId="@customer.customer_ID">Delete Customer</a>
                 </td>
             </tr>
         }
