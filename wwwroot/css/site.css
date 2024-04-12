@@ -211,3 +211,20 @@ body {
 }
 
 
+
+
+.filter-red {
+    filter: invert(36%) sepia(8%) saturate(7430%) hue-rotate(323deg) brightness(127%) contrast(92%);
+}
+
+.center-vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 90vh;
+}
+
+a.no-decoration-link, a.no-decoration-link:active, a.no-decoration-link:visited {
+    color: black;
+    text-decoration: none;
+}

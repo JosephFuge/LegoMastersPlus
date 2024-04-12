@@ -10,7 +10,7 @@
     <div class="col-2"></div>
     <form method="post" class="auth-form col">
        
-        <h2>Edit Customer</h2>
+        <h2>Edit User</h2>
         <input asp-for="SignInAfter" hidden />
         <table>
             <tr>
@@ -89,6 +89,20 @@
                 <td></td>
                 <td>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</td>
             </tr>
+            @if (Model.AllRoles != null && Model.AllRoles.Any())
+                {
+                <tr>
+                    <h3>Roles</h3>
+                    @foreach (string? role in Model.AllRoles)
+                    {
+                        @if (role != null)
+                        {
+                            <label class="category-label">@role: </label>
+                            <input type="checkbox" name="SelectedRoles" value="@role" checked="@Model.SelectedRoles.Contains(role)" />
+                        }
+                    }
+                </tr>
+            }
             @if (ViewBag.ShowCookieConsentButton != null && ViewBag.ShowCookieConsentButton)
             {
                 <tr>
@@ -97,7 +111,7 @@
             }
 
         </table>
-        <button type="submit">@(ViewBag.IsEdit != null && ViewBag.IsEdit ? "Save Changes" : "Register")</button>
+        <button type="submit">Save Changes</button>
     </form>
     <div class="col-2"></div>
 </div>
