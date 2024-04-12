@@ -17,7 +17,6 @@
         <tr>
             <td></td>
             <td>Username</td>
-            <td>Type</td>
             <td>Roles</td>
             <td></td>
             <td></td>
@@ -30,9 +29,6 @@
                 </td>
                 <td>
                     <p>@userRoles.Key.UserName</p>
-                </td>
-                <td>
-                    Lorem Ipsum
                 </td>
                 <td>
                     <p>@(userRoles.Value.Any() ? string.Join(", ", userRoles.Value) : "No Roles")</p>

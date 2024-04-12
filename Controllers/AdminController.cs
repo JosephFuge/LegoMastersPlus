@@ -377,10 +377,12 @@ namespace LegoMastersPlus.Controllers
                 if (registerResult.Succeeded)
                 {
                     await _signInManager.UserManager.AddToRoleAsync(newUser, "Customer");
+                    var user = await _signInManager.UserManager.FindByEmailAsync(customerRegister.Email);
 
                     // Create customer model. Calculate age based off of time since birth date
                     var newCustomer = new Customer
                     {
+                        IdentityID = user?.Id,
                         first_name = customerRegister.first_name,
                         gender = customerRegister.gender,
                         last_name = customerRegister.last_name,
