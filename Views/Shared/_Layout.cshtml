@@ -53,20 +53,9 @@
         </nav>
     </header>
 
-
-
-
-    <div class="">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - LegoMastersPlus - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <main role="main">
+        @RenderBody()
+    </main>
 
     <div class="modal fade" id="cookieConsentModal" tabindex="-1" role="dialog" aria-labelledby="cookieConsentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -87,6 +76,12 @@
             </div>
         </div>
     </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - LegoMastersPlus - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
     
     @section Scripts {
         @RenderSection("Scripts", required: false)
