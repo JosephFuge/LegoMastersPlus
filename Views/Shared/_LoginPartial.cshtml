@@ -9,7 +9,7 @@
 
  *@
 
-    <li class="nav-item">
+    <li class="nav-item pe-3 align-items-center pt-2">
         <div class="navigation-display">Hello @User.Identity?.Name!</div>
     </li>
 
@@ -21,7 +21,7 @@
     </li> *@
     <div class="nav-item">
         <form asp-controller="Home" asp-action="Logout" method="post">
-            <button type="submit" class="nav-link">Logout</button>
+            <button type="submit" class="nav-link btn btn-outline-secondary">Logout</button>
         </form>
     </div>
 }
