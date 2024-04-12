@@ -1,5 +1,5 @@
 ﻿
-@model ProductsListViewModel
+@model List<Product>
 
 
 <div class="bg-tan">
@@ -23,7 +23,7 @@
         <h1>Featured Products</h1>
         <div class="col container container-fluid">
             <div class="row">
-                @foreach (var prod in ViewBag.TopProducts)
+                @foreach (var prod in Model)
                 {
                     <div class="col-lg-2 col-md-2 col-sm-6">
                         <div class="product-card">

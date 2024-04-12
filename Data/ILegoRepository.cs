@@ -17,6 +17,7 @@ namespace LegoMastersPlus.Data
         public IQueryable<Order> Orders { get; }
         public void DeleteProduct(Product product);
         public IQueryable<ProductItemRecommendation> ProductItemRecommendations(int product_ID);
+        public IQueryable<ProductUserRecommendation> ProductUserRecommendations(int customer_ID);
         public void DeleteOrder(Order order);
         public void SaveChanges();
 

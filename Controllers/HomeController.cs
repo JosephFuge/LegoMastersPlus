@@ -49,18 +49,51 @@ namespace LegoMastersPlus.Controllers
             _session = new InferenceSession(modelPath);
         }
 
-        public IActionResult Index()
+        
+        public async Task<IActionResult> Index()
         {
-            //var products = _legoRepo.Products; // Assuming you have a method to retrieve all products
+            var products = getTopProducts();
 
-            var pageSize = 4;
-            // Set pageNum to 1 if it is 0 (as can happen for the default Products page request)
-            var pageNum = 1;
+            var userClaim = HttpContext.User;
 
-            // Get the correct list of products based on page size and page number
-           var productList = _legoRepo.Products.Skip((pageNum - 1) * pageSize).Take(pageSize);
+            // If user is signed in, has a customer row in the customer table and has a pre-predicted recommendation for them in the database, show it
+            // Otherwise, show top-rated products
+            if (userClaim != null)
+            {
+                var user = await _signInManager.UserManager.GetUserAsync(userClaim);
+                if (user != null)
+                {
+                    var customer = _legoRepo.Customers.Single(c => c.IdentityID == user.Id);
 
-           var topProductIds = _legoRepo.LineItems
+                    if (customer != null)
+                    {
+                        var customerRecs = _legoRepo.ProductUserRecommendations(customer.customer_ID).FirstOrDefault();
+                        if (customerRecs != null)
+                        {
+                            products = [
+                                customerRecs.Product_1,
+                                customerRecs.Product_2,
+                                customerRecs.Product_3,
+                                customerRecs.Product_4,
+                                customerRecs.Product_5,
+                                customerRecs.Product_6,
+                                customerRecs.Product_7,
+                                customerRecs.Product_8,
+                                customerRecs.Product_9,
+                                customerRecs.Product_10
+                                ];
+                        }
+                    }
+                }
+            }
+
+            return View(products);
+        }
+
+        private List<Product> getTopProducts()
+        {
+            // 1. Get top-purchased product Ids
+            var topProductIds = _legoRepo.LineItems
                .GroupBy(li => li.product_ID)
                .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
                .OrderByDescending(x => x.PurchaseCount)
@@ -68,25 +101,12 @@ namespace LegoMastersPlus.Controllers
                .Select(x => x.ProductId)
                .ToList();
 
-           // 2. Join with Product details
-           var topProducts = _legoRepo.Products
-               .Where(p => topProductIds.Contains(p.product_ID))
-               .ToList();
+            // 2. Join with Product details
+            var topProducts = _legoRepo.Products
+                .Where(p => topProductIds.Contains(p.product_ID))
+                .ToList();
 
-            // Store the ordered LineItems in the ViewBag
-            ViewBag.TopProducts = topProducts;
-
-
-
-
-            // Gather paging info and product list into a ViewModel
-            var productCount = _legoRepo.Products.Count();
-            PaginationInfo pagingInfo = new PaginationInfo(productCount, pageSize, pageNum);
-            var allCategories = _legoRepo.Categories;
-            var productPagingModel = new ProductsListViewModel(productList.ToList(), pagingInfo, null, null, allCategories.ToList(), null, null);
-
-            return View(productPagingModel);
-
+            return topProducts;
         }
 
         public IActionResult AccessDenied(string ReturnUrl)
