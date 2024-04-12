@@ -23,6 +23,8 @@ namespace LegoMastersPlus.Infrastructure
 
         public PaginationInfo PageModel { get; set; }
 
+        public string? PageNumName { get; set; }
+
         public bool PageClassesEnabled { get; set; } = false;
         public string PageClass { get; set; } = String.Empty;
         public string PageClassNormal { get; set; } = String.Empty;
@@ -89,7 +91,8 @@ namespace LegoMastersPlus.Infrastructure
             // Add current query parameters to the dictionary, excluding page-related parameters
             foreach (var param in ViewContext?.HttpContext?.Request?.Query)
             {
-                if (param.Key.ToLower() != "pagenum")
+
+                if (param.Key.ToLower() != "pagenum" && (PageNumName == null || param.Key.ToLower() != PageNumName.ToLower()))
                 {
                     // Handle multi-value parameters like CategoryIds
                     if (param.Value.Count > 1)
@@ -103,7 +106,7 @@ namespace LegoMastersPlus.Infrastructure
                 }
             }
 
-            routeValues["pageNum"] = pageNumber;
+            routeValues[PageNumName ?? "pageNum"] = pageNumber;
 
             aTag.Attributes["href"] = urlHelper.Action(PageAction, PageController, routeValues);
             if (PageClassesEnabled)
