@@ -264,6 +264,7 @@ namespace LegoMastersPlus.Controllers
                     last_name = customer.last_name,
                     SignInAfter = false,
                 };
+                ViewBag.IsEdit = true;
                 return View("~/Views/Home/CustomerRegister.cshtml", editAccountInfo);
             }
 
@@ -408,8 +409,8 @@ namespace LegoMastersPlus.Controllers
                         var userClaim = HttpContext.User;
                         if (userClaim != null)
                         {
-                            var user = await _signInManager.UserManager.GetUserAsync(userClaim);
-                            if (await _signInManager.UserManager.IsInRoleAsync(user, "Admin"))
+                            var tempUser = await _signInManager.UserManager.GetUserAsync(userClaim);
+                            if (await _signInManager.UserManager.IsInRoleAsync(tempUser, "Admin"))
                             {
                                 return RedirectToAction("Users", "Admin");
                             }

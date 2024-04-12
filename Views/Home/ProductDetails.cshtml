@@ -3,7 +3,7 @@
 @* <a class="rounded-pill btn btn-danger btn-pill" data-url="@Url.Action("DeleteProduct", "Admin", new { product_ID = tempProd.product_ID })" data-productid="@tempProd.product_ID">Delete Product</a> *@
 
 @using LegoMastersPlus.Infrastructure
-@model ProductItemRecommendation
+@model ProductDetailsViewModel
 
 <div class="container container-fluid d-flex">
     <div class="row">
@@ -42,7 +42,7 @@
                     <div class="card-body">
                         Price: $@Model.RecProduct.price
                         <form id="@Model.RecProduct.product_ID" method="post" asp-page="/Cart">
-                            <input type="hidden" asp-for="product_ID" value="@Model.RecProduct.product_ID">
+                            <input type="hidden" asp-for="RecProduct.product_ID" value="@Model.RecProduct.product_ID">
                             <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()"/>
                             <button type="submit" class="btn btn-outline-primary btn-sm float-end">Add to Cart</button>
                         </form>
@@ -57,14 +57,24 @@
     <h3>If you like @Model.RecProduct.name, you might like:</h3>
 </div>
 <div class="row">
-    <vc:product-recommendation-card product="@Model.Product_1"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_2"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_3"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_4"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_5"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_6"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_7"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_8"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_9"></vc:product-recommendation-card>
-    <vc:product-recommendation-card product="@Model.Product_10"></vc:product-recommendation-card>
+    @if (Model.Recommendation != null)
+    {
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_1"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_2"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_3"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_4"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_5"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_6"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_7"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_8"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_9"></vc:product-recommendation-card>
+        <vc:product-recommendation-card product="@Model.Recommendation.Product_10"></vc:product-recommendation-card>
+    } else if (Model.StaticRecommendations != null)
+    {
+        @foreach (Product prod in Model.StaticRecommendations)
+        {
+            <vc:product-recommendation-card product="@prod"></vc:product-recommendation-card>
+        }
+    }
+
 </div>

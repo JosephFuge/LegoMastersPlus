@@ -85,8 +85,37 @@ namespace LegoMastersPlus.Controllers
 
         public IActionResult ProductDetails(int product_ID)
         {
+            Product? prod = _legoRepo.Products.FirstOrDefault(p => p.product_ID == product_ID);
+            
+            if (prod == null)
+            {
+                return RedirectToAction("Products");
+            }
+
             var details = _legoRepo.ProductItemRecommendations(product_ID).FirstOrDefault();
-            return View(details);
+            List<Product>? products = null;
+            if (details == null)
+            {
+                var productIds = _legoRepo.LineItems
+                   .Where(li => li.product_ID != product_ID)
+                   .GroupBy(li => li.product_ID)
+                   .Select(group => new { ProductId = group.Key, PurchaseCount = group.Count() })
+                   .OrderByDescending(x => x.PurchaseCount)
+                   .Take(5) // Taking only the top 5
+                   .Select(x => x.ProductId)
+                   .ToList();
+                products = _legoRepo.Products
+                    .Where(p => productIds.Contains(p.product_ID))
+                    .ToList();
+            }
+
+            ProductDetailsViewModel prodDetails = new ProductDetailsViewModel
+            {
+                RecProduct = prod,
+                Recommendation = details,
+                StaticRecommendations = products,
+            };
+            return View(prodDetails);
         }
 
         public IActionResult Privacy()

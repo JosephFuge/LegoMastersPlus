@@ -96,7 +96,7 @@
             }
 
         </table>
-        <button type="submit">Register</button>
+        <button type="submit">@(ViewBag.IsEdit != null && ViewBag.IsEdit ? "Save Changes" : "Register")</button>
     </form>
     <div class="col-2"></div>
 </div>
