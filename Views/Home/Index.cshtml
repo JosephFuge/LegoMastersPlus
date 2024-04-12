@@ -5,14 +5,14 @@
 <div class="bg-tan">
     <div class="container">
         <div class="row">
-            <div class="col-3">
-                <h1>Welcome to the Brickwell store!</h1>
-                <p>Your ultimate destination for all things LEGO!</p>
-                <a asp-area="" asp-controller="Home" asp-action="Products" class="btn btn-outline-primary btn-sm float-end">Explore Now</a>
+            <div class="col-4">
+                <h1 class="home-h1">Welcome to the Brickwell store!</h1>
+                <p class="home-p">Your ultimate destination for all things LEGO!</p>
+                <a asp-area="" asp-controller="Home" asp-action="Products" class="btn btn-outline-primary btn-lg float-end">Explore Now</a>
             </div>
-            <div class="col"></div>
-            <div class="col-5 center">
-                <img src="/img/home.jpg" class="home-img">
+            <div class="col-2"></div>
+            <div class="col center">
+                <img src="/img/home.jpg" class="home-img" alt="image">
             </div>
         </div>
     </div>
@@ -21,12 +21,12 @@
 <div class="container">
     <div>
         <h1>Featured Products</h1>
-        <div class="col container container-fluid">
+        <div class="container horizontal-scroll">
             <div class="row">
                 @foreach (var prod in Model)
                 {
-                    <div class="col-lg-2 col-md-2 col-sm-6">
-                        <div class="product-card">
+                    <div class="card scroll-card pe-0">
+                        <div class="card-body product-card pe-0">
                             <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
                                 <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
                                 <h2 class="product-title custom-product-name">@prod.name</h2>
@@ -38,7 +38,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
 
 

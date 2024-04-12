@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Authentication;
+using System.ComponentModel.DataAnnotations;
 
 namespace LegoMastersPlus.Models.ViewModels
 {
@@ -31,6 +32,8 @@ namespace LegoMastersPlus.Models.ViewModels
         [Required]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public List<AuthenticationScheme>? ExternalLogins { get; set; }
 
         public bool SignInAfter { get; set; } = true;
     }
