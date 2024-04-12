@@ -71,7 +71,7 @@ namespace LegoMastersPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteCustomer(int customerId)
         {
-            // Logic to delete the user from the repository
+            // Logic to delete the user from the user manager, as well as the customer
             var customer = _legoRepo.Customers.FirstOrDefault(c => c.customer_ID == customerId);
 
             if (customer != null)
@@ -149,6 +149,7 @@ namespace LegoMastersPlus.Controllers
         [HttpGet]
         public IActionResult EditProduct(int product_ID)
         {
+            // Get list of categories a product can fall under
             ViewBag.Categories = _legoRepo.Categories.Distinct().ToList();
             var editProduct = _legoRepo.Products.Single(prod => prod.product_ID == product_ID);
             return View("AddEditProduct", editProduct);
@@ -445,31 +446,22 @@ namespace LegoMastersPlus.Controllers
 
                     _logger.LogInformation("Admin created a customer with name " + customerRegister.first_name + " " + customerRegister.last_name);
 
-
-                    // If they should sign in (defaults to yes), go to the home page
-                    if (customerRegister.SignInAfter)
+                    // Otherwise, check if they are an admin and if so, take them back to the Users page
+                    var userClaim = HttpContext.User;
+                    if (userClaim != null)
                     {
-                        await _signInManager.SignInAsync(newUser, isPersistent: false);
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        // Otherwise, check if they are an admin and if so, take them back to the Users page
-                        var userClaim = HttpContext.User;
-                        if (userClaim != null)
+                        var tempUser = await _signInManager.UserManager.GetUserAsync(userClaim);
+                        if (await _signInManager.UserManager.IsInRoleAsync(tempUser, "Admin"))
                         {
-                            var tempUser = await _signInManager.UserManager.GetUserAsync(userClaim);
-                            if (await _signInManager.UserManager.IsInRoleAsync(tempUser, "Admin"))
-                            {
-                                return RedirectToAction("Users", "Admin");
-                            }
-                            else
-                            {
-                                return RedirectToAction("Index");
-                            }
+                            return RedirectToAction("Users", "Admin");
                         }
-                        return RedirectToAction("Index");
+                        else
+                        {
+                            return RedirectToAction("Index");
+                        }
                     }
+
+                    return RedirectToAction("Index");
                 }
                 else
                 {
@@ -497,6 +489,7 @@ namespace LegoMastersPlus.Controllers
             }
         }
 
+        // Ensure user has cookies
         private bool _isCookieConsentAccepted()
         {
             if (!Request.Cookies.ContainsKey("CookieConsent"))
