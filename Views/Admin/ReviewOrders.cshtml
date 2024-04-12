@@ -98,31 +98,34 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var order in ViewBag.fraudulent)
+                        @foreach (var order in Model.Orders)
                         {
-                            <tr>
-                                <td>@order.transaction_ID</td>
-                                <td>@order.customer_ID</td>
-                                <td>@order.date</td>
-                                <td>@order.day_of_week</td>
-                                <td>@order.time</td>
-                                <td>@order.entry_mode</td>
-                                <td>@order.amount</td>
-                                <td>@order.type_of_transaction</td>
-                                <td>@order.country_of_transaction</td>
-                                <td>@order.shipping_address</td>
-                                <td>@order.bank</td>
-                                <td>@order.type_of_card</td>
-                                <td>
-                                    @if (@order.fraud) {<span class="badge bg-danger">Yes</span>}
-                                    else {<span class="badge bg-success">No</span>}
-                                </td>
-                                <td>
-                                    <a class="rounded-pill btn btn-sm btn-danger" data-url="@Url.Action("DeleteOrder", "Admin", new { transactionId = order.transaction_ID })" data-productid="@order.transaction_ID">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </td>
-                            </tr>
+                            if (order.fraud == true)
+                            {
+                                <tr>
+                                    <td>@order.transaction_ID</td>
+                                    <td>@order.customer_ID</td>
+                                    <td>@order.date</td>
+                                    <td>@order.day_of_week</td>
+                                    <td>@order.time</td>
+                                    <td>@order.entry_mode</td>
+                                    <td>@order.amount</td>
+                                    <td>@order.type_of_transaction</td>
+                                    <td>@order.country_of_transaction</td>
+                                    <td>@order.shipping_address</td>
+                                    <td>@order.bank</td>
+                                    <td>@order.type_of_card</td>
+                                    <td>
+                                        @if (@order.fraud) {<span class="badge bg-danger">Yes</span>}
+                                        else {<span class="badge bg-success">No</span>}
+                                    </td>
+                                    <td>
+                                        <a class="rounded-pill btn btn-sm btn-danger" data-url="@Url.Action("DeleteOrder", "Admin", new { transactionId = order.transaction_ID })" data-productid="@order.transaction_ID">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>

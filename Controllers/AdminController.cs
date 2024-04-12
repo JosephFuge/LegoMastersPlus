@@ -214,10 +214,7 @@ namespace LegoMastersPlus.Controllers
 
             // Get the correct list of products based on page size and page number
             var orderList = _legoRepo.Orders.Skip((pageNum - 1) * pageSize).Take(pageSize);
-
-            var fraudOrders = _legoRepo.Orders.Where(order => order.fraud == true).ToList();
-
-            ViewBag.fraudulent = fraudOrders;
+            
             // Gather paging info and product list into a ViewModel
             var orderCount = _legoRepo.Orders.Count();
             PaginationInfo pagingInfo = new PaginationInfo(orderCount, pageSize, pageNum);
