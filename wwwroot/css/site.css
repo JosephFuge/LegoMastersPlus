@@ -375,7 +375,7 @@ a.no-decoration-link, a.no-decoration-link:active, a.no-decoration-link:visited 
 .auth-form {
     border-radius: 15px;
     background-color: rgba(255, 255, 255);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     opacity: 1;
     padding: 20px;
     width: 500px;
@@ -457,4 +457,20 @@ main {
 
 footer {
     background-color: white;
+}
+
+.user-edit-form {
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+    padding: 20px;
+    width: 500px;
+    margin-top: 50px; /* Adjust this to position the form vertically */
+}
+
+.custom-about-us-image {
+    max-height: 500px; /* Adjust the maximum height as needed */
+    width: auto; /* Let the width adjust automatically */
+
 }
