@@ -3,69 +3,71 @@
 }
 
 @model ProductsListViewModel
-<p></p>
-
-    <h1 class="page-title text-center color-black">All Lego Sets</h1>
-
-<p></p>
-
-<div class="row">
-    <div class="col-2">
-        <form asp-controller="Home" asp-action="Products" method="get">
-            <label asp-for="PrimaryColor" class="form-label">Primary Color:</label>
-            <select asp-for="PrimaryColor" class="form-select">
-                <option value="">Select Color</option>
-                @foreach (var primColor in Model.PrimaryColors)
+<div class="container-fluid">
+    <p></p>
+    
+        <h1 class="page-title text-center color-black">All Lego Sets</h1>
+    
+    <p></p>
+    
+    <div class="row">
+        <div class="col-2">
+            <form asp-controller="Home" asp-action="Products" method="get">
+                <label asp-for="PrimaryColor" class="form-label">Primary Color:</label>
+                <select asp-for="PrimaryColor" class="form-select">
+                    <option value="">Select Color</option>
+                    @foreach (var primColor in Model.PrimaryColors)
+                    {
+                        <option value="@primColor">@primColor</option>
+                    }
+                </select>
+                <p></p>
+                <label asp-for="SecondaryColor" class="form-label">Secondary Color:</label>
+                <select asp-for="SecondaryColor" class="form-select">
+                    <option value="">Select Color</option>
+                    @foreach (var secColor in Model.SecondaryColors)
+                    {
+                        <option value="@secColor">@secColor</option>
+                    }
+                </select>
+                <p></p>
+    
+                <label class="form-label mb-0 pb-0">Results Per Page:</label>
+                <div class="radioSelector mb-0 pb-0">
+                    <input id="first" type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") />
+                    <label for="first" class="form-radio-label">5</label>
+                    <input id="second" type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "")/>
+                    <label for="second" class="form-radio-label">10</label>
+                    <input id="third" type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "")/>
+                    <label for="third" class="form-radio-label">20</label>
+                </div>
+                <h5 class="category-heading">Categories</h5>
+                @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
                 {
-                    <option value="@primColor">@primColor</option>
+                    <input type="checkbox" name="SelectedCategories" value="@category.value.CategoryId" checked="@Model.SelectedCategories.Contains(category.value.CategoryId)" />
+                    <label class="category-label">@category.value.Name</label>
+                    <div class="line-height"></div>
                 }
-            </select>
-            <p></p>
-            <label asp-for="SecondaryColor" class="form-label">Secondary Color:</label>
-            <select asp-for="SecondaryColor" class="form-select">
-                <option value="">Select Color</option>
-                @foreach (var secColor in Model.SecondaryColors)
-                {
-                    <option value="@secColor">@secColor</option>
-                }
-            </select>
-            <p></p>
-
-            <label class="form-label">Results Per Page:</label>
-            <div class="page-size radioSelector">
-                <input id="first" type="radio" name="PageSize" value="5" @(Model.PageSize == 5 ? "checked" : "") />
-                <label for="first" class="form-radio-label">5</label>
-                <input id="second" type="radio" name="PageSize" value="10" @(Model.PageSize == 10 ? "checked" : "")/>
-                <label for="second" class="form-radio-label">10</label>
-                <input id="third" type="radio" name="PageSize" value="20" @(Model.PageSize == 20 ? "checked" : "")/>
-                <label for="third" class="form-radio-label">20</label>
-            </div>
-
-            <h5 class="category-heading">Categories</h5>
-            @foreach (var category in Model.Categories.Select((value, index) => new { value, index }))
-            {
-                <input type="checkbox" name="SelectedCategories" value="@category.value.CategoryId" checked="@Model.SelectedCategories.Contains(category.value.CategoryId)" />
-                <label class="category-label">@category.value.Name</label>
-                <div class="line-height"></div>
-            }
-            <p></p>
-            <p></p>
-            <input type="submit" value="Filter" class="btn btn-primary" />
-        </form>
-    </div>
-    <div class="col container container-fluid">
-        <div class="row">
-            @foreach (Product p in Model.Products)
-            {
-                <partial name="ProductSummary" model="p" />
-            }
+                <p></p>
+                <p></p>
+                <input type="submit" value="Filter" class="btn btn-primary" />
+            </form>
         </div>
-
+        <div class="col container container-fluid">
+            <div class="row">
+                @foreach (Product p in Model.Products)
+                {
+                    <partial name="ProductSummary" model="p" />
+                }
+            </div>
+    
+        </div>
     </div>
-</div>
+    
+    
+    <div class="col d-flex justify-content-end">
+        <div page-model="@Model.PaginationInfo" page-action="Products" page-controller="Home"
+             page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
+    </div>
 
-
-<div class="col d-flex justify-content-end">
-    <div page-model="@Model.PaginationInfo" page-action="Products" page-controller="Home"
-         page-classes-enabled="true" page-class="btn" page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group w-auto"></div>
 </div>
