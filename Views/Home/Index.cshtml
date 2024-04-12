@@ -1,54 +1,44 @@
 ﻿
 @model ProductsListViewModel
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEGO Store - Home</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="bg-soft-purple">
-        <div class="container">
-            <div class="row">
-                <div class="col-2">
-                    <h1>Welcome to the<br>LegoMastersPlus store!</h1>
-                    <p>Your ultimate destination for all things LEGO!</p>
-                    <a href="" class="btn">Explore Now</a>
-                </div>
-                <div class="col-2">
-                    <img src="home.jpg">
-                </div>
+
+<div class="bg-soft-purple">
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <h1>Welcome to the<br>LegoMastersPlus store!</h1>
+                <p>Your ultimate destination for all things LEGO!</p>
+                <a href="" class="btn">Explore Now</a>
+            </div>
+            <div class="col-2">
+                <img src="/img/home.jpg">
             </div>
         </div>
-     </div>
-     <div>
+    </div>
+    </div>
+    <div>
         
      </div>
     <div class="container">
         <div>
             <h1>Featured Products</h1>
             <div class="row">
-                @foreach (var product in Model.Products)
+                @foreach (var prod in ViewBag.TopProducts)
                 {
                     <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="product-card">
-                            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@product.product_ID">
-                                <img src="@product.img_link" alt="@product.name" class="img-fluid product-image">
-                                <h2 class="product-title custom-product-name">@product.name</h2>
+                            <a class="custom-product-name" asp-controller="Home" asp-action="ProductDetails" asp-route-product_ID="@prod.product_ID">
+                                <img src="@prod.img_link" alt="@prod.name" class="img-fluid product-image">
+                                <h2 class="product-title custom-product-name">@prod.name</h2>
                             </a>
-                            <p class="product-price">$@product.price</p>
+                            <p class="product-price">$@prod.price</p>
                         </div>
                     </div>
                 }
             </div>
         </div>
     </div>
-</body>
-</html>
+
 
 
 

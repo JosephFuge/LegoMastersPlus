@@ -39,7 +39,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
 })
-    .AddEntityFrameworkStores<LegoMastersDbContext>();
+    .AddEntityFrameworkStores<LegoMastersDbContext>().AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
 
 // Add HSTS
@@ -126,8 +126,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute("pagination", "{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
 app.MapDefaultControllerRoute();
+app.MapControllerRoute("pagination", "/{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
 
 app.MapRazorPages();
 

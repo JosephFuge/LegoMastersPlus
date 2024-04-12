@@ -20,6 +20,18 @@ namespace LegoMastersPlus.Data
             _context.SaveChanges();
         }
 
+        public void UpdateCustomer(Customer customer)
+        {
+            _context.Update(customer);
+            _context.SaveChanges();
+        }
+
+        public void DeleteCustomer(Customer customer)
+        {
+            _context.Customers.Remove(customer);
+            _context.SaveChanges();
+        }
+
         public IQueryable<Product> Products => _context.Products.Include(p => p.ProductCategories).ThenInclude(pc => pc.Category);
 
         public IQueryable<string> PrimaryColors => _context.Products.Select(p => p.primary_color).Distinct();
@@ -80,6 +92,9 @@ namespace LegoMastersPlus.Data
         public IQueryable<Category> Categories => _context.Categories;
         
         public IQueryable<Order> Orders => _context.Orders.Include(order => order.LineItems);
+
+        public IQueryable<LineItem> LineItems => _context.LineItems.Include(lineItem => lineItem.Product);
+
 
 
     }

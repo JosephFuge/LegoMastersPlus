@@ -64,7 +64,6 @@ $(document).ready(function () {
         $('#deleteConfirmationModal').modal('show'); // Show the confirmation modal
 
         $('.close-modal').click(function () {
-            sessionStorage.setItem("cookieNotificationShown", "true");
             $('#cookieConsentModal').modal('hide');
         });
 
@@ -74,6 +73,64 @@ $(document).ready(function () {
                 url: deleteUrl, // Use the URL fetched from the button's data-url attribute
                 success: function () {
                     $('#deleteConfirmationModal').modal('hide');
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function () {
+                    alert('Failed to delete the product.'); // Handle error
+                }
+            });
+        });
+    });
+});
+
+// delete customer: 
+$(document).ready(function () {
+    $('#deleteCustomerButton').click(function (event) {
+        event.preventDefault(); // Prevent the default link behavior
+
+        var deleteUrl = $(this).data('url'); // Use the URL from the data-url attribute
+
+        $('#customerDeleteConfirmationModal').modal('show'); // Show the confirmation modal
+
+        $('.close-modal').click(function () {
+            $('#customerDeleteConfirmationModal').modal('hide');
+        });
+
+        $('#customerConfirmDelete').off().click(function () {
+            $.ajax({
+                type: "POST",
+                url: deleteUrl, // Use the URL fetched from the button's data-url attribute
+                success: function () {
+                    $('#customerDeleteConfirmationModal').modal('hide');
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function () {
+                    alert('Failed to delete the product.'); // Handle error
+                }
+            });
+        });
+    });
+});
+
+// delete user: 
+$(document).ready(function () {
+    $('#deleteUserButton').click(function (event) {
+        event.preventDefault(); // Prevent the default link behavior
+
+        var deleteUrl = $(this).data('url'); // Use the URL from the data-url attribute
+
+        $('#userDeleteConfirmationModal').modal('show'); // Show the confirmation modal
+
+        $('.close-modal').click(function () {
+            $('#userDeleteConfirmationModal').modal('hide');
+        });
+
+        $('#userConfirmDelete').off().click(function () {
+            $.ajax({
+                type: "POST",
+                url: deleteUrl, // Use the URL fetched from the button's data-url attribute
+                success: function () {
+                    $('#userDeleteConfirmationModal').modal('hide');
                     location.reload(); // Reload the page to reflect changes
                 },
                 error: function () {
