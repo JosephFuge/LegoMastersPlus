@@ -7,8 +7,10 @@
 @model EditUserViewModel
 
 <div class="text-center row">
-    <div class="col-2"></div>
-    <form method="post" class="auth-form col">
+    <div class="col-4">
+        <img src="/img/explorer_lego_minifigure.jpg" height="700" class="margin-top-lg" />
+    </div>
+    <form method="post" class="col-5 user-edit-form">
        
         <h2>Edit User</h2>
         <input asp-for="SignInAfter" hidden />
@@ -118,7 +120,7 @@
 
             </table>
         </div>
-        <button type="submit">Save Changes</button>
+        <button class="btn rounded-pill btn-outline-success" type="submit">Save Changes</button>
     </form>
-    <div class="col-2"></div>
+    <div class="col-3"></div>
 </div>

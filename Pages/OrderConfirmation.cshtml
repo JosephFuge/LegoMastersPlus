@@ -9,16 +9,16 @@
 }
 
 <div class="container pt-5">
-    <div class="row justify-content-center align-items-center text-center h-100">
+    <div class="justify-content-center align-items-center text-center h-100">
         @if (Model.IsFraudulent == true)
         {
             <h1 class="color-darkblue">Your order is currently under review</h1>
-            <img src="~/img/legos_being_built.jpg" style="height: 50px; width: auto"/>
+            <img src="~/img/legos_being_built.jpg" width="500"/>
         }
         @if (Model.IsFraudulent == false)
         {
             <h1 class="color-darkblue">Your order has been placed, thank you!</h1>
-            <img src="~/img/lego-delivery.jpg" style="height: 50px; width: auto" />    
+            <img src="~/img/lego-delivery.jpg" width="500" />    
         }
     </div>
 </div>
