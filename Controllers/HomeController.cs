@@ -83,6 +83,11 @@ namespace LegoMastersPlus.Controllers
 
         }
 
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            return View();
+        }
+
         public IActionResult ProductDetails(int product_ID)
         {
             Product? prod = _legoRepo.Products.FirstOrDefault(p => p.product_ID == product_ID);
