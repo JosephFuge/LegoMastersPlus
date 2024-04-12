@@ -246,15 +246,16 @@ namespace LegoMastersPlus.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
+                }
                 if (result.Succeeded)
                 {
                     
                     // var user = await _userManager.FindByEmailAsync(loginRequest.Email);
                     // if user != null && await _userManager.GetTwoFactorEnabledAsync(user)
-                    if (result.RequiresTwoFactor)
-                    {
-                        return RedirectToPage("/Account/LoginWith2f", new { Area = "Identity", RememberMe = loginRequest.RememberMe, returnUrl = "/" });
-                    }
+                    
                     if (loginRequest.Email == "haydencowart@faketest.com")
                     {
                         return RedirectToAction("Index");

@@ -72,15 +72,18 @@ public class LoginWith2f : PageModel
 
     public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
     {
-        // Ensure the user has gone through the username & password screen first
-        var curUserClaim = HttpContext.User;
-        var user = await _signInManager.UserManager.GetUserAsync(curUserClaim);
-
-        if (user == null)
-        {
-            throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-        }
-
+        // if (User.Identity != null && !User.Identity.IsAuthenticated)
+        // {
+        //     var user = await _signInManager.UserManager.GetUserAsync(User);
+        //     if (user == null)
+        //     {
+        //         throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+        //     }
+        //
+        //     ReturnUrl = returnUrl;
+        //     RememberMe = rememberMe;
+        // }
+        var user = await _signInManager.UserManager.GetUserAsync(User);
         ReturnUrl = returnUrl;
         RememberMe = rememberMe;
 
