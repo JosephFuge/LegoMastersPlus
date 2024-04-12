@@ -145,8 +145,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Link prettying
-app.MapControllerRoute("pagination", "/{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
+// Improving URLs
+app.MapControllerRoute("paginationOrders", "/Orders/{pageNum}", new { Controller = "Admin", action = "ReviewOrders", pageNum = 1 });
+app.MapControllerRoute("paginationAdminProducts", "/Products/{pageNum}", new { Controller = "Admin", action = "Products", pageNum = 1 });
 app.MapDefaultControllerRoute();
 
 app.MapRazorPages();
