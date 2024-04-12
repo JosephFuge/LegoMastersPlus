@@ -455,3 +455,9 @@ main {
 footer {
     background-color: white;
 }
+
+.custom-about-us-image {
+    max-height: 500px; /* Adjust the maximum height as needed */
+    width: auto; /* Let the width adjust automatically */
+
+}
