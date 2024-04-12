@@ -68,12 +68,13 @@ namespace LegoMastersPlus.Data
             _context.SaveChanges();
         }
         
-        public void SaveOrder(Order order)
+        public int SaveOrder(Order order)
         {
             // Add your logic to save the order to the database
             // For example, using Entity Framework:
             _context.Add(order);
             _context.SaveChanges();
+            return order.transaction_ID;
         }
 
         public IQueryable<Category> Categories => _context.Categories;

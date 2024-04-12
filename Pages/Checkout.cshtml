@@ -1,5 +1,6 @@
 @page
 @model LegoMastersPlus.Pages.CheckoutModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     Layout = "_Layout"; // Use a layout that includes Bootstrap
@@ -10,15 +11,22 @@
         <div class="col-md-6 offset-md-3">
             <h2 class="mb-4">Order details:</h2>
             <form method="post">
-                <div class="form-group">
+                @* <div class="form-group">
                     <label for="Name">User Name</label>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
+                </div> *@
 
                 <div class="form-group">
                     <label for="CountryOfTransaction">Country of Transaction:</label>
-                    <input asp-for="CountryOfTransaction" class="form-control" />
+                    <select asp-for="CountryOfTransaction" class="form-control">
+                        <option value="">Select a Country</option>
+                        <option value="china">China</option>
+                        <option value="india">India</option>
+                        <option value="russia">Russia</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="usa">United States of America</option>
+                    </select>
                     <span asp-validation-for="CountryOfTransaction" class="text-danger"></span>
                 </div>
                 
@@ -30,7 +38,16 @@
 
                 <div class="form-group">
                     <label for="Bank">Bank</label>
-                    <input asp-for="Bank" class="form-control" />
+                    <select asp-for="Bank" class="form-control">
+                        <option value="">Select a Bank</option>
+                        <option value="barclay">Barclays</option>
+                        <option value="hsbc">HSBC</option>
+                        <option value="halifax">Halifax</option>
+                        <option value="lloyd">Lloyds</option>
+                        <option value="metro">Metro</option>
+                        <option value="monzo">Monzo</option>
+                        <option value="rbs">Royal Bank of Scotland (RBS)</option>
+                    </select>
                     <span asp-validation-for="Bank" class="text-danger"></span>
                 </div>
 
@@ -38,16 +55,16 @@
                     <label for="TypeOfCard">Type of Card</label>
                     <select asp-for="TypeOfCard" class="form-control">
                         <option value="">Select a Card Type</option>
-                        <option value="Visa">Visa</option>
-                        <option value="MasterCard">MasterCard</option>
+                        <option value="visa">Visa</option>
+                        <option value="mastercard">MasterCard</option>
                         <!-- Add more options as necessary -->
                     </select>
                     <span asp-validation-for="TypeOfCard" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Place Order</button>
+                <div asp-validation-summary="ModelOnly" class="text-danger mt-3"></div>
             </form>
-            <div asp-validation-summary="ModelOnly" class="text-danger mt-3"></div>
         </div>
     </div>
 </div>
