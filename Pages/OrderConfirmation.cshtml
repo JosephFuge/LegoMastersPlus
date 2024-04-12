@@ -5,15 +5,35 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
+
+<style>
+    /* Center the content horizontally and vertically */
+    confirmBody {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    /* Style for the message box */
+    .message-box {
+
+        text-align: center; /* Center the text horizontally */
+        background-color: #f0f0f0;
+        padding: 20px;
+        border-radius: 5px;
+    }
+</style>
 
 @if (Model.IsFraudulent == true)
 {
-    <div>Your order is currently under review</div>
+    <div class="confirmBody message-box"><h1>Your order is currently under review</h1></div>
 }
 @if (Model.IsFraudulent == false)
 {
-    <div>Your order has been placed, thank you!</div>
+    <div class="confirmBody message-box"><h1>Your order has been placed, thank you!</h1></div>
 }
 
