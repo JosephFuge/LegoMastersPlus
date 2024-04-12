@@ -63,7 +63,7 @@ namespace LegoMastersPlus.Controllers
                 var user = await _signInManager.UserManager.GetUserAsync(userClaim);
                 if (user != null)
                 {
-                    var customer = _legoRepo.Customers.Single(c => c.IdentityID == user.Id);
+                    var customer = _legoRepo.Customers.FirstOrDefault(c => c.IdentityID == user.Id);
 
                     if (customer != null)
                     {
