@@ -4,6 +4,7 @@
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">Summary of All Orders</h2>
+            <span>(Summary of fraudulent orders below)</span>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -100,7 +101,7 @@
                     <tbody>
                         @foreach (var order in Model.Orders)
                         {
-                            if (order.fraud == true)
+                            if (order.fraud)
                             {
                                 <tr>
                                     <td>@order.transaction_ID</td>
