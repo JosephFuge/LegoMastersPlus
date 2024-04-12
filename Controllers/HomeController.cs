@@ -111,6 +111,7 @@ namespace LegoMastersPlus.Controllers
 
             ProductDetailsViewModel prodDetails = new ProductDetailsViewModel
             {
+                product_ID = prod.product_ID,
                 RecProduct = prod,
                 Recommendation = details,
                 StaticRecommendations = products,
