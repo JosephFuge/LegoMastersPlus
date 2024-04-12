@@ -357,7 +357,8 @@ namespace LegoMastersPlus.Controllers
         [HttpGet]
         public IActionResult ExternalLogin()
         {
-            return View("Login");
+            // Shouldn't be able to navigate here; just give them the login page
+            return RedirectToAction("Login");
         }
 
         [HttpPost]
