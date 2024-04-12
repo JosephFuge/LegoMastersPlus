@@ -22,6 +22,12 @@ using System.Net.NetworkInformation;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
+/*
+ * Brickwell
+ * Section 4 Group 4
+ * Authors: Joseph Fuge, Cameron Klepacz, Ezekiel Goodman, Hannah Cameron
+ */
+
 namespace LegoMastersPlus.Controllers
 {
     public class HomeController : Controller
@@ -81,6 +87,11 @@ namespace LegoMastersPlus.Controllers
 
             return View(productPagingModel);
 
+        }
+
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            return View();
         }
 
         public IActionResult ProductDetails(int product_ID)

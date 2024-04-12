@@ -8,6 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
+/*
+ * Brickwell
+ * Section 4 Group 4
+ * Authors: Joseph Fuge, Cameron Klepacz, Ezekiel Goodman, Hannah Cameron
+ */
+
 namespace LegoMastersPlus.Controllers
 {
     // Ensure only Admins can access the pages and actions within AdminController
@@ -254,7 +260,12 @@ namespace LegoMastersPlus.Controllers
 
             if (user != null && customer != null)
             {
-                CustomerRegisterViewModel editAccountInfo = new CustomerRegisterViewModel
+                // Get all available roles
+                var roles = _roleManager.Roles.Select(r => r.Name).ToList();
+
+                var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
+
+                EditUserViewModel editAccountInfo = new EditUserViewModel
                 {
                     Email = user.Email,
                     birth_date = customer.birth_date.ToDateTime(TimeOnly.MinValue),
@@ -263,22 +274,24 @@ namespace LegoMastersPlus.Controllers
                     first_name = customer.first_name,
                     last_name = customer.last_name,
                     SignInAfter = false,
+                    AllRoles = roles ?? new List<string?>(),
+                    SelectedRoles = userRoles?.ToList() ?? new List<string>(),
                 };
                 ViewBag.IsEdit = true;
-                return View("~/Views/Home/CustomerRegister.cshtml", editAccountInfo);
+                return View("EditUser", editAccountInfo);
             }
 
             return RedirectToAction("Users");
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUser(CustomerRegisterViewModel customerRegister)
+        public async Task<IActionResult> EditUser(EditUserViewModel userEdit)
         {
             ModelState.Remove("Password");
             ModelState.Remove("ConfirmPassword");
             if (ModelState.IsValid)
             {
-                var user = await _signInManager.UserManager.FindByNameAsync(customerRegister.Email);
+                var user = await _signInManager.UserManager.FindByNameAsync(userEdit.Email);
 
                 if (user != null)
                 {
@@ -287,21 +300,45 @@ namespace LegoMastersPlus.Controllers
                     if (customer != null)
                     {
 
-                        customer.first_name = customerRegister.first_name;
-                        customer.gender = customerRegister.gender;
-                        customer.last_name = customerRegister.last_name;
-                        customer.birth_date = DateOnly.FromDateTime(customerRegister.birth_date);
-                        customer.country_of_residence = customerRegister.country_of_residence;
-                        customer.age = CalculateAge(customerRegister.birth_date, DateTime.Now);
+                        // Update customer model to new edits
+                        customer.first_name = userEdit.first_name;
+                        customer.gender = userEdit.gender;
+                        customer.last_name = userEdit.last_name;
+                        customer.birth_date = DateOnly.FromDateTime(userEdit.birth_date);
+                        customer.country_of_residence = userEdit.country_of_residence;
+                        customer.age = CalculateAge(userEdit.birth_date, DateTime.Now);
 
                         _legoRepo.UpdateCustomer(customer);
 
-                        if (customerRegister.Password != null && customerRegister.Password.Length > 0 && !(await _signInManager.UserManager.CheckPasswordAsync(user, customerRegister.Password)))
+                        // Check if password is different and if so, update it
+                        if (userEdit.Password != null && userEdit.Password.Length > 0 && !(await _signInManager.UserManager.CheckPasswordAsync(user, userEdit.Password)))
                         {
                             var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
                             if (token != null)
                             {
-                                await _signInManager.UserManager.ResetPasswordAsync(user, token, customerRegister.Password);
+                                await _signInManager.UserManager.ResetPasswordAsync(user, token, userEdit.Password);
+                            }
+
+                        }
+
+                        var userRoles = await _signInManager.UserManager.GetRolesAsync(user);
+                        var roles = _roleManager.Roles.Select(r => r.Name).ToList();
+
+                        if (roles != null)
+                        {
+                            foreach (string role in roles)
+                            {
+                                if (role != null)
+                                {
+                                    if (userEdit.SelectedRoles.Contains(role) && !userRoles.Contains(role))
+                                    {
+                                        await _signInManager.UserManager.AddToRoleAsync(user, role);
+                                    }
+                                    else if (!userEdit.SelectedRoles.Contains(role) && userRoles.Contains(role))
+                                    {
+                                        await _signInManager.UserManager.RemoveFromRoleAsync(user, role);
+                                    }
+                                }
                             }
 
                         }
@@ -310,8 +347,19 @@ namespace LegoMastersPlus.Controllers
                     }
                 }
             }
+
+            var tempRoles = _roleManager.Roles.Select(r => r.Name).ToList();
+
+            var tempUser = await _signInManager.UserManager.FindByNameAsync(userEdit.Email);
+            if (tempUser != null)
+            {
+                var tempUserRoles = await _signInManager.UserManager.GetRolesAsync(tempUser);
+                userEdit.SelectedRoles = (tempUserRoles?.ToList() ?? new List<string>());
+            }
             
-            return View("~/Views/Home/CustomerRegister.cshtml", customerRegister);
+            userEdit.AllRoles = tempRoles;
+
+            return View(userEdit);
         }
 
         [HttpGet]

@@ -6,6 +6,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+/*
+ * Brickwell
+ * Section 4 Group 4
+ * Authors: Joseph Fuge, Cameron Klepacz, Ezekiel Goodman, Hannah Cameron
+ */
+
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
@@ -14,9 +20,18 @@ var connectionString = config.GetConnectionString("LegoMasterConnection") ?? thr
 builder.Services.AddDbContext<LegoMastersDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// Dependency Injection for Repository pattern
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
-builder.Services.AddRazorPages();
 
+// Add and authorize razor pages
+builder.Services.AddRazorPages(options =>
+    {
+        options.Conventions.AuthorizePage("/Checkout");
+        options.Conventions.AuthorizePage("/OrderConfirmation");
+    }
+); 
+
+// Shopping cart setup
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
@@ -82,6 +97,7 @@ else
     app.UseHsts();
 }
 
+// Add Customer and Admin roles if they don't exist
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -117,7 +133,9 @@ app.Use(async (context, next) =>
     await next();
 });
 
+// Redirect HTTP connections to HTTPS
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseSession();
@@ -127,7 +145,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+// Link prettying
 app.MapControllerRoute("pagination", "/{pageNum}", new { Controller = "Home", action = "Products", pageNum = 1 });
 app.MapDefaultControllerRoute();
 
